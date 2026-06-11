@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Player {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  token  String  @unique
+  active Boolean @default(true)
+
+  ducks    Float    @default(0)
+  money    Float    @default(150.0)
+  lastSync DateTime @default(now())
+
+  lastActive DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  buildings    PlayerBuilding[]
+  storages     PlayerStorage[]
+  achievements PlayerAchievement[]
+}
+
+model PlayerBuilding {
+  buildingId String
+  playerId   String
+
+  amount Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  player Player @relation(fields: [playerId], references: [id])
+
+  @@id([buildingId, playerId])
+}
+
+model PlayerStorage {
+  storageId String
+  playerId  String
+
+  amount Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  player Player @relation(fields: [playerId], references: [id])
+
+  @@id([storageId, playerId])
+}
+
+model PlayerAchievement {
+  achievementId String
+  playerId      String
+
+  unlockedAt DateTime @default(now())
+
+  player Player @relation(fields: [playerId], references: [id])
+
+  @@id([achievementId, playerId])
+}
+
+// 💰 MARKET SYSTEM
+// model MarketSnapshot {
+//   id     String @id @default(cuid())
+//   price  Float
+//   demand Float
+//   supply Float
+
+//   createdAt DateTime @default(now())
+// }
+
+// model TradeHistory {
+//   id String @id @default(cuid())
+
+//   playerId String
+//   type     String
+//   amount   BigInt
+//   price    Float
+//   total    Float
+
+//   createdAt DateTime @default(now())
+
+//   player Player @relation(fields: [playerId], references: [id])
+// }
+
+// 📦 CONTRACTS (MISSIONS)
+// model Contract {
+//   id          String @id @default(cuid())
+//   title       String
+//   description String
+
+//   rewardMoney Float
+//   rewardRep   Float
+
+//   requirement String
+
+//   createdAt          DateTime           @default(now())
+//   contractProgresses ContractProgress[]
+// }
+
+// model ContractProgress {
+//   id String @id @default(cuid())
+
+//   playerId   String
+//   contractId String
+
+//   progress  Int     @default(0)
+//   completed Boolean @default(false)
+
+//   startedAt   DateTime  @default(now())
+//   completedAt DateTime?
+
+//   player   Player   @relation(fields: [playerId], references: [id])
+//   contract Contract @relation(fields: [contractId], references: [id])
+// }
+
+// 🌍 WORLD STATE (GLOBAL SYSTEM)
+// model WorldState {
+//   id String @id @default(cuid())
+
+//   totalDucks   BigInt @default(0)
+//   marketPrice  Float  @default(1.0)
+//   totalPlayers Int    @default(0)
+
+//   lastUpdate DateTime @updatedAt
+// }

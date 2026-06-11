@@ -1,0 +1,148 @@
+{
+    "production": [
+        {
+            "id": "first_duck",
+            "hidden": false,
+            "name": {
+                "en": "First Duck",
+                "fr": "Premier Coin-Coin"
+            },
+            "description": {
+                "en": "Produce 1 duck",
+                "fr": "Produire 1 canard"
+            },
+            "condition": {
+                "type": "total_ducks_produced",
+                "value": 1
+            },
+            "reward": {
+                "money": 50
+            }
+        },
+        {
+            "id": "duck_farmer",
+            "hidden": false,
+            "name": {
+                "en": "Duck Farmer",
+                "fr": "Éleveur de Canards"
+            },
+            "description": {
+                "en": "Produce 100 ducks",
+                "fr": "Produire 100 canards"
+            },
+            "condition": {
+                "type": "total_ducks_produced",
+                "value": 100
+            },
+            "reward": {
+                "money": 500
+            }
+        },
+        {
+            "id": "industrial_ducking",
+            "hidden": false,
+            "name": {
+                "en": "Industrial Ducking",
+                "fr": "Élevage Industriel"
+            },
+            "description": {
+                "en": "Produce 10,000 ducks",
+                "fr": "Produire 10 000 canards"
+            },
+            "condition": {
+                "type": "total_ducks_produced",
+                "value": 10000
+            },
+            "reward": {
+                "reputation": 10
+            }
+        },
+        {
+            "id": "duck_millionaire",
+            "hidden": false,
+            "name": {
+                "en": "Duck Millionaire",
+                "fr": "Canard Millionnaire"
+            },
+            "description": {
+                "en": "Produce 1,000,000 ducks",
+                "fr": "Produire 1 000 000 canards"
+            },
+            "condition": {
+                "type": "total_ducks_produced",
+                "value": 1000000
+            },
+            "reward": {
+                "reputation": 100
+            }
+        }
+    ],
+    "buildings": [
+        {
+            "id": "first_building",
+            "hidden": false,
+            "name": {
+                "en": "First Building",
+                "fr": "Premier Bâtiment"
+            },
+            "description": {
+                "en": "Buy your first building",
+                "fr": "Acheter votre premier bâtiment"
+            },
+            "condition": {
+                "type": "buildings_owned",
+                "value": 1
+            }
+        },
+        {
+            "id": "landlord",
+            "hidden": false,
+            "name": {
+                "en": "Landlord",
+                "fr": "Ducklord"
+            },
+            "description": {
+                "en": "Own 10 buildings",
+                "fr": "Posséder 10 bâtiments"
+            },
+            "condition": {
+                "type": "buildings_owned",
+                "value": 10
+            }
+        }
+    ],
+    "wealth": [
+        {
+            "id": "first_sale",
+            "hidden": false,
+            "name": {
+                "en": "First Sale",
+                "fr": "Premier Client"
+            },
+            "description": {
+                "en": "Sell your first duck",
+                "fr": "Vendre un canard"
+            },
+            "condition": {
+                "type": "ducks_sold",
+                "value": 1
+            }
+        },
+        {
+            "id": "million_dollar_ducks",
+            "hidden": false,
+            "name": {
+                "en": "Million Duck Company",
+                "fr": "Entreprise des Canards Millionnaires"
+            },
+            "description": {
+                "en": "Own 1,000,000$",
+                "fr": "Posséder 1 000 000$"
+            },
+            "condition": {
+                "type": "money_owned",
+                "value": 1000000
+            }
+        }
+    ]
+}

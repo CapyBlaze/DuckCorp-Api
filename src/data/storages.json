@@ -1,0 +1,11 @@
+[
+    {
+        "id": "cardboard_box",
+        "name": {
+            "en": "Cardboard Box",
+            "fr": "Boîte en Carton"
+        },
+        "cost": 50,
+        "storageCapacity": 10
+    }
+]

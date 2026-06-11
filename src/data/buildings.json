@@ -1,0 +1,73 @@
+[
+    {
+        "id": "garage",
+        "name": {
+            "en": "Garage",
+            "fr": "Garage"
+        },
+        "cost": 100,
+        "production": 0.1
+    },
+    {
+        "id": "small_workshop",
+        "name": {
+            "en": "Small Workshop",
+            "fr": "Petit Atelier"
+        },
+        "cost": 200,
+        "production": 0.5
+    },
+    {
+        "id": "industrial_workshop",
+        "name": {
+            "en": "Industrial Workshop",
+            "fr": "Atelier Industriel"
+        },
+        "cost": 1000,
+        "production": 2
+    },
+    {
+        "id": "modular_factory",
+        "name": {
+            "en": "Modular Factory",
+            "fr": "Usine Modulaire"
+        },
+        "cost": 10000,
+        "production": 10
+    },
+    {
+        "id": "big_factory",
+        "name": {
+            "en": "Big Factory",
+            "fr": "Grande Usine"
+        },
+        "cost": 500000,
+        "production": 50
+    },
+    {
+        "id": "orbital_station",
+        "name": {
+            "en": "Orbital Station",
+            "fr": "Station Orbitale"
+        },
+        "cost": 5000000,
+        "production": 200
+    },
+    {
+        "id": "planet_factory",
+        "name": {
+            "en": "Planet Factory",
+            "fr": "Usine Planétaire"
+        },
+        "cost": 10000000000,
+        "production": 1000
+    },
+    {
+        "id": "dyson_duck_sphere",
+        "name": {
+            "en": "Dyson Duck Sphere",
+            "fr": "Sphère Dyson Duck"
+        },
+        "cost": 10000000000000
+    }
+]
