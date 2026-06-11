@@ -1,88 +1,57 @@
-import type { NextFunction, Request, Response } from "express";
-import { ApiResponse } from "../utils/apiResponse.js";
+import type { Request as ExpressRequest } from "express";
+import { Controller, Get, Request, Route, Security, Tags } from "tsoa";
+import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { playersByDucks, playersByMoney, playersByNbBuildings, playersByNbStorage, playersByProduction, playersByStorage } from "../services/leaderbord.service.js";
 
 
-export const byDucks = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+
+@Route("leaderboard")
+@Tags("Leaderboard")
+export class LeaderboardController extends Controller {
+    @Get("byDucks")
+    @Security("bearerAuth")
+    public async byDucks(): Promise<ApiResponseFormat> {
         const players = await playersByDucks();
-
-        ApiResponse.success(res, 
-            "Leaderboard by ducks retrieved successfully",
-            players
-        );
-
-    } catch (error) {
-        next(error);
+        return ApiResponse.success("Leaderboard by ducks retrieved successfully", players);
     }
-};
 
-export const byMoney = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+
+    @Get("byMoney")
+    @Security("bearerAuth")
+    public async byMoney(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const players = await playersByMoney();
-
-        ApiResponse.success(res, 
-            "Leaderboard by money retrieved successfully",
-            players
-        );
-
-    } catch (error) {
-        next(error);
+        return ApiResponse.success("Leaderboard by money retrieved successfully", players);
     }
-};
 
-export const byProduction = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+
+    @Get("byProduction")
+    @Security("bearerAuth")
+    public async byProduction(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const players = await playersByProduction();
-
-        ApiResponse.success(res, 
-            "Leaderboard by production retrieved successfully",
-            players
-        );
-
-    } catch (error) {
-        next(error);
+        return ApiResponse.success("Leaderboard by production retrieved successfully", players);
     }
-};
 
-export const byStorage = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+
+    @Get("byStorage")
+    @Security("bearerAuth")
+    public async byStorage(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const players = await playersByStorage();
-
-        ApiResponse.success(res, 
-            "Leaderboard by storage retrieved successfully",
-            players
-        );
-
-    } catch (error) {
-        next(error);
+        return ApiResponse.success("Leaderboard by storage retrieved successfully", players);
     }
-};
 
-export const byNbBuildings = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+
+    @Get("byNbBuildings")
+    @Security("bearerAuth")
+    public async byNbBuildings(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const players = await playersByNbBuildings();
-
-        ApiResponse.success(res, 
-            "Leaderboard by number of buildings retrieved successfully",
-            players
-        );
-
-    } catch (error) {
-        next(error);
+        return ApiResponse.success("Leaderboard by number of buildings retrieved successfully", players);
     }
-};
 
-export const byNbStorage = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+
+    @Get("byNbStorage")
+    @Security("bearerAuth")
+    public async byNbStorage(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const players = await playersByNbStorage();
-
-        ApiResponse.success(res, 
-            "Leaderboard by number of storage units retrieved successfully",
-            players
-        );
-
-    } catch (error) {
-        next(error);
+        return ApiResponse.success("Leaderboard by number of storage units retrieved successfully", players);
     }
-};
+}

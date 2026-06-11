@@ -1,119 +1,99 @@
-import type { NextFunction, Request, Response } from "express";
+import type { Request as ExpressRequest } from "express";
+import { Body, Controller, Delete, Get, Path, Post, Request, Route, Security, SuccessResponse, Tags } from "tsoa";
 import { registerUser, getUserById, deleteUserById } from "../services/auth.service.js";
-import { ApiResponse } from "../utils/apiResponse.js";
+import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 
 
-export const register = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { name } = req.body;
-    
+
+interface RegisterBody {
+    name: string;
+}
+
+@Route("auth")
+@Tags("Auth")
+export class AuthController extends Controller {
+    @Post("register")
+    @SuccessResponse(201, "User registered")
+    public async register(@Body() body: RegisterBody): Promise<ApiResponseFormat> {
+        const { name } = body;
+
         if (!name) {
-            return ApiResponse.error(res, 
-                "Information missing",
-                "Name is required", 
-                400
-            );
+            this.setStatus(400);
+            return ApiResponse.error("Information missing", "Name is required");
         }
-    
+
         const user = await registerUser(name);
-    
-        return ApiResponse.success(res, 
-            "User registered",
-            {
-                id: user.id,
-                token: user.token,
-                name: user.name,
-                lastActive: user.lastActive,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt
-            },
-            201
-        );
 
-    } catch (error) {
-        next(error);
+        this.setStatus(201);
+        return ApiResponse.success("User registered", {
+            id: user.id,
+            token: user.token,
+            name: user.name,
+            lastActive: user.lastActive,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        });
     }
-};
 
 
-export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const user = req.user;
-        return ApiResponse.success(res, 
-            "User data retrieved",
-            {
+    @Get("profile")
+    @Security("bearerAuth")
+    public async getProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
+        const user = (req as any).user;
+        return {
+            success: true,
+            message: "User data retrieved",
+            data: {
                 id: user.id,
                 name: user.name,
                 lastActive: user.lastActive,
                 createdAt: user.createdAt,
-                updatedAt: user.updatedAt
+                updatedAt: user.updatedAt,
             },
-            200
-        );
-
-    } catch (error) {
-        next(error);
+            timestamp: new Date().toISOString(),
+        };
     }
-};
 
 
-export const getPlayer = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.params;
-
-        if (!id) {
-            return ApiResponse.error(res, 
-                "Information missing",
-                "Player ID is required",
-                400
-            );
-        }
-
-        const user = await getUserById(id as string);
+    @Get("player/{id}")
+    public async getPlayer(@Path() id: string): Promise<ApiResponseFormat> {
+        const user = await getUserById(id);
 
         if (!user) {
-            return ApiResponse.error(res, 
-                "Player not found",
-                "No player exists with the provided ID",
-                404
-            );
+            this.setStatus(404);
+            return {
+                success: false,
+                error: "Player not found",
+                message: "No player exists with the provided ID",
+                timestamp: new Date().toISOString(),
+            };
         }
 
-        return ApiResponse.success(res, 
-            "Player data retrieved",
-            {
+        return {
+            success: true,
+            message: "Player data retrieved",
+            data: {
                 id: user.id,
                 name: user.name,
                 lastActive: user.lastActive,
                 createdAt: user.createdAt,
-                updatedAt: user.updatedAt
+                updatedAt: user.updatedAt,
             },
-            200
-        );
-
-    } catch (error) {
-        next(error);
+            timestamp: new Date().toISOString(),
+        };
     }
-};
 
 
-
-export const deleteProfile = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const user = req.user;
-
+    @Delete("profile")
+    @Security("bearerAuth")
+    public async deleteProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
+        const user = (req as any).user;
         await deleteUserById(user.id);
-
-        return ApiResponse.success(res, 
-            "User profile deleted",
-            {
-                id: user.id,
-                name: user.name
-            },
-            200
-        );
-
-    } catch (error) {
-        next(error);
+        return {
+            success: true,
+            message: "User profile deleted",
+            data: { id: user.id, name: user.name },
+            timestamp: new Date().toISOString(),
+        };
     }
-};
+}

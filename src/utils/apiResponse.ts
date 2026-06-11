@@ -1,6 +1,5 @@
 export interface ApiResponseFormat<T = any> {
     success: boolean;
-    status: number;
     message: string;
     data?: T;
     error?: string;
@@ -8,36 +7,15 @@ export interface ApiResponseFormat<T = any> {
 }
 
 export class ApiResponse {
-    static success<T>(res: any, message: string, data: T = null as any, status = 200) {
-        const response: ApiResponseFormat = {
-            success: true,
-            status,
-            message,
-            data: data ?? undefined,
-            timestamp: new Date().toISOString(),
-        };
-        return res.status(status).json(response);
+    static success<T>(message: string, data?: T): ApiResponseFormat<T> {
+        return { success: true, message, data, timestamp: new Date().toISOString() };
     }
 
-    static failure<T>(res: any, message: string, data: T = null as any, status = 200) {
-        const response: ApiResponseFormat = {
-            success: false,
-            status,
-            message,
-            data: data ?? undefined,
-            timestamp: new Date().toISOString(),
-        };
-        return res.status(status).json(response);
+    static failure<T>(message: string, data?: T): ApiResponseFormat<T> {
+        return { success: false, message, data, timestamp: new Date().toISOString() };
     }
 
-    static error(res: any, errorName = "Internal Server Error", message: string, status = 500) {
-        const response: ApiResponseFormat = {
-            success: false,
-            status,
-            error: errorName,
-            message,
-            timestamp: new Date().toISOString(),
-        };
-        return res.status(status).json(response);
+    static error(errorName = "Internal Server Error", message: string): ApiResponseFormat {
+        return { success: false, error: errorName, message, timestamp: new Date().toISOString() };
     }
 }

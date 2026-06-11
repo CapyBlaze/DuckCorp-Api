@@ -4,8 +4,9 @@
   "description": "The world's leading rubber duck manufacturer.",
   "main": "index.js",
   "scripts": {
-    "swagger": "tsx src/swagger.ts",
-    "start": "tsx src/swagger.ts && tsx --watch src/app.ts",
+    "dev": "tsoa spec-and-routes && tsx --watch src/app.ts",
+    "build": "tsoa spec-and-routes && tsc",
+    "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -28,8 +29,8 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
     "picocolors": "^1.1.1",
-    "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.1",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "tsoa": "^7.0.0-alpha.0"
   }
 }

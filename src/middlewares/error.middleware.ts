@@ -9,24 +9,27 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     );
 
     if (err instanceof SyntaxError && 'status' in err && err.status === 400 && 'body' in err) {
-        return ApiResponse.error(res, 
-            "Bad Request", 
-            "The JSON format sent is invalid.", 
-            400
+        return res.status(400).json(
+            ApiResponse.error(
+                "Bad Request", 
+                "The JSON format sent is invalid."
+            )
         );
     }
 
     if (err instanceof TypeError && err.message.includes("Cannot destructure property")) {
-        return ApiResponse.error(res, 
-            "Bad Request", 
-            "The request body is unreadable or empty.", 
-            400
+        return res.status(400).json(
+            ApiResponse.error(
+                "Bad Request", 
+                "The request body is unreadable or empty.", 
+            )
         );
     }
 
-    return ApiResponse.error(res, 
-        "Internal Server Error", 
-        "An internal error occurred on the server.", 
-        err.status || 500
+    return res.status(err.status || 500).json(
+        ApiResponse.error(
+            "Internal Server Error", 
+            "An internal error occurred on the server."
+        )
     );
 };

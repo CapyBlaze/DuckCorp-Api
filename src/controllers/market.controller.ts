@@ -1,55 +1,35 @@
-import type { NextFunction, Request, Response } from "express";
-import { ApiResponse } from "../utils/apiResponse.js";
+import type { Request as ExpressRequest } from "express";
+import { Controller, Get, Request, Route, Security, Tags } from "tsoa";
+import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { getDuckPrice, getPriceHistory, sellDucksForPlayer } from "../services/market.service.js";
 
 
-export const sellDucks = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const user = req.user;
 
+@Route("market")
+@Tags("Market")
+export class MarketController extends Controller {
+    @Get("")
+    @Security("bearerAuth")
+    public async sellDucks(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
+        const user = (req as any).user;
         const result = await sellDucksForPlayer(user.id);
 
-        return ApiResponse.success(res, 
-            "Ducks sold successfully", 
-            result, 
-            200
-        );
-
-    } catch (error) {
-        next(error);
+        return ApiResponse.success("Ducks sold successfully", result);
     }
-};
 
-export const getMarketPrice = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+
+    @Get("sell")
+    @Security("bearerAuth")
+    public async getMarketPrice(): Promise<ApiResponseFormat> {
         const price = getDuckPrice();
-
-        return ApiResponse.success(res, 
-            "Current duck price retrieved", 
-            { 
-                price 
-            }, 
-            200
-        );
-
-    } catch (error) {
-        next(error);
+        return ApiResponse.success("Current duck price retrieved", { price });
     }
-};
 
-export const priceHistoryChart = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+
+    @Get("history")
+    @Security("bearerAuth")
+    public async priceHistoryChart(): Promise<ApiResponseFormat> {
         const priceHistory = getPriceHistory();
-
-        return ApiResponse.success(res, 
-            "Price history retrieved", 
-            { 
-                priceHistory 
-            }, 
-            200
-        );
-
-    } catch (error) {
-        next(error);
+        return ApiResponse.success("Price history retrieved", { priceHistory });
     }
-};
+}

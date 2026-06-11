@@ -1,13 +1,11 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { prisma } from "../prisma.js";
-import { ApiResponse } from "../utils/apiResponse.js";
 
-
-export async function authHandler(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.authorization?.replace("Bearer ", "");
+export async function expressAuthentication(request: Request, securityName: string): Promise<any> {
+    const token = request.headers.authorization?.replace("Bearer ", "");
 
     if (!token) {
-        return ApiResponse.error(res, "Bad Request", "Missing token", 401);
+        throw { status: 401, message: "Missing token" };
     }
 
     const user = await prisma.player.findUnique({
@@ -15,13 +13,12 @@ export async function authHandler(req: Request, res: Response, next: NextFunctio
     });
 
     if (!user) {
-        return ApiResponse.error(res, "Bad Request", "Invalid token", 401);
+        throw { status: 401, message: "Invalid token" };
     }
 
     if (!user.active) {
-        return ApiResponse.error(res, "Unauthorized", "User is inactive", 403);
+        throw { status: 403, message: "User is inactive" };
     }
 
-    req.user = user;
-    next();
+    return user;
 }

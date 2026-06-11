@@ -1,27 +1,21 @@
-import type { NextFunction, Request, Response } from "express";
-import { ApiResponse } from "../utils/apiResponse.js";
+import { Controller, Get, Route, Tags } from "tsoa";
+import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 
 
-export const healthCheck = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        return ApiResponse.success(res, "System is healthy");
 
-    } catch (error) {
-        next(error);
+@Route("system")
+@Tags("System")
+export class SystemController extends Controller {
+    @Get("health")
+    public async healthCheck(): Promise<ApiResponseFormat> {
+        return ApiResponse.success("System is healthy");
     }
-};
-
-
-export const getVersion = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        return ApiResponse.success(res,
-            "API version retrieved",
-            {
-                version: process.env.API_VERSION || "unknown"
-            }
-        );
-
-    } catch (error) {
-        next(error);
+    
+    
+    @Get("version")
+    public async getVersion(): Promise<ApiResponseFormat> {
+        return ApiResponse.success("API version retrieved", {
+            version: process.env.API_VERSION || "unknown"
+        });
     }
-};
+}

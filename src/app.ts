@@ -4,12 +4,13 @@ import rateLimit from "express-rate-limit";
 import swaggerUi from "swagger-ui-express";
 import pc from 'picocolors';
 
-import swaggerDocument from "../swagger-output.json" with { type: "json" };
+import swaggerDocument from "../swagger.json" with { type: "json" };
 import { errorHandler } from "./middlewares/error.middleware.js";
 import { loggerHandler } from "./middlewares/logger.middleware.js";
 import { notFoundHandler } from "./middlewares/notFound.middleware.js";
 import { ApiResponse } from "./utils/apiResponse.js";
-import routes from "./routes/index.route.js";
+import { RegisterRoutes } from "./generated/routes.js";
+
 
 
 dotenv.config({ quiet: true });
@@ -23,10 +24,11 @@ const globalLimiter = rateLimit({
     validate: { trustProxy: false }, 
 
     handler: (req, res, next, options) => {
-        return ApiResponse.error(res, 
-            "Too Many Requests",
-            "You have exceeded the limit of allowed requests. Please try again later.", 
-            options.statusCode
+        return res.status(options.statusCode).json(
+            ApiResponse.error(
+                "Too Many Requests",
+                "You have exceeded the limit of allowed requests. Please try again later.",
+            )
         );
     }
 });
@@ -39,13 +41,15 @@ const authLimiter = rateLimit({
     validate: { trustProxy: false }, 
 
     handler: (req, res, next, options) => {
-        return ApiResponse.error(res, 
-            "Too Many Requests",
-            "You have exceeded the limit of allowed requests. Please try again later.", 
-            options.statusCode
+        return res.status(options.statusCode).json(
+            ApiResponse.error(
+                "Too Many Requests",
+                "You have exceeded the limit of allowed requests. Please try again later.",
+            )
         );
     }
 });
+
 
 
 const app = express();
@@ -58,8 +62,9 @@ app.use(globalLimiter);
 app.use("/auth/register", authLimiter);
 
 
-app.use("/docs/api", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-app.use("/", routes);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+RegisterRoutes(app);
+
 
 app.use(notFoundHandler);
 app.use(errorHandler);

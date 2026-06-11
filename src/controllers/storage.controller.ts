@@ -1,84 +1,71 @@
-import type { NextFunction, Request, Response } from "express";
-import { ApiResponse } from "../utils/apiResponse.js";
+import type { Request as ExpressRequest } from "express";
+import { Body, Controller, Get, Post, Request, Route, Security, Tags } from "tsoa";
+import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
 import { buyStorageForPlayer, BuyStorageResult } from "../services/storage.service.js";
 
 
-export const getStorageList = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        return ApiResponse.success(res,
-            "Storage list retrieved",
+
+interface BuyStorageBody {
+    id: string;
+}
+
+@Route("storage")
+@Tags("Storage")
+export class StorageController extends Controller {
+    @Get("list")
+    @Security("bearerAuth")
+    public async getStorageList(): Promise<ApiResponseFormat> {
+        return ApiResponse.success("Storage list retrieved",
             gameData.storages
         );
-
-    } catch (error) {
-        next(error);
     }
-};
-
-
-export const buyStorage = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { id } = req.body;
+    
+    
+    @Post("buy")
+    @Security("bearerAuth")
+    public async buyStorage(@Request() req: ExpressRequest, @Body() body: BuyStorageBody): Promise<ApiResponseFormat> {
+        const { id } = body;
+        const user = (req as any).user;
 
         if (!id) {
-            return ApiResponse.error(res, 
-                "Information missing",
-                "Storage ID is required", 
-                400
-            );
+            this.setStatus(400);
+            return ApiResponse.error("Information missing", "Storage ID is required");
         }
 
-        const result = await buyStorageForPlayer(req.user.id, id);
 
+        const result = await buyStorageForPlayer(user.id, id);
         if (!result) {
-            return ApiResponse.error(res,
-                "Unknown error",
-                "An unknown error occurred while processing the purchase",
-                500
-            );
+            this.setStatus(500);
+            return ApiResponse.error("Unknown error", "An unknown error occurred while processing the purchase");
         }
+
 
         switch (result.result) {
             case BuyStorageResult.PlayerNotFound:
-                return ApiResponse.failure(res,
-                    "Not Found",
-                    "Player not found",
-                );
+                this.setStatus(404);
+                return ApiResponse.failure("Not Found", "Player not found");
 
             case BuyStorageResult.NotEnoughMoney:
-                return ApiResponse.failure(res,
-                    "Not enough money",
-                    "Insufficient funds to purchase this storage",
-                );
+                this.setStatus(400);
+                return ApiResponse.failure("Not enough money", "Insufficient funds to purchase this storage");
 
             case BuyStorageResult.StorageNotFound:
-                return ApiResponse.failure(res,
-                    "Not Found",
-                    "Storage not found",
-                );
+                this.setStatus(404);
+                return ApiResponse.failure("Not Found", "Storage not found");
 
             case BuyStorageResult.Success:
-                return ApiResponse.success(res,
-                    "Storage purchased",
-                    {
-                        name: result.name,
-                        playerMoney: result.playerMoney,
-                        amount: result.amount,
-                        storageCapacity: result.storageCapacity,
-                        cost: result.cost
-                    }
-                );
+                return ApiResponse.success("Storage purchased", {
+                    name: result.name,
+                    playerMoney: result.playerMoney,
+                    amount: result.amount,
+                    storageCapacity: result.storageCapacity,
+                    cost: result.cost
+                });
 
             default:
-                return ApiResponse.error(res,
-                    "Unknown error",
-                    "An unknown error occurred while processing the purchase",
-                    500
-                );        
+                this.setStatus(500);
+                return ApiResponse.error("Unknown error", "An unknown error occurred while processing the purchase");
         }
-
-    } catch (error) {
-        next(error);
     }
-};
+}
