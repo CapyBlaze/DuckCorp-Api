@@ -64,30 +64,6 @@ model PlayerAchievement {
   @@id([achievementId, playerId])
 }
 
-// 💰 MARKET SYSTEM
-// model MarketSnapshot {
-//   id     String @id @default(cuid())
-//   price  Float
-//   demand Float
-//   supply Float
-
-//   createdAt DateTime @default(now())
-// }
-
-// model TradeHistory {
-//   id String @id @default(cuid())
-
-//   playerId String
-//   type     String
-//   amount   BigInt
-//   price    Float
-//   total    Float
-
-//   createdAt DateTime @default(now())
-
-//   player Player @relation(fields: [playerId], references: [id])
-// }
-
 // 📦 CONTRACTS (MISSIONS)
 // model Contract {
 //   id          String @id @default(cuid())

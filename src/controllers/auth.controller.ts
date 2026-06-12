@@ -12,6 +12,7 @@ interface RegisterBody {
 @Route("auth")
 @Tags("Auth")
 export class AuthController extends Controller {
+    /** Register a new user */
     @Post("register")
     @SuccessResponse(201, "User registered")
     public async register(@Body() body: RegisterBody): Promise<ApiResponseFormat> {
@@ -36,64 +37,51 @@ export class AuthController extends Controller {
     }
 
 
+    /** Get the profile of the authenticated user */
     @Get("profile")
     @Security("bearerAuth")
     public async getProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
-        return {
-            success: true,
-            message: "User data retrieved",
-            data: {
-                id: user.id,
-                name: user.name,
-                lastActive: user.lastActive,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
-            },
-            timestamp: new Date().toISOString(),
-        };
+        return ApiResponse.success("User data retrieved", {
+            id: user.id,
+            name: user.name,
+            lastActive: user.lastActive,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        });
     }
 
 
+    /** Get a player's profile by ID (public endpoint) */
     @Get("player/{id}")
     public async getPlayer(@Path() id: string): Promise<ApiResponseFormat> {
         const user = await getUserById(id);
 
         if (!user) {
             this.setStatus(404);
-            return {
-                success: false,
-                error: "Player not found",
-                message: "No player exists with the provided ID",
-                timestamp: new Date().toISOString(),
-            };
+            return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
 
-        return {
-            success: true,
-            message: "Player data retrieved",
-            data: {
-                id: user.id,
-                name: user.name,
-                lastActive: user.lastActive,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
-            },
-            timestamp: new Date().toISOString(),
-        };
+        return ApiResponse.success("Player data retrieved", {
+            id: user.id,
+            name: user.name,
+            lastActive: user.lastActive,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        });
     }
 
 
+    /** Delete the profile of the authenticated user */
     @Delete("profile")
     @Security("bearerAuth")
     public async deleteProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
         await deleteUserById(user.id);
-        return {
-            success: true,
-            message: "User profile deleted",
-            data: { id: user.id, name: user.name },
-            timestamp: new Date().toISOString(),
-        };
+
+        return ApiResponse.success("User profile deleted", { 
+            id: user.id, 
+            name: user.name 
+        });
     }
 }

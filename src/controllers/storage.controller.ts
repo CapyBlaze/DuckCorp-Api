@@ -13,6 +13,7 @@ interface BuyStorageBody {
 @Route("storage")
 @Tags("Storage")
 export class StorageController extends Controller {
+    /**  Get list of available storages */
     @Get("list")
     @Security("bearerAuth")
     public async getStorageList(): Promise<ApiResponseFormat> {
@@ -22,6 +23,7 @@ export class StorageController extends Controller {
     }
     
     
+    /** Buy a storage unit */
     @Post("buy")
     @Security("bearerAuth")
     public async buyStorage(@Request() req: ExpressRequest, @Body() body: BuyStorageBody): Promise<ApiResponseFormat> {

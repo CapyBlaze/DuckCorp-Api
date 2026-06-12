@@ -13,6 +13,7 @@ interface BuyBuildingBody {
 @Route("building")
 @Tags("Building")
 export class BuildingController extends Controller {
+    /** Get the list of available buildings that can be purchased */
     @Get("list")
     @Security("bearerAuth")
     public async getBuildingList(): Promise<ApiResponseFormat> {
@@ -20,6 +21,7 @@ export class BuildingController extends Controller {
     }
 
 
+    /** Purchase a building for the authenticated player */
     @Post("buy")
     @Security("bearerAuth")
     public async buyBuilding(@Request() req: ExpressRequest, @Body() body: BuyBuildingBody): Promise<ApiResponseFormat> {

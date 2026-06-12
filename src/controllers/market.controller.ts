@@ -1,5 +1,5 @@
 import type { Request as ExpressRequest } from "express";
-import { Controller, Get, Request, Route, Security, Tags } from "tsoa";
+import { Controller, Get, Post, Request, Route, Security, Tags } from "tsoa";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { getDuckPrice, getPriceHistory, sellDucksForPlayer } from "../services/market.service.js";
 
@@ -8,24 +8,27 @@ import { getDuckPrice, getPriceHistory, sellDucksForPlayer } from "../services/m
 @Route("market")
 @Tags("Market")
 export class MarketController extends Controller {
-    @Get("")
-    @Security("bearerAuth")
-    public async sellDucks(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
-        const result = await sellDucksForPlayer(user.id);
-
-        return ApiResponse.success("Ducks sold successfully", result);
-    }
-
-
-    @Get("sell")
+    /** Get the current price of ducks in the market */
+    @Get("price")
     @Security("bearerAuth")
     public async getMarketPrice(): Promise<ApiResponseFormat> {
         const price = getDuckPrice();
         return ApiResponse.success("Current duck price retrieved", { price });
     }
+    
 
+    /** Sell all ducks for the authenticated player and return the total amount earned */
+    @Post("sell")
+    @Security("bearerAuth")
+    public async sellDucks(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
+        const user = (req as any).user;
+        const result = await sellDucksForPlayer(user.id);
+        
+        return ApiResponse.success("Ducks sold successfully", result);
+    }
+    
 
+    /** Get the history of the last 100 duck prices on the market */
     @Get("history")
     @Security("bearerAuth")
     public async priceHistoryChart(): Promise<ApiResponseFormat> {

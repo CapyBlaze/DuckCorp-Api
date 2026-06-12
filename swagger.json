@@ -43,6 +43,18 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SortType": {
+				"description": "Sort types for the leaderboard",
+				"enum": [
+					"byDucks",
+					"byMoney",
+					"byProduction",
+					"byStorage",
+					"byNbBuildings",
+					"byNbStorage"
+				],
+				"type": "string"
+			},
 			"BuyBuildingBody": {
 				"properties": {
 					"id": {
@@ -68,16 +80,25 @@
 				"additionalProperties": false
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
 	},
 	"info": {
-		"title": "duckcorp-api",
+		"title": "DuckCorp API",
 		"version": "1.0.0",
 		"description": "The world's leading rubber duck manufacturer.",
 		"license": {
-			"name": "ISC"
+			"name": "MIT"
 		},
-		"contact": {}
+		"contact": {
+			"name": "CapyBlaze",
+			"email": "capyblaze@gmail.com"
+		}
 	},
 	"paths": {
 		"/system/health": {
@@ -95,6 +116,7 @@
 						}
 					}
 				},
+				"description": "Check system status",
 				"tags": [
 					"System"
 				],
@@ -117,6 +139,7 @@
 						}
 					}
 				},
+				"description": "Get API version",
 				"tags": [
 					"System"
 				],
@@ -139,6 +162,7 @@
 						}
 					}
 				},
+				"description": "Get list of available storages",
 				"tags": [
 					"Storage"
 				],
@@ -165,6 +189,7 @@
 						}
 					}
 				},
+				"description": "Buy a storage unit",
 				"tags": [
 					"Storage"
 				],
@@ -201,6 +226,7 @@
 						}
 					}
 				},
+				"description": "Get player data",
 				"tags": [
 					"Player"
 				],
@@ -213,7 +239,7 @@
 			}
 		},
 		"/player/sync": {
-			"get": {
+			"post": {
 				"operationId": "GetPlayerSync",
 				"responses": {
 					"200": {
@@ -227,6 +253,7 @@
 						}
 					}
 				},
+				"description": "Synchronize player data (process offline production)",
 				"tags": [
 					"Player"
 				],
@@ -238,9 +265,9 @@
 				"parameters": []
 			}
 		},
-		"/market": {
+		"/player/buildings": {
 			"get": {
-				"operationId": "SellDucks",
+				"operationId": "GetPlayerBuildings",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -253,8 +280,9 @@
 						}
 					}
 				},
+				"description": "Get player buildings",
 				"tags": [
-					"Market"
+					"Player"
 				],
 				"security": [
 					{
@@ -264,7 +292,34 @@
 				"parameters": []
 			}
 		},
-		"/market/sell": {
+		"/player/storages": {
+			"get": {
+				"operationId": "GetPlayerStorages",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get player storages",
+				"tags": [
+					"Player"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/market/price": {
 			"get": {
 				"operationId": "GetMarketPrice",
 				"responses": {
@@ -279,6 +334,34 @@
 						}
 					}
 				},
+				"description": "Get the current price of ducks in the market",
+				"tags": [
+					"Market"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/market/sell": {
+			"post": {
+				"operationId": "SellDucks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"description": "Sell all ducks for the authenticated player and return the total amount earned",
 				"tags": [
 					"Market"
 				],
@@ -305,6 +388,7 @@
 						}
 					}
 				},
+				"description": "Get the history of the last 100 duck prices on the market",
 				"tags": [
 					"Market"
 				],
@@ -316,9 +400,9 @@
 				"parameters": []
 			}
 		},
-		"/leaderboard/byDucks": {
+		"/leaderboard": {
 			"get": {
-				"operationId": "ByDucks",
+				"operationId": "GetLeaderboard",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -331,6 +415,67 @@
 						}
 					}
 				},
+				"description": "Get the leaderboard sorted by the specified criteria",
+				"tags": [
+					"Leaderboard"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "The criteria to sort the leaderboard by (default: byDucks)",
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/SortType"
+						}
+					},
+					{
+						"description": "The page number for pagination (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"description": "The number of players to return per page (default: 10)",
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1,
+							"maximum": 20
+						}
+					}
+				]
+			}
+		},
+		"/leaderboard/me": {
+			"get": {
+				"operationId": "GetMyLeaderboard",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the authenticated player's current rank in the leaderboard",
 				"tags": [
 					"Leaderboard"
 				],
@@ -342,9 +487,9 @@
 				"parameters": []
 			}
 		},
-		"/leaderboard/byMoney": {
+		"/game/config": {
 			"get": {
-				"operationId": "ByMoney",
+				"operationId": "GetConfig",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -357,118 +502,11 @@
 						}
 					}
 				},
+				"description": "Get the game configuration",
 				"tags": [
-					"Leaderboard"
+					"Game"
 				],
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/leaderboard/byProduction": {
-			"get": {
-				"operationId": "ByProduction",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponseFormat"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Leaderboard"
-				],
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/leaderboard/byStorage": {
-			"get": {
-				"operationId": "ByStorage",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponseFormat"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Leaderboard"
-				],
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/leaderboard/byNbBuildings": {
-			"get": {
-				"operationId": "ByNbBuildings",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponseFormat"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Leaderboard"
-				],
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/leaderboard/byNbStorage": {
-			"get": {
-				"operationId": "ByNbStorage",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponseFormat"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Leaderboard"
-				],
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				],
+				"security": [],
 				"parameters": []
 			}
 		},
@@ -487,6 +525,7 @@
 						}
 					}
 				},
+				"description": "Get the list of available buildings that can be purchased",
 				"tags": [
 					"Building"
 				],
@@ -513,6 +552,7 @@
 						}
 					}
 				},
+				"description": "Purchase a building for the authenticated player",
 				"tags": [
 					"Building"
 				],
@@ -549,6 +589,7 @@
 						}
 					}
 				},
+				"description": "Register a new user",
 				"tags": [
 					"Auth"
 				],
@@ -581,6 +622,7 @@
 						}
 					}
 				},
+				"description": "Get the profile of the authenticated user",
 				"tags": [
 					"Auth"
 				],
@@ -605,6 +647,7 @@
 						}
 					}
 				},
+				"description": "Delete the profile of the authenticated user",
 				"tags": [
 					"Auth"
 				],
@@ -631,6 +674,7 @@
 						}
 					}
 				},
+				"description": "Get a player's profile by ID (public endpoint)",
 				"tags": [
 					"Auth"
 				],

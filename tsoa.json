@@ -4,7 +4,22 @@
     "controllerPathGlobs": ["src/controllers/**/*.controller.ts"],
     "spec": {
         "outputDirectory": ".",
-        "specVersion": 3
+        "specVersion": 3,
+        "name": "DuckCorp API",
+        "title": "DuckCorp API",
+        "description": "The world's leading rubber duck manufacturer.",
+        "version": "1.0.0",
+        "contact": {
+            "name": "CapyBlaze",
+            "email": "capyblaze@gmail.com"
+        },
+        "securityDefinitions": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
     },
     "routes": {
         "routesDir": "src/generated",

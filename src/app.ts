@@ -62,7 +62,7 @@ app.use(globalLimiter);
 app.use("/auth/register", authLimiter);
 
 
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 RegisterRoutes(app);
 
 

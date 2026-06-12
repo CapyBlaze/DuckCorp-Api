@@ -1,4 +1,5 @@
 import type { ErrorRequestHandler } from "express";
+import { ValidateError } from "tsoa";
 import { ApiResponse } from "../utils/apiResponse.js";
 import pc from 'picocolors';
 
@@ -22,6 +23,20 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
             ApiResponse.error(
                 "Bad Request", 
                 "The request body is unreadable or empty.", 
+            )
+        );
+    }
+
+    if (err instanceof ValidateError) {
+        const errorKeys = Object.keys(err.fields);
+    
+        const firstKey = errorKeys[0];
+        const cleanMessage = firstKey ? err.fields[firstKey]?.message : "Invalid parameter";
+
+        return res.status(400).json(
+            ApiResponse.error(
+                "Validation Error",
+                cleanMessage || "One or more parameters failed validation.",
             )
         );
     }
