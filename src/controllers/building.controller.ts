@@ -15,7 +15,7 @@ interface BuyBuildingBody {
 export class BuildingController extends Controller {
     /** Get the list of available buildings that can be purchased */
     @Get("list")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getBuildingList(): Promise<ApiResponseFormat> {
         return ApiResponse.success("Building list retrieved", gameData.buildings);
     }
@@ -23,7 +23,7 @@ export class BuildingController extends Controller {
 
     /** Purchase a building for the authenticated player */
     @Post("buy")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async buyBuilding(@Request() req: ExpressRequest, @Body() body: BuyBuildingBody): Promise<ApiResponseFormat> {
         const { id } = body;
         const user = (req as any).user;

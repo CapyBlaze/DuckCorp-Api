@@ -1,4 +1,4 @@
-import { loadJson } from "../utils/loadJson.js";
+import { loadJsonData } from "../utils/loadJson.js";
 
 
 export interface Translation {
@@ -62,17 +62,10 @@ class GameData {
     storages: StorageItem[];
 
     constructor() {
-        this.achievements = { production: [], buildings: [], wealth: [] };
-        this.buildings = [];
-        this.storages = [];
-    }
-
-    load() {
-        this.achievements = loadJson("achievements.json");
-        this.buildings = loadJson("buildings.json");
-        this.storages = loadJson("storages.json");
+        this.achievements = loadJsonData("achievements.json");
+        this.buildings = loadJsonData("buildings.json");
+        this.storages = loadJsonData("storages.json");
     }
 }
 
 export const gameData = new GameData();
-gameData.load();

@@ -4,8 +4,33 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import pc from 'picocolors';
 
 
+
+export class HttpError extends Error {
+    constructor(
+        public status: number,
+        name: string,
+        message: string,
+    ) {
+        super(message);
+
+        this.name = name;
+    }
+}
+
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+    if (err instanceof HttpError) {
+        return res.status(err.status).json(
+            ApiResponse.error(
+                err.name || "Http Error",
+                err.message
+            )
+        );
+    }
+
+    
+    const date = new Date().toISOString();
     console.error(
+        `${pc.gray(`[${date}]`)} ` +
         `${pc.red(pc.bold('Encountered error:'))} ${pc.white(err.message)}`
     );
 

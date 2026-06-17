@@ -1,17 +1,21 @@
+import { gameConfig } from "../config/GameConfig.js";
 import { prisma } from "../prisma.js";
 import { processOfflineProduction } from "./duck.service.js";
+import { addTotalDucksSold, addTotalMoneyGenerated } from "./world.service.js";
 
 
 export function getDuckPrice(time: number = Date.now()) {
-    const t = Math.floor(time / 5000);
+    const t = Math.floor(time / gameConfig.config.marketUpdateIntervalMs);
 
-    const base = 10;
+    const minPrice = gameConfig.config.duckPriceFluctuation.min;
+    const maxPrice = gameConfig.config.duckPriceFluctuation.max;
+    const base = (minPrice + maxPrice) / 2; 
 
     const trend = Math.sin(t * 0.7) * 6;
     const noise = Math.sin(t * 3.1) * 2;
 
     let price = base + trend + noise;
-    price = +Math.max(1, Math.min(25, price)).toFixed(3);
+    price = +Math.max(minPrice, Math.min(maxPrice, price)).toFixed(3);
 
     return price;
 }
@@ -54,6 +58,9 @@ export async function sellDucksForPlayer(playerId: string) {
         }
     });
 
+    await addTotalDucksSold(player.ducks);
+    await addTotalMoneyGenerated(earnings);
+
     return {
         ducksSold: player.ducks,
         duckPrice: duckPrice,
@@ -65,7 +72,7 @@ export function getPriceHistory() {
     let historicalPrices: number[] = [];
     const t = Date.now();
 
-    for (let time = t - (5000 * 100); time < t; time += 5000) {
+    for (let time = t - (gameConfig.config.marketUpdateIntervalMs * 100); time < t; time += gameConfig.config.marketUpdateIntervalMs) {
         let price = getDuckPrice(time);
         historicalPrices.push(price);
     }

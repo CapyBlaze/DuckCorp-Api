@@ -14,10 +14,13 @@
             "email": "capyblaze@gmail.com"
         },
         "securityDefinitions": {
-            "bearerAuth": {
+            "playerAuth": {
                 "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
+                "scheme": "bearer"
+            },
+            "adminAuth": {
+                "type": "http",
+                "scheme": "bearer"
             }
         }
     },

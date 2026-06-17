@@ -12,8 +12,8 @@ model Player {
   token  String  @unique
   active Boolean @default(true)
 
-  ducks    Float    @default(0)
-  money    Float    @default(150.0)
+  ducks    Float
+  money    Float
   lastSync DateTime @default(now())
 
   lastActive DateTime @default(now())
@@ -95,13 +95,19 @@ model PlayerAchievement {
 //   contract Contract @relation(fields: [contractId], references: [id])
 // }
 
-// 🌍 WORLD STATE (GLOBAL SYSTEM)
-// model WorldState {
-//   id String @id @default(cuid())
+model WorldState {
+  id Int @id @default(1)
 
-//   totalDucks   BigInt @default(0)
-//   marketPrice  Float  @default(1.0)
-//   totalPlayers Int    @default(0)
+  totalDucksProduced  BigInt @default(0)
+  totalDucksSold      BigInt @default(0)
+  totalMoneyGenerated BigInt @default(0)
 
-//   lastUpdate DateTime @updatedAt
-// }
+  createdAt  DateTime @default(now())
+  lastUpdate DateTime @updatedAt
+}
+
+model IpBan {
+  id        String   @id @default(cuid())
+  ipAddress String   @unique
+  bannedAt  DateTime @default(now())
+}

@@ -1,6 +1,8 @@
+import { gameConfig } from "../config/GameConfig.js";
 import { prisma } from "../prisma.js";
 import { getProductionPerMinute } from "./building.service.js";
 import { getMaxStorageCapacity } from "./storage.service.js";
+import { addTotalDucksProduced } from "./world.service.js";
 
 
 export async function processOfflineProduction(playerId: string) {
@@ -17,7 +19,7 @@ export async function processOfflineProduction(playerId: string) {
         return -1;
     }
     
-    const minutesOffline = (now - player.lastSync.getTime()) / 60000;
+    const minutesOffline = Math.min((now - player.lastSync.getTime()) / 60000, gameConfig.config.maxOfflineHours * 60);
     const productionPerMinute = await getProductionPerMinute(playerId);
     const maxStorageCapacity = await getMaxStorageCapacity(playerId);
 
@@ -31,6 +33,8 @@ export async function processOfflineProduction(playerId: string) {
             lastSync: new Date()
         }
     });
+
+    await addTotalDucksProduced(totalProduction);
 
     return Math.floor(newDucks);
 }

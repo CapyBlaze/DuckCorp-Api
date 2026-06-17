@@ -10,7 +10,7 @@ import { getDuckPrice, getPriceHistory, sellDucksForPlayer } from "../services/m
 export class MarketController extends Controller {
     /** Get the current price of ducks in the market */
     @Get("price")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getMarketPrice(): Promise<ApiResponseFormat> {
         const price = getDuckPrice();
         return ApiResponse.success("Current duck price retrieved", { price });
@@ -19,7 +19,7 @@ export class MarketController extends Controller {
 
     /** Sell all ducks for the authenticated player and return the total amount earned */
     @Post("sell")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async sellDucks(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
         const result = await sellDucksForPlayer(user.id);
@@ -30,7 +30,7 @@ export class MarketController extends Controller {
 
     /** Get the history of the last 100 duck prices on the market */
     @Get("history")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async priceHistoryChart(): Promise<ApiResponseFormat> {
         const priceHistory = getPriceHistory();
         return ApiResponse.success("Price history retrieved", { priceHistory });

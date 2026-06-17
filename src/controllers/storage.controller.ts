@@ -15,7 +15,7 @@ interface BuyStorageBody {
 export class StorageController extends Controller {
     /**  Get list of available storages */
     @Get("list")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getStorageList(): Promise<ApiResponseFormat> {
         return ApiResponse.success("Storage list retrieved",
             gameData.storages
@@ -25,7 +25,7 @@ export class StorageController extends Controller {
     
     /** Buy a storage unit */
     @Post("buy")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async buyStorage(@Request() req: ExpressRequest, @Body() body: BuyStorageBody): Promise<ApiResponseFormat> {
         const { id } = body;
         const user = (req as any).user;

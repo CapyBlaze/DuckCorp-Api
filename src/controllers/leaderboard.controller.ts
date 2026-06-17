@@ -39,7 +39,7 @@ export class LeaderboardController extends Controller {
      * @maximum pageSize 20
      */
     @Get("")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getLeaderboard(
         @Query() sort?: SortType,
         @Query() page?: number,
@@ -90,7 +90,7 @@ export class LeaderboardController extends Controller {
 
     /** Get the authenticated player's current rank in the leaderboard */
     @Get("me")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getMyLeaderboard(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
 

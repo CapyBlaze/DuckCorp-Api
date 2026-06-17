@@ -39,7 +39,7 @@ export class AuthController extends Controller {
 
     /** Get the profile of the authenticated user */
     @Get("profile")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
         return ApiResponse.success("User data retrieved", {
@@ -74,7 +74,7 @@ export class AuthController extends Controller {
 
     /** Delete the profile of the authenticated user */
     @Delete("profile")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async deleteProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
         await deleteUserById(user.id);

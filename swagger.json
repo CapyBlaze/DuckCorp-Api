@@ -78,13 +78,170 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"RegisterAdminBody": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"username",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ConfigUpdateBody": {
+				"properties": {
+					"startingValues": {
+						"properties": {
+							"money": {
+								"type": "number",
+								"format": "double"
+							},
+							"ducks": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"money",
+							"ducks"
+						],
+						"type": "object"
+					},
+					"maxOfflineHours": {
+						"type": "number",
+						"format": "double"
+					},
+					"marketUpdateIntervalMs": {
+						"type": "number",
+						"format": "double"
+					},
+					"duckPriceFluctuation": {
+						"properties": {
+							"max": {
+								"type": "number",
+								"format": "double"
+							},
+							"min": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"max",
+							"min"
+						],
+						"type": "object"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetPlayerMoneyBody": {
+				"properties": {
+					"money": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"money"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetPlayerDucksBody": {
+				"properties": {
+					"ducks": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"ducks"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddPlayerMoneyBody": {
+				"properties": {
+					"money": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"money"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddPlayerDucksBody": {
+				"properties": {
+					"ducks": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"ducks"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RemovePlayerMoneyBody": {
+				"properties": {
+					"money": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"money"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RemovePlayerDucksBody": {
+				"properties": {
+					"ducks": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"ducks"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IPBanBody": {
+				"properties": {
+					"ipAddress": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ipAddress"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
-			"bearerAuth": {
+			"playerAuth": {
 				"type": "http",
-				"scheme": "bearer",
-				"bearerFormat": "JWT"
+				"scheme": "bearer"
+			},
+			"adminAuth": {
+				"type": "http",
+				"scheme": "bearer"
 			}
 		}
 	},
@@ -168,7 +325,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -195,7 +352,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": [],
@@ -232,7 +389,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -259,7 +416,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -286,7 +443,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -313,7 +470,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -340,7 +497,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -367,7 +524,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -394,7 +551,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -421,7 +578,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": [
@@ -481,7 +638,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -506,7 +663,11 @@
 				"tags": [
 					"Game"
 				],
-				"security": [],
+				"security": [
+					{
+						"playerAuth": []
+					}
+				],
 				"parameters": []
 			}
 		},
@@ -531,7 +692,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -558,7 +719,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": [],
@@ -628,7 +789,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -653,7 +814,7 @@
 				],
 				"security": [
 					{
-						"bearerAuth": []
+						"playerAuth": []
 					}
 				],
 				"parameters": []
@@ -689,6 +850,620 @@
 						}
 					}
 				]
+			}
+		},
+		"/admin/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisterAdminBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/config": {
+			"get": {
+				"operationId": "GetConfig",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "UpdateConfig",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ConfigUpdateBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/players": {
+			"get": {
+				"operationId": "GetPlayers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"description": "-",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "The page number for pagination (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"description": "The number of players to return per page (default: 10)",
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1,
+							"maximum": 500
+						}
+					}
+				]
+			}
+		},
+		"/admin/players/{id}": {
+			"get": {
+				"operationId": "GetPlayerById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeletePlayer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/players/{id}/reset": {
+			"post": {
+				"operationId": "ResetPlayer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/players/{id}/money": {
+			"post": {
+				"operationId": "SetPlayerMoney",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SetPlayerMoneyBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/players/{id}/ducks": {
+			"post": {
+				"operationId": "SetPlayerDucks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SetPlayerDucksBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/players/{id}/add-money": {
+			"post": {
+				"operationId": "AddPlayerMoney",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddPlayerMoneyBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/players/{id}/add-ducks": {
+			"post": {
+				"operationId": "AddPlayerDucks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddPlayerDucksBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/players/{id}/remove-money": {
+			"post": {
+				"operationId": "RemovePlayerMoney",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RemovePlayerMoneyBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/players/{id}/remove-ducks": {
+			"post": {
+				"operationId": "RemovePlayerDucks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RemovePlayerDucksBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/ip/ban": {
+			"post": {
+				"operationId": "BanIP",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IPBanBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/ip/unban": {
+			"post": {
+				"operationId": "UnbanIP",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IPBanBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/stats": {
+			"get": {
+				"operationId": "GetStats",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"adminAuth": []
+					}
+				],
+				"parameters": []
 			}
 		}
 	},

@@ -2,30 +2,41 @@
   "todotree": {
     "tree": [
       {
-        "key": 1781284611664,
-        "children": [],
-        "todo": {
-          "content": "Ajouter les different type de reponse a chaque route",
-          "id": 1781284611664,
-          "level": "default",
-          "done": false,
-          "start": 1781284611664
-        }
-      },
-      {
-        "key": 1781284667528,
-        "children": [],
-        "todo": {
-          "content": "Ajouter de vrai exemple de résultat de route",
-          "id": 1781284667528,
-          "level": "default",
-          "done": false,
-          "start": 1781284667529
-        }
-      },
-      {
         "key": 1781284681303,
         "children": [
+          {
+            "key": 1781683666545,
+            "children": [],
+            "todo": {
+              "content": "Finir description de toute les routes",
+              "id": 1781683666545,
+              "level": "default",
+              "done": false,
+              "start": 1781683666545
+            }
+          },
+          {
+            "key": 1781284611664,
+            "children": [],
+            "todo": {
+              "content": "Ajouter les different type de reponse a chaque route",
+              "id": 1781284611664,
+              "level": "default",
+              "done": false,
+              "start": 1781284611664
+            }
+          },
+          {
+            "key": 1781284667528,
+            "children": [],
+            "todo": {
+              "content": "Ajouter de vrai exemple de résultat de route",
+              "id": 1781284667528,
+              "level": "default",
+              "done": false,
+              "start": 1781284667529
+            }
+          },
           {
             "key": 1781284700313,
             "children": [],
@@ -55,28 +66,6 @@
           "level": "default",
           "done": false,
           "start": 1781284681303
-        }
-      },
-      {
-        "key": 1781284715072,
-        "children": [],
-        "todo": {
-          "content": "Autimisation de l'api",
-          "id": 1781284715072,
-          "level": "default",
-          "done": false,
-          "start": 1781284715072
-        }
-      },
-      {
-        "key": 1781286024816,
-        "children": [],
-        "todo": {
-          "content": "Relier le game config au vrai info du jeu",
-          "id": 1781286024816,
-          "level": "default",
-          "done": false,
-          "start": 1781286024816
         }
       },
       {
@@ -111,8 +100,23 @@
               "content": "WorldState",
               "id": 1781286273760,
               "level": "default",
-              "done": false,
-              "start": 1781286273760
+              "done": true,
+              "start": 1781286273760,
+              "focus": false,
+              "end": 1781683656034
+            }
+          },
+          {
+            "key": 1781289427535,
+            "children": [],
+            "todo": {
+              "content": "Admin",
+              "id": 1781289427535,
+              "level": "default",
+              "done": true,
+              "start": 1781289427535,
+              "focus": false,
+              "end": 1781683650962
             }
           }
         ],
@@ -123,12 +127,75 @@
           "done": false,
           "start": 1781286176321
         }
+      },
+      {
+        "key": 1781296290219,
+        "children": [
+          {
+            "key": 1781286024816,
+            "children": [],
+            "todo": {
+              "content": "Relier le game config au vrai info du jeu",
+              "id": 1781286024816,
+              "level": "default",
+              "done": true,
+              "start": 1781286024816,
+              "focus": false,
+              "end": 1781289423775
+            }
+          },
+          {
+            "key": 1781284715072,
+            "children": [],
+            "todo": {
+              "content": "Optimisation de l'api",
+              "id": 1781284715072,
+              "level": "default",
+              "done": false,
+              "start": 1781284715072
+            }
+          },
+          {
+            "key": 1781296311858,
+            "children": [],
+            "todo": {
+              "content": "valider tout les entré par l'user",
+              "id": 1781296311858,
+              "level": "default",
+              "done": false,
+              "start": 1781296311858
+            }
+          },
+          {
+            "key": 1781296788163,
+            "children": [],
+            "todo": {
+              "content": "Middleware pour log tout l'admin",
+              "id": 1781296788163,
+              "level": "default",
+              "done": true,
+              "start": 1781296788163,
+              "focus": false,
+              "end": 1781683226177
+            }
+          }
+        ],
+        "todo": {
+          "content": "Code",
+          "id": 1781296290219,
+          "level": "default",
+          "done": false,
+          "start": 1781296290219
+        }
       }
     ],
     "expandKeys": [
       1781284681303,
       1781284700313,
-      1781286176321
+      1781286176321,
+      1781284611664,
+      1781296290219,
+      1781289427535
     ],
     "add_mode": "bottom",
     "virtual": false,
@@ -140,6 +207,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1781286275819"
+    "version": "1781683678096"
   }
 }

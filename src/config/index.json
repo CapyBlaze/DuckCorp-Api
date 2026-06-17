@@ -1,0 +1,12 @@
+{
+    "startingValues": {
+        "money": 150.0,
+        "ducks": 0.0
+    },
+    "maxOfflineHours": 24,
+    "marketUpdateIntervalMs": 30000,
+    "duckPriceFluctuation": {
+        "min": -5,
+        "max": 25
+    }
+}

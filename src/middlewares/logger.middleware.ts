@@ -22,6 +22,10 @@ export function loggerHandler(req: Request, res: Response, next: NextFunction) {
             statusColor = pc.yellow;
             statusStr = `NOT FOUND ${status}`;
 
+        } else if (status === 403) {
+            statusColor = pc.red;
+            statusStr = `FORBIDDEN ${status}`;
+        
         } else if (status === 429) {
             statusColor = pc.red;
             statusStr = `RATE LIMITED ${status}`;
@@ -37,8 +41,9 @@ export function loggerHandler(req: Request, res: Response, next: NextFunction) {
         console.log(
             `${pc.gray(`[${date}]`)} ` +
             `${statusColor(pc.bold(statusStr))} ` +
+            `${url.startsWith("/admin") ? pc.red(pc.bold('ADMIN ')) : ''}` +
             `${pc.cyan(method)} ` +
-            `${pc.blue(url)} - ` +
+            `${url.startsWith("/admin") ? pc.red(url) : pc.blue(url)} - ` +
             `IP: ${pc.magenta(ip as string)} - ` +
             `Agent: ${pc.dim(userAgent)} - ` +
             `${pc.yellow(`${durationInMs}ms`)}`

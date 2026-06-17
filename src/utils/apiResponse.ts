@@ -1,7 +1,7 @@
 export interface ApiResponseFormat<T = any> {
     success: boolean;
     message: string;
-    data?: T;
+    data?: T | undefined;
     error?: string;
     timestamp: string;
 }

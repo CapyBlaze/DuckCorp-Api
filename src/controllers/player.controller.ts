@@ -13,7 +13,7 @@ import { processOfflineProduction } from "../services/duck.service.js";
 export class PlayerController extends Controller {
     /** Get player data */
     @Get("")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getPlayer(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
         
@@ -45,7 +45,7 @@ export class PlayerController extends Controller {
 
     /** Synchronize player data (process offline production) */
     @Post("sync")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getPlayerSync(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
 
@@ -64,7 +64,7 @@ export class PlayerController extends Controller {
 
     /** Get player buildings */
     @Get("buildings")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getPlayerBuildings(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
         const buildings = await getPlayerBuildings(user.id);
@@ -77,7 +77,7 @@ export class PlayerController extends Controller {
 
     /** Get player storages */
     @Get("storages")
-    @Security("bearerAuth")
+    @Security("playerAuth")
     public async getPlayerStorages(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
         const storages = await getPlayerStorages(user.id);
