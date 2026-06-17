@@ -1465,6 +1465,32 @@
 				],
 				"parameters": []
 			}
+		},
+		"/achievement/list": {
+			"get": {
+				"operationId": "GetAchievements",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Achievement"
+				],
+				"security": [
+					{
+						"playerAuth": []
+					}
+				],
+				"parameters": []
+			}
 		}
 	},
 	"servers": [

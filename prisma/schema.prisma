@@ -16,6 +16,12 @@ model Player {
   money    Float
   lastSync DateTime @default(now())
 
+  totalDucksProduced BigInt @default(0)
+  totalDucksSold BigInt @default(0)
+  totalMoneyGenerated Float @default(0)
+  totalBuildings Int @default(0)
+  totalStorage Int @default(0)
+
   lastActive DateTime @default(now())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -63,37 +69,6 @@ model PlayerAchievement {
 
   @@id([achievementId, playerId])
 }
-
-// 📦 CONTRACTS (MISSIONS)
-// model Contract {
-//   id          String @id @default(cuid())
-//   title       String
-//   description String
-
-//   rewardMoney Float
-//   rewardRep   Float
-
-//   requirement String
-
-//   createdAt          DateTime           @default(now())
-//   contractProgresses ContractProgress[]
-// }
-
-// model ContractProgress {
-//   id String @id @default(cuid())
-
-//   playerId   String
-//   contractId String
-
-//   progress  Int     @default(0)
-//   completed Boolean @default(false)
-
-//   startedAt   DateTime  @default(now())
-//   completedAt DateTime?
-
-//   player   Player   @relation(fields: [playerId], references: [id])
-//   contract Contract @relation(fields: [contractId], references: [id])
-// }
 
 model WorldState {
   id Int @id @default(1)

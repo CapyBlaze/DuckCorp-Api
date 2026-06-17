@@ -3,6 +3,7 @@ import { Body, Controller, Get, Post, Request, Route, Security, Tags } from "tso
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
 import { buyStorageForPlayer, BuyStorageResult } from "../services/storage.service.js";
+import { checkAchievements } from "../services/achievement.service.js";
 
 
 
@@ -57,12 +58,15 @@ export class StorageController extends Controller {
                 return ApiResponse.failure("Not Found", "Storage not found");
 
             case BuyStorageResult.Success:
+                const achievements = await checkAchievements(user);
+
                 return ApiResponse.success("Storage purchased", {
                     name: result.name,
                     playerMoney: result.playerMoney,
                     amount: result.amount,
                     storageCapacity: result.storageCapacity,
-                    cost: result.cost
+                    cost: result.cost,
+                    achievementsUnlocked: achievements
                 });
 
             default:

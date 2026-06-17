@@ -30,7 +30,10 @@ export async function processOfflineProduction(playerId: string) {
         where: { id: playerId },
         data: { 
             ducks: newDucks,
-            lastSync: new Date()
+            lastSync: new Date(),
+            totalDucksProduced: {
+                increment: newDucks - player.ducks
+            }
         }
     });
 

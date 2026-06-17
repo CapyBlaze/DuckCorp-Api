@@ -78,19 +78,10 @@
               "content": "Achievements",
               "id": 1781286181760,
               "level": "default",
-              "done": false,
-              "start": 1781286181760
-            }
-          },
-          {
-            "key": 1781286188153,
-            "children": [],
-            "todo": {
-              "content": "Missions",
-              "id": 1781286188153,
-              "level": "default",
-              "done": false,
-              "start": 1781286188153
+              "done": true,
+              "start": 1781286181760,
+              "focus": false,
+              "end": 1781720394745
             }
           },
           {
@@ -124,8 +115,10 @@
           "content": "GamePlay",
           "id": 1781286176321,
           "level": "default",
-          "done": false,
-          "start": 1781286176321
+          "done": true,
+          "start": 1781286176321,
+          "focus": false,
+          "end": 1781720395976
         }
       },
       {
@@ -207,6 +200,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1781683678096"
+    "version": "1781720396003"
   }
 }

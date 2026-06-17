@@ -2,6 +2,7 @@ import type { Request as ExpressRequest } from "express";
 import { Controller, Get, Post, Request, Route, Security, Tags } from "tsoa";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { getDuckPrice, getPriceHistory, sellDucksForPlayer } from "../services/market.service.js";
+import { checkAchievements } from "../services/achievement.service.js";
 
 
 
@@ -23,8 +24,13 @@ export class MarketController extends Controller {
     public async sellDucks(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
         const result = await sellDucksForPlayer(user.id);
+
+        const achievements = await checkAchievements(user);
         
-        return ApiResponse.success("Ducks sold successfully", result);
+        return ApiResponse.success("Ducks sold successfully", { 
+            ...result, 
+            achievementsUnlocked: achievements 
+        });
     }
     
 

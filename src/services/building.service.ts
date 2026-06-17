@@ -49,6 +49,9 @@ export async function buyBuildingForPlayer(
             data: {
                 money: {
                     decrement: building.cost
+                },
+                totalBuildings: {
+                    increment: 1
                 }
             }
         });

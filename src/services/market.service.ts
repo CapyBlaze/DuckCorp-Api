@@ -54,7 +54,13 @@ export async function sellDucksForPlayer(playerId: string) {
         where: { id: playerId },
         data: {
             ducks: 0,
-            money: player.money + earnings
+            money: player.money + earnings,
+            totalDucksSold: {
+                increment: player.ducks
+            },
+            totalMoneyGenerated: {
+                increment: earnings
+            }
         }
     });
 

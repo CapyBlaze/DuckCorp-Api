@@ -48,6 +48,9 @@ export async function buyStorageForPlayer(
             data: {
                 money: {
                     decrement: storage.cost
+                },
+                totalStorage: {
+                    increment: 1
                 }
             }
         });

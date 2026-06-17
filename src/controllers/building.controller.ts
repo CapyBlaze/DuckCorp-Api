@@ -3,6 +3,7 @@ import { Body, Controller, Get, Post, Request, Route, Security, Tags } from "tso
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
 import { buyBuildingForPlayer, BuyBuildingResult } from "../services/building.service.js";
+import { checkAchievements } from "../services/achievement.service.js";
 
 
 
@@ -55,12 +56,15 @@ export class BuildingController extends Controller {
                 return ApiResponse.failure("Not Found", "Building not found");
 
             case BuyBuildingResult.Success:
+                const achievements = await checkAchievements(user);
+
                 return ApiResponse.success("Building purchased", {
                     name: result.name,
                     playerMoney: result.playerMoney,
                     amount: result.amount,
                     productionPerMinute: result.productionPerMinute,
-                    cost: result.cost
+                    cost: result.cost,
+                    achievementsUnlocked: achievements
                 });
 
             default:

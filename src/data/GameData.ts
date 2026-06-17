@@ -35,6 +35,7 @@ export interface StorageItem {
 
 export interface AchievementItem {
     id: string;
+    category: "production" | "buildings" | "wealth" | "?????";
     hidden: boolean;
     name: Translation;
     description: Translation;
@@ -48,16 +49,11 @@ export interface AchievementItem {
     };
 }
 
-export interface AchievementList {
-    production: AchievementItem[];
-    buildings: AchievementItem[];
-    wealth: AchievementItem[];
-}
 
 
 
 class GameData {
-    achievements: AchievementList;
+    achievements: AchievementItem[];
     buildings: BuildingItem[];
     storages: StorageItem[];
 

@@ -3,7 +3,7 @@ import {Controller, Get, Post, Request, Route, Security, Tags } from "tsoa";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { getProductionPerMinute, getPlayerBuildings } from "../services/building.service.js";
 import { getMaxStorageCapacity, getPlayerStorages } from "../services/storage.service.js";
-import { getPlayerAchievements } from "../services/achievement.service.js";
+import { checkAchievements, getPlayerAchievements } from "../services/achievement.service.js";
 import { processOfflineProduction } from "../services/duck.service.js";
 
 
@@ -28,6 +28,9 @@ export class PlayerController extends Controller {
             getProductionPerMinute(user.id),
             getMaxStorageCapacity(user.id),
         ]);
+
+        const achievementsUnlocked = await checkAchievements(user);
+
         
         return ApiResponse.success("Player data retrieved", {
             id: user.id,
@@ -38,7 +41,9 @@ export class PlayerController extends Controller {
 
             buildings: buildings,
             storages: storages,
-            achievements: achievements
+            achievements: achievements,
+
+            achievementsUnlocked: achievementsUnlocked,
         });
     }
 
@@ -52,12 +57,15 @@ export class PlayerController extends Controller {
         const ducksAfterSync = await processOfflineProduction(user.id);
         const productionPerMinute = await getProductionPerMinute(user.id);
         const maxStorageCapacity = await getMaxStorageCapacity(user.id);
+
+        const achievements = await checkAchievements(user);
         
         return ApiResponse.success("Player data synchronized", {
             ducks: ducksAfterSync === -1 ? user.ducks : ducksAfterSync,
             money: user.money,
             productionPerMinute: productionPerMinute,
             maxStorageCapacity: maxStorageCapacity,
+            achievementsUnlocked: achievements
         });
     }
 
