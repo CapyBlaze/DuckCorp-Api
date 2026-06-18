@@ -8,7 +8,7 @@
     "declaration": true,
     "declarationMap": true,
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "strict": true,
     "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
@@ -19,6 +19,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "outDir": "./dist",
   }
 }

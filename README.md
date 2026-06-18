@@ -20,45 +20,44 @@
 A multiplayer idle game API where players build a rubber duck empire, produce ducks and sell them on the market.
 Designed to run on a local network, making it perfect for a Raspberry Pi or a small home server.
 
-<div align="center">
-    <h3>
-        <a href="" target="_blank">
-        👉 Api Documentation 👈
-        </a>
-    </h3>
+<div>
+    <h4>
+        <b>📖 View API Documentation:</b> <a href="https://api.duckcorp.xyz/docs" target="_blank">https://api.duckcorp.xyz/docs</a>
+    </h4>
+    <h4>
+        <b>🌐 API Endpoint:</b> <code>https://api.duckcorp.xyz/</code>
+    </h4>
+    <br>
+    <details>
+        <summary>🗂️ Table of Contents</summary>
+        <ol>
+            <li>
+                <a href="#🔎-features">🔎 Features</a>
+            </li>
+            <li>
+                <a href="#❓-how-it-works">❓ How it works</a>
+            </li>
+            <li>
+                <a href="#🎮-how-to-play">🎮 How to play</a>
+            </li>
+            <li>
+                <a href="#🚀-getting-started">🚀 Getting Started</a>
+            </li>
+            <li>
+                <a href="#🛠️-architecture-and-tech-stack">🛠️ Architecture and Tech Stack</a>
+            </li>
+            <li>
+                <a href="#🤝-contributing">🤝 Contributing</a>
+            </li>
+            <li>
+                <a href="#📝-license">📝 License</a>
+            </li>
+            <li>
+                <a href="#👤-author">👤 Author</a>
+            </li>
+        </ol>
+    </details>
 </div>
-
-<br />
-
-<details>
-    <summary>🗂️ Table of Contents</summary>
-    <ol>
-        <li>
-            <a href="#🔎-features">🔎 Features</a>
-        </li>
-        <li>
-            <a href="#❓-how-it-works">❓ How it works</a>
-        </li>
-        <li>
-            <a href="#🎮-how-to-play">🎮 How to play</a>
-        </li>
-        <li>
-            <a href="#🚀-getting-started">🚀 Getting Started</a>
-        </li>
-        <li>
-            <a href="#🛠️-architecture-and-tech-stack">🛠️ Architecture and Tech Stack</a>
-        </li>
-        <li>
-            <a href="#🤝-contributing">🤝 Contributing</a>
-        </li>
-        <li>
-            <a href="#📝-license">📝 License</a>
-        </li>
-        <li>
-            <a href="#👤-author">👤 Author</a>
-        </li>
-    </ol>
-</details>
 
 ---
 
