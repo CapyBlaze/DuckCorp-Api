@@ -22,7 +22,7 @@ export class AuthController extends Controller {
         message: "User registered",
         data: {
             id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            token: "player_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+            token: "ba546530-96b6-4233-8552-7e1f4ce6c9d2",
             name: "DuckMaster",
             lastActive: "2026-06-17T18:30:00.000Z",
             createdAt: "2026-06-17T18:30:00.000Z",
