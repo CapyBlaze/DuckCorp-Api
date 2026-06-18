@@ -268,12 +268,21 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "System is healthy",
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
 								}
 							}
 						}
 					}
 				},
-				"description": "Check system status",
+				"description": "Check whether the API process is running and able to answer requests.",
 				"tags": [
 					"System"
 				],
@@ -291,12 +300,24 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "API version retrieved",
+											"data": {
+												"version": "1.0.0"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
 								}
 							}
 						}
 					}
 				},
-				"description": "Get API version",
+				"description": "Get the API version exposed by the running process.",
 				"tags": [
 					"System"
 				],
@@ -304,7 +325,7 @@
 				"parameters": []
 			}
 		},
-		"/storage/list": {
+		"/storage": {
 			"get": {
 				"operationId": "GetStorageList",
 				"responses": {
@@ -314,12 +335,42 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Storage list retrieved",
+											"data": [
+												{
+													"id": "cardboard_box",
+													"name": {
+														"en": "Cardboard Box",
+														"fr": "Boîte en Carton"
+													},
+													"cost": 50,
+													"storageCapacity": 10
+												}
+											],
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get list of available storages",
+				"description": "Get the catalog of storage units that increase the player's duck capacity.",
 				"tags": [
 					"Storage"
 				],
@@ -341,12 +392,72 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Storage purchased",
+											"data": {
+												"name": {
+													"en": "Cardboard Box",
+													"fr": "Boîte en Carton"
+												},
+												"playerMoney": 950,
+												"amount": 1,
+												"storageCapacity": 10,
+												"cost": 50,
+												"achievementsUnlocked": []
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not enough money",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Storage or player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Purchase error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Buy a storage unit",
+				"description": "Purchase one storage unit for the authenticated player and return the updated storage capacity.",
 				"tags": [
 					"Storage"
 				],
@@ -378,12 +489,62 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player data retrieved",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"ducks": 42,
+												"money": 900,
+												"productionPerMinute": 6,
+												"maxStorageCapacity": 10,
+												"buildings": [
+													{
+														"buildingId": "garage",
+														"name": {
+															"en": "Garage",
+															"fr": "Garage"
+														},
+														"amount": 1,
+														"productionPerMinute": 6
+													}
+												],
+												"storages": [
+													{
+														"storageId": "cardboard_box",
+														"name": {
+															"en": "Cardboard Box",
+															"fr": "Boîte en Carton"
+														},
+														"amount": 1,
+														"storageCapacity": 10
+													}
+												],
+												"achievements": [],
+												"achievementsUnlocked": []
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get player data",
+				"description": "Get the authenticated player's complete gameplay state after processing offline production.",
 				"tags": [
 					"Player"
 				],
@@ -405,12 +566,38 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player data synchronized",
+											"data": {
+												"ducks": 47.5,
+												"money": 900,
+												"productionPerMinute": 6,
+												"maxStorageCapacity": 10,
+												"achievementsUnlocked": []
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Synchronize player data (process offline production)",
+				"description": "Synchronize the authenticated player by applying offline duck production.",
 				"tags": [
 					"Player"
 				],
@@ -432,12 +619,44 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player buildings retrieved",
+											"data": {
+												"buildings": [
+													{
+														"buildingId": "garage",
+														"name": {
+															"en": "Garage",
+															"fr": "Garage"
+														},
+														"amount": 2,
+														"productionPerMinute": 12
+													}
+												]
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get player buildings",
+				"description": "Get the authenticated player's purchased buildings and their production values.",
 				"tags": [
 					"Player"
 				],
@@ -459,12 +678,44 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player storages retrieved",
+											"data": {
+												"storages": [
+													{
+														"storageId": "cardboard_box",
+														"name": {
+															"en": "Cardboard Box",
+															"fr": "Boîte en Carton"
+														},
+														"amount": 3,
+														"storageCapacity": 30
+													}
+												]
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get player storages",
+				"description": "Get the authenticated player's purchased storage units and capacity values.",
 				"tags": [
 					"Player"
 				],
@@ -486,12 +737,34 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Current duck price retrieved",
+											"data": {
+												"price": 12.347
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get the current price of ducks in the market",
+				"description": "Get the current market price used when selling ducks.",
 				"tags": [
 					"Market"
 				],
@@ -513,12 +786,45 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Ducks sold successfully",
+											"data": {
+												"ducksSold": 42,
+												"duckPrice": 12.347,
+												"earnings": 518.574,
+												"achievementsUnlocked": [
+													{
+														"id": "first_sale",
+														"name": {
+															"en": "First Sale",
+															"fr": "Première vente"
+														}
+													}
+												]
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Sell all ducks for the authenticated player and return the total amount earned",
+				"description": "Sell all ducks owned by the authenticated player at the current market price.",
 				"tags": [
 					"Market"
 				],
@@ -540,12 +846,39 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Price history retrieved",
+											"data": {
+												"priceHistory": [
+													10.142,
+													10.856,
+													11.902,
+													12.347
+												]
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get the history of the last 100 duck prices on the market",
+				"description": "Get the last 100 computed market prices for charts and trend displays.",
 				"tags": [
 					"Market"
 				],
@@ -567,12 +900,41 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Leaderboard by ducks retrieved successfully",
+											"data": [
+												{
+													"name": "DuckMaster",
+													"ducks": 420
+												},
+												{
+													"name": "QuackFactory",
+													"ducks": 300
+												}
+											],
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get the leaderboard sorted by the specified criteria",
+				"description": "Get a paginated leaderboard sorted by ducks, money, production, storage capacity, building count, or storage count.",
 				"tags": [
 					"Leaderboard"
 				],
@@ -627,12 +989,40 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Your leaderboard ranks retrieved successfully",
+											"data": {
+												"rank": 3,
+												"ducksRank": 4,
+												"moneyRank": 6,
+												"productionRank": 3,
+												"storageRank": 5,
+												"nbBuildingsRank": 2,
+												"nbStorageRank": 7
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get the authenticated player's current rank in the leaderboard",
+				"description": "Get the authenticated player's rank in every leaderboard category.",
 				"tags": [
 					"Leaderboard"
 				],
@@ -654,12 +1044,43 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Game configuration retrieved successfully",
+											"data": {
+												"startingValues": {
+													"ducks": 0,
+													"money": 1000
+												},
+												"maxOfflineHours": 8,
+												"marketUpdateIntervalMs": 60000,
+												"duckPriceFluctuation": {
+													"min": 5,
+													"max": 20
+												}
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get the game configuration",
+				"description": "Get the public game configuration used by clients.",
 				"tags": [
 					"Game"
 				],
@@ -671,7 +1092,7 @@
 				"parameters": []
 			}
 		},
-		"/building/list": {
+		"/building": {
 			"get": {
 				"operationId": "GetBuildingList",
 				"responses": {
@@ -681,12 +1102,51 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Building list retrieved",
+											"data": [
+												{
+													"id": "garage",
+													"name": {
+														"en": "Garage",
+														"fr": "Garage"
+													},
+													"cost": 100,
+													"production": 0.1
+												},
+												{
+													"id": "small_workshop",
+													"name": {
+														"en": "Small Workshop",
+														"fr": "Petit Atelier"
+													},
+													"cost": 200,
+													"production": 0.5
+												}
+											],
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get the list of available buildings that can be purchased",
+				"description": "Get the catalog of buildings that players can purchase to increase duck production.",
 				"tags": [
 					"Building"
 				],
@@ -708,12 +1168,80 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Building purchased",
+											"data": {
+												"name": {
+													"en": "Garage",
+													"fr": "Garage"
+												},
+												"playerMoney": 900,
+												"amount": 1,
+												"productionPerMinute": 6,
+												"cost": 100,
+												"achievementsUnlocked": [
+													{
+														"id": "first_building",
+														"name": {
+															"en": "First Building",
+															"fr": "Premier bâtiment"
+														}
+													}
+												]
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not enough money",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Building or player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Purchase error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Purchase a building for the authenticated player",
+				"description": "Purchase one building for the authenticated player and return the updated building amount and production.",
 				"tags": [
 					"Building"
 				],
@@ -745,12 +1273,39 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "User registered",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"token": "player_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+												"name": "DuckMaster",
+												"lastActive": "2026-06-17T18:30:00.000Z",
+												"createdAt": "2026-06-17T18:30:00.000Z",
+												"updatedAt": "2026-06-17T18:30:00.000Z"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing name",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Register a new user",
+				"description": "Register a new player account.\nThe response includes the bearer token used to authenticate player routes.",
 				"tags": [
 					"Auth"
 				],
@@ -778,12 +1333,38 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "User data retrieved",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster",
+												"lastActive": "2026-06-17T18:30:00.000Z",
+												"createdAt": "2026-06-17T18:25:00.000Z",
+												"updatedAt": "2026-06-17T18:30:00.000Z"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get the profile of the authenticated user",
+				"description": "Get the profile of the authenticated player from the bearer token.",
 				"tags": [
 					"Auth"
 				],
@@ -803,12 +1384,35 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "User profile deleted",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Delete the profile of the authenticated user",
+				"description": "Delete the authenticated player's account and progress.",
 				"tags": [
 					"Auth"
 				],
@@ -830,12 +1434,38 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player data retrieved",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster",
+												"lastActive": "2026-06-17T18:30:00.000Z",
+												"createdAt": "2026-06-17T18:25:00.000Z",
+												"updatedAt": "2026-06-17T18:30:00.000Z"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get a player's profile by ID (public endpoint)",
+				"description": "Get a public player profile by ID. This route does not expose money, ducks, token, or private progress data.",
 				"tags": [
 					"Auth"
 				],
@@ -862,11 +1492,35 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "User logged in",
+											"data": {
+												"token": "admin_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+												"name": "admin"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing credentials",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Authenticate as an administrator and receive the bearer token required for admin routes.",
 				"tags": [
 					"Admin"
 				],
@@ -894,11 +1548,43 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Game configuration retrieved successfully",
+											"data": {
+												"startingValues": {
+													"ducks": 0,
+													"money": 1000
+												},
+												"maxOfflineHours": 8,
+												"marketUpdateIntervalMs": 60000,
+												"duckPriceFluctuation": {
+													"min": 5,
+													"max": 20
+												}
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get the current game configuration, including starting values and market tuning.",
 				"tags": [
 					"Admin"
 				],
@@ -918,11 +1604,53 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Game configuration updated successfully",
+											"data": {
+												"startingValues": {
+													"ducks": 0,
+													"money": 1200
+												},
+												"maxOfflineHours": 10,
+												"marketUpdateIntervalMs": 60000,
+												"duckPriceFluctuation": {
+													"min": 5,
+													"max": 25
+												}
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid configuration value",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Update one or more game configuration values and persist them to disk.",
 				"tags": [
 					"Admin"
 				],
@@ -954,12 +1682,49 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player data retrieved",
+											"data": [
+												{
+													"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+													"name": "DuckMaster",
+													"ducks": 42,
+													"money": 900,
+													"productionPerMinute": 6,
+													"maxStorageCapacity": 10,
+													"active": true,
+													"lastSync": "2026-06-17T18:30:00.000Z",
+													"lastActive": "2026-06-17T18:30:00.000Z",
+													"createdAt": "2026-06-17T18:25:00.000Z",
+													"updatedAt": "2026-06-17T18:30:00.000Z",
+													"buildings": [],
+													"storages": [],
+													"achievements": []
+												}
+											],
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
-				"description": "-",
+				"description": "Get a paginated list of players",
 				"tags": [
 					"Admin"
 				],
@@ -1005,11 +1770,57 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player data retrieved",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster",
+												"ducks": 42,
+												"money": 900,
+												"productionPerMinute": 6,
+												"maxStorageCapacity": 10,
+												"active": true,
+												"lastSync": "2026-06-17T18:30:00.000Z",
+												"lastActive": "2026-06-17T18:30:00.000Z",
+												"createdAt": "2026-06-17T18:25:00.000Z",
+												"updatedAt": "2026-06-17T18:30:00.000Z",
+												"buildings": [],
+												"storages": [],
+												"achievements": []
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get complete gameplay and account details for one player by ID.",
 				"tags": [
 					"Admin"
 				],
@@ -1038,11 +1849,45 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player deleted",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Delete a player account and return the deleted player's identity.",
 				"tags": [
 					"Admin"
 				],
@@ -1073,11 +1918,45 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player reset",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Reset a player's progress to default game values while keeping the account.",
 				"tags": [
 					"Admin"
 				],
@@ -1108,11 +1987,56 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player money updated",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster",
+												"money": 5000
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid money value",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Replace a player's money amount with an exact non-negative value.",
 				"tags": [
 					"Admin"
 				],
@@ -1153,11 +2077,56 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player ducks updated",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster",
+												"ducks": 250
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid duck value",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Replace a player's duck amount with an exact non-negative value.",
 				"tags": [
 					"Admin"
 				],
@@ -1198,11 +2167,56 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player money added",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster",
+												"money": 1500
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid money value",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Add a non-negative amount of money to a player.",
 				"tags": [
 					"Admin"
 				],
@@ -1243,11 +2257,56 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player ducks added",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster",
+												"ducks": 350
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid duck value",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Add a non-negative amount of ducks to a player.",
 				"tags": [
 					"Admin"
 				],
@@ -1288,11 +2347,56 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player money removed",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster",
+												"money": 800
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid money value",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Remove a non-negative amount of money from a player.",
 				"tags": [
 					"Admin"
 				],
@@ -1333,11 +2437,56 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Player ducks removed",
+											"data": {
+												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
+												"name": "DuckMaster",
+												"ducks": 120
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid duck value",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Player not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Remove a non-negative amount of ducks from a player.",
 				"tags": [
 					"Admin"
 				],
@@ -1378,11 +2527,44 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "IP banned",
+											"data": {
+												"ipAddress": "203.0.113.42"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing IP address",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Ban an IP address from accessing the API.",
 				"tags": [
 					"Admin"
 				],
@@ -1414,11 +2596,44 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "IP unbanned",
+											"data": {
+												"ipAddress": "203.0.113.42"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing IP address",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Remove a ban from an IP address.",
 				"tags": [
 					"Admin"
 				],
@@ -1450,11 +2665,46 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Admin stats fetched",
+											"data": {
+												"players": 12,
+												"ducksProduced": 12000,
+												"ducksSold": 8450,
+												"moneyGenerated": 103250.75,
+												"apiVersion": "1.0.0",
+												"uptime": 86400,
+												"memory": {
+													"usedMB": 512,
+													"freeMB": 1536,
+													"totalMB": 2048,
+													"usagePercent": 25
+												},
+												"cpuUsage": "12.34%"
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get global game totals and host resource statistics for the admin dashboard.",
 				"tags": [
 					"Admin"
 				],
@@ -1466,7 +2716,7 @@
 				"parameters": []
 			}
 		},
-		"/achievement/list": {
+		"/achievement": {
 			"get": {
 				"operationId": "GetAchievements",
 				"responses": {
@@ -1476,11 +2726,50 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ApiResponseFormat"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"success": true,
+											"message": "Achievements retrieved",
+											"data": {
+												"achievements": [
+													{
+														"id": "first_duck",
+														"name": {
+															"en": "First Duck",
+															"fr": "Premier Canard"
+														},
+														"description": {
+															"en": "Produce your first duck.",
+															"fr": "Produisez votre premier canard."
+														},
+														"condition": {
+															"type": "ducks",
+															"value": 1
+														}
+													}
+												]
+											},
+											"timestamp": "2026-06-17T18:30:00.000Z"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseFormat"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get every achievement available in the game.\nUse this route to display the achievement catalog, including locked\nachievements that the authenticated player has not unlocked yet.",
 				"tags": [
 					"Achievement"
 				],

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Path, Post, Put, Query, Route, Security, Tags } from "tsoa";
+import { Body, Controller, Delete, Example, Get, Path, Post, Put, Query, Response, Route, Security, Tags } from "tsoa";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { getPlayersPaginated, getPlayer, loginAdmin, deleteUserById, resetPlayerData, setPlayerDataMoney, setPlayerDataDucks, addPlayerDataDucks, addPlayerDataMoney, removePlayerDataMoney, removePlayerDataDucks, ipUnbanned, ipBanned, countPlayers } from "../services/admin.service.js";
 import { processOfflineProduction } from "../services/duck.service.js";
@@ -61,8 +61,18 @@ interface IPBanBody {
 @Route("admin")
 @Tags("Admin")
 export class AdminController extends Controller {
-    /**  */
+    /** Authenticate as an administrator and receive the bearer token required for admin routes. */
     @Post("login")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "User logged in",
+        data: {
+            token: "admin_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+            name: "admin"
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Missing credentials")
     public async login(@Body() body: RegisterAdminBody): Promise<ApiResponseFormat> {
         const { username, password } = body;
 
@@ -81,9 +91,21 @@ export class AdminController extends Controller {
     }
 
 
-    /** */
+    /** Get the current game configuration, including starting values and market tuning. */
     @Get("config")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Game configuration retrieved successfully",
+        data: {
+            startingValues: { ducks: 0, money: 1000 },
+            maxOfflineHours: 8,
+            marketUpdateIntervalMs: 60000,
+            duckPriceFluctuation: { min: 5, max: 20 }
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getConfig(): Promise<ApiResponseFormat> {
         return ApiResponse.success(
             "Game configuration retrieved successfully",
@@ -92,9 +114,22 @@ export class AdminController extends Controller {
     }
 
 
-    /** */
+    /** Update one or more game configuration values and persist them to disk. */
     @Put("config")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Game configuration updated successfully",
+        data: {
+            startingValues: { ducks: 0, money: 1200 },
+            maxOfflineHours: 10,
+            marketUpdateIntervalMs: 60000,
+            duckPriceFluctuation: { min: 5, max: 25 }
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Invalid configuration value")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async updateConfig(@Body() body: ConfigUpdateBody): Promise<ApiResponseFormat> {
         const { startingValues, maxOfflineHours, marketUpdateIntervalMs, duckPriceFluctuation } = body;
 
@@ -150,7 +185,7 @@ export class AdminController extends Controller {
 
 
     /** 
-     * -
+     * Get a paginated list of players
      * 
      * @param page The page number for pagination (default: 1)
      * @param pageSize The number of players to return per page (default: 10)
@@ -163,6 +198,30 @@ export class AdminController extends Controller {
      */
     @Get("players")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player data retrieved",
+        data: [
+            {
+                id: "cmz8n7r2g0000v9k4a1b2c3d4",
+                name: "DuckMaster",
+                ducks: 42,
+                money: 900,
+                productionPerMinute: 6,
+                maxStorageCapacity: 10,
+                active: true,
+                lastSync: "2026-06-17T18:30:00.000Z",
+                lastActive: "2026-06-17T18:30:00.000Z",
+                createdAt: "2026-06-17T18:25:00.000Z",
+                updatedAt: "2026-06-17T18:30:00.000Z",
+                buildings: [],
+                storages: [],
+                achievements: []
+            }
+        ],
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayers(
         @Query() page?: number,
         @Query('limit') pageSize?: number
@@ -213,9 +272,32 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Get complete gameplay and account details for one player by ID. */
     @Get("players/{id}")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player data retrieved",
+        data: {
+            id: "cmz8n7r2g0000v9k4a1b2c3d4",
+            name: "DuckMaster",
+            ducks: 42,
+            money: 900,
+            productionPerMinute: 6,
+            maxStorageCapacity: 10,
+            active: true,
+            lastSync: "2026-06-17T18:30:00.000Z",
+            lastActive: "2026-06-17T18:30:00.000Z",
+            createdAt: "2026-06-17T18:25:00.000Z",
+            updatedAt: "2026-06-17T18:30:00.000Z",
+            buildings: [],
+            storages: [],
+            achievements: []
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Player not found")
     public async getPlayerById(@Path() id: string): Promise<ApiResponseFormat> {
         const user = await getPlayer(id);
 
@@ -259,9 +341,20 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Delete a player account and return the deleted player's identity. */
     @Delete("players/{id}")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player deleted",
+        data: {
+            id: "cmz8n7r2g0000v9k4a1b2c3d4",
+            name: "DuckMaster"
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Player not found")
     public async deletePlayer(@Path() id: string): Promise<ApiResponseFormat> {
         const user = await deleteUserById(id);
 
@@ -277,9 +370,20 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Reset a player's progress to default game values while keeping the account. */
     @Post("players/{id}/reset")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player reset",
+        data: {
+            id: "cmz8n7r2g0000v9k4a1b2c3d4",
+            name: "DuckMaster"
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Player not found")
     public async resetPlayer(
         @Path() id: string, 
     ): Promise<ApiResponseFormat> {
@@ -297,9 +401,18 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Replace a player's money amount with an exact non-negative value. */
     @Post("players/{id}/money")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player money updated",
+        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", money: 5000 },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Invalid money value")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Player not found")
     public async setPlayerMoney(
         @Path() id: string, 
         @Body() body: SetPlayerMoneyBody
@@ -326,9 +439,18 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Replace a player's duck amount with an exact non-negative value. */
     @Post("players/{id}/ducks")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player ducks updated",
+        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", ducks: 250 },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Invalid duck value")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Player not found")
     public async setPlayerDucks(
         @Path() id: string, 
         @Body() body: SetPlayerDucksBody
@@ -355,9 +477,18 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Add a non-negative amount of money to a player. */
     @Post("players/{id}/add-money")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player money added",
+        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", money: 1500 },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Invalid money value")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Player not found")
     public async addPlayerMoney(
         @Path() id: string, 
         @Body() body: AddPlayerMoneyBody
@@ -384,9 +515,18 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Add a non-negative amount of ducks to a player. */
     @Post("players/{id}/add-ducks")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player ducks added",
+        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", ducks: 350 },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Invalid duck value")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Player not found")
     public async addPlayerDucks(
         @Path() id: string, 
         @Body() body: AddPlayerDucksBody
@@ -413,9 +553,18 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Remove a non-negative amount of money from a player. */
     @Post("players/{id}/remove-money")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player money removed",
+        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", money: 800 },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Invalid money value")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Player not found")
     public async removePlayerMoney(
         @Path() id: string, 
         @Body() body: RemovePlayerMoneyBody
@@ -442,9 +591,18 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Remove a non-negative amount of ducks from a player. */
     @Post("players/{id}/remove-ducks")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player ducks removed",
+        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", ducks: 120 },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Invalid duck value")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Player not found")
     public async removePlayerDucks(
         @Path() id: string, 
         @Body() body: RemovePlayerDucksBody
@@ -471,9 +629,17 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Ban an IP address from accessing the API. */
     @Post("ip/ban")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "IP banned",
+        data: { ipAddress: "203.0.113.42" },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Missing IP address")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async banIP(
         @Body() body: IPBanBody
     ): Promise<ApiResponseFormat> {
@@ -492,9 +658,17 @@ export class AdminController extends Controller {
     }
 
 
-    /**  */
+    /** Remove a ban from an IP address. */
     @Post("ip/unban")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "IP unbanned",
+        data: { ipAddress: "203.0.113.42" },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Missing IP address")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async unbanIP(
         @Body() body: IPBanBody
     ): Promise<ApiResponseFormat> {
@@ -512,10 +686,31 @@ export class AdminController extends Controller {
         });
     }
 
-
-    /**  */
+    
+    /** Get global game totals and host resource statistics for the admin dashboard. */
     @Get("stats")
     @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Admin stats fetched",
+        data: {
+            players: 12,
+            ducksProduced: 12000,
+            ducksSold: 8450,
+            moneyGenerated: 103250.75,
+            apiVersion: "1.0.0",
+            uptime: 86400,
+            memory: {
+                usedMB: 512,
+                freeMB: 1536,
+                totalMB: 2048,
+                usagePercent: 25
+            },
+            cpuUsage: "12.34%"
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getStats(): Promise<ApiResponseFormat> {
         const load = await systeminformation.currentLoad();
         const mem = await systeminformation.mem();

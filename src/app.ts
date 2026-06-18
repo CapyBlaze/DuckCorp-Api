@@ -21,13 +21,14 @@ await bootstrap();
 
 
 const port = process.env.SERVER_PORT || 3000;
+const trustProxy = process.env.TRUST_PROXY === "true";
 
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 200,                 // Max 200 requests per IP
     standardHeaders: 'draft-7',
     legacyHeaders: false,
-    validate: { trustProxy: false }, 
+    validate: { trustProxy }, 
 
     handler: (req, res, next, options) => {
         return res.status(options.statusCode).json(
@@ -44,7 +45,7 @@ const authLimiter = rateLimit({
     max: 5,                  // Max 5 requests per IP
     standardHeaders: 'draft-7',
     legacyHeaders: false,
-    validate: { trustProxy: false }, 
+    validate: { trustProxy }, 
 
     handler: (req, res, next, options) => {
         return res.status(options.statusCode).json(
@@ -61,7 +62,7 @@ const adminLimiter = rateLimit({
     max: 5,                   // Max 5 requests per IP
     standardHeaders: 'draft-7',
     legacyHeaders: false,
-    validate: { trustProxy: false },
+    validate: { trustProxy },
 
     handler: (req, res, next, options) => {
         return res.status(options.statusCode).json(
@@ -76,7 +77,7 @@ const adminLimiter = rateLimit({
 
 
 const app = express();
-app.set('trust proxy', true);
+app.set('trust proxy', trustProxy);
 
 app.use(express.json());
 app.use(loggerHandler);

@@ -1,5 +1,5 @@
 import type { Request as ExpressRequest } from "express";
-import { Body, Controller, Get, Post, Request, Route, Security, Tags } from "tsoa";
+import { Body, Controller, Example, Get, Post, Request, Response, Route, Security, Tags } from "tsoa";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
 import { buyStorageForPlayer, BuyStorageResult } from "../services/storage.service.js";
@@ -14,9 +14,23 @@ interface BuyStorageBody {
 @Route("storage")
 @Tags("Storage")
 export class StorageController extends Controller {
-    /**  Get list of available storages */
-    @Get("list")
+    /** Get the catalog of storage units that increase the player's duck capacity. */
+    @Get("")
     @Security("playerAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Storage list retrieved",
+        data: [
+            {
+                id: "cardboard_box",
+                name: { en: "Cardboard Box", fr: "Boîte en Carton" },
+                cost: 50,
+                storageCapacity: 10
+            }
+        ],
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getStorageList(): Promise<ApiResponseFormat> {
         return ApiResponse.success("Storage list retrieved",
             gameData.storages
@@ -24,9 +38,27 @@ export class StorageController extends Controller {
     }
     
     
-    /** Buy a storage unit */
+    /** Purchase one storage unit for the authenticated player and return the updated storage capacity. */
     @Post("buy")
     @Security("playerAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Storage purchased",
+        data: {
+            name: { en: "Cardboard Box", fr: "Boîte en Carton" },
+            playerMoney: 950,
+            amount: 1,
+            storageCapacity: 10,
+            cost: 50,
+            achievementsUnlocked: []
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Missing storage ID")
+    @Response<ApiResponseFormat>(400, "Not enough money")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Storage or player not found")
+    @Response<ApiResponseFormat>(500, "Purchase error")
     public async buyStorage(@Request() req: ExpressRequest, @Body() body: BuyStorageBody): Promise<ApiResponseFormat> {
         const { id } = body;
         const user = (req as any).user;

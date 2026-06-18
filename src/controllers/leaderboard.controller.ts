@@ -1,5 +1,5 @@
 import type { Request as ExpressRequest } from "express";
-import { Controller, Get, Query, Request, Route, Security, Tags } from "tsoa";
+import { Controller, Example, Get, Query, Request, Response, Route, Security, Tags } from "tsoa";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { getPlayerRank, playersByDucks, playersByMoney, playersByNbBuildings, playersByNbStorage, playersByProduction, playersByStorage } from "../services/leaderbord.service.js";
 
@@ -26,7 +26,7 @@ export enum SortType {
 @Tags("Leaderboard")
 export class LeaderboardController extends Controller {
     /** 
-     * Get the leaderboard sorted by the specified criteria 
+     * Get a paginated leaderboard sorted by ducks, money, production, storage capacity, building count, or storage count.
      * 
      * @param sort The criteria to sort the leaderboard by (default: byDucks)
      * @param page The page number for pagination (default: 1)
@@ -40,6 +40,16 @@ export class LeaderboardController extends Controller {
      */
     @Get("")
     @Security("playerAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Leaderboard by ducks retrieved successfully",
+        data: [
+            { name: "DuckMaster", ducks: 420 },
+            { name: "QuackFactory", ducks: 300 }
+        ],
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getLeaderboard(
         @Query() sort?: SortType,
         @Query() page?: number,
@@ -88,9 +98,24 @@ export class LeaderboardController extends Controller {
     }
 
 
-    /** Get the authenticated player's current rank in the leaderboard */
+    /** Get the authenticated player's rank in every leaderboard category. */
     @Get("me")
     @Security("playerAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Your leaderboard ranks retrieved successfully",
+        data: {
+            rank: 3,
+            ducksRank: 4,
+            moneyRank: 6,
+            productionRank: 3,
+            storageRank: 5,
+            nbBuildingsRank: 2,
+            nbStorageRank: 7
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getMyLeaderboard(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
 

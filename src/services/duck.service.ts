@@ -25,6 +25,7 @@ export async function processOfflineProduction(playerId: string) {
 
     const totalProduction = productionPerMinute * minutesOffline;
     const newDucks = Math.min(player.ducks + totalProduction, maxStorageCapacity);
+    const actualProduced = Math.max(0, newDucks - player.ducks);
     
     await prisma.player.update({
         where: { id: playerId },
@@ -32,12 +33,12 @@ export async function processOfflineProduction(playerId: string) {
             ducks: newDucks,
             lastSync: new Date(),
             totalDucksProduced: {
-                increment: newDucks - player.ducks
+                increment: actualProduced
             }
         }
     });
 
-    await addTotalDucksProduced(totalProduction);
+    await addTotalDucksProduced(actualProduced);
 
     return Math.floor(newDucks);
 }

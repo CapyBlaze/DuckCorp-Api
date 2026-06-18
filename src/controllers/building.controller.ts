@@ -1,5 +1,5 @@
 import type { Request as ExpressRequest } from "express";
-import { Body, Controller, Get, Post, Request, Route, Security, Tags } from "tsoa";
+import { Body, Controller, Example, Get, Post, Request, Response, Route, Security, Tags } from "tsoa";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
 import { buyBuildingForPlayer, BuyBuildingResult } from "../services/building.service.js";
@@ -14,17 +14,60 @@ interface BuyBuildingBody {
 @Route("building")
 @Tags("Building")
 export class BuildingController extends Controller {
-    /** Get the list of available buildings that can be purchased */
-    @Get("list")
+    /** Get the catalog of buildings that players can purchase to increase duck production. */
+    @Get("")
     @Security("playerAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Building list retrieved",
+        data: [
+            {
+                id: "garage",
+                name: { en: "Garage", fr: "Garage" },
+                cost: 100,
+                production: 0.1
+            },
+            {
+                id: "small_workshop",
+                name: { en: "Small Workshop", fr: "Petit Atelier" },
+                cost: 200,
+                production: 0.5
+            }
+        ],
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getBuildingList(): Promise<ApiResponseFormat> {
         return ApiResponse.success("Building list retrieved", gameData.buildings);
     }
 
 
-    /** Purchase a building for the authenticated player */
+    /** Purchase one building for the authenticated player and return the updated building amount and production. */
     @Post("buy")
     @Security("playerAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Building purchased",
+        data: {
+            name: { en: "Garage", fr: "Garage" },
+            playerMoney: 900,
+            amount: 1,
+            productionPerMinute: 6,
+            cost: 100,
+            achievementsUnlocked: [
+                {
+                    id: "first_building",
+                    name: { en: "First Building", fr: "Premier bâtiment" }
+                }
+            ]
+        },
+        timestamp: "2026-06-17T18:30:00.000Z"
+    })
+    @Response<ApiResponseFormat>(400, "Missing building ID")
+    @Response<ApiResponseFormat>(400, "Not enough money")
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    @Response<ApiResponseFormat>(404, "Building or player not found")
+    @Response<ApiResponseFormat>(500, "Purchase error")
     public async buyBuilding(@Request() req: ExpressRequest, @Body() body: BuyBuildingBody): Promise<ApiResponseFormat> {
         const { id } = body;
         const user = (req as any).user;
