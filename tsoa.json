@@ -13,7 +13,7 @@
             "name": "CapyBlaze",
             "email": "capyblaze@gmail.com"
         },
-        "servers": ["api.duckcorp.com"],
+        "servers": ["duckcorp.capyblaze.hackclub.app/"],
         "securityDefinitions": {
             "playerAuth": {
                 "type": "http",

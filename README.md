@@ -22,10 +22,10 @@ Designed to run on a local network, making it perfect for a Raspberry Pi or a sm
 
 <div>
     <h4>
-        <b>📖 View API Documentation:</b> <a href="https://api.duckcorp.xyz/docs" target="_blank">https://api.duckcorp.xyz/docs</a>
+        <b>📖 View API Documentation:</b> <a href="https://duckcorp.capyblaze.hackclub.app/docs" target="_blank">https://duckcorp.capyblaze.hackclub.app/docs</a>
     </h4>
     <h4>
-        <b>🌐 API Endpoint:</b> <code>https://api.duckcorp.xyz/</code>
+        <b>🌐 API Endpoint:</b> <code>https://duckcorp.capyblaze.hackclub.app/</code>
     </h4>
     <br>
     <details>
@@ -213,7 +213,7 @@ Produce more ducks, earn more money and climb to the top of the leaderboard.
 
 ### 8. Other Routes
 
-To see the rest of the available routes, please refer to the [documentation]()
+To see the rest of the available routes, please refer to the [documentation](https://duckcorp.capyblaze.hackclub.app/docs/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
   
