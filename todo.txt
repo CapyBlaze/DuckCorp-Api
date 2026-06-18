@@ -1,5 +1,0 @@
-tsoa.json -> modif url server
-readme.md -> add api documentation link 
-readme.md -> add api documentation link 
-readme.md -> add api documentation link 
-readme.md -> add api link
