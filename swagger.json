@@ -248,7 +248,7 @@
 	"info": {
 		"title": "DuckCorp API",
 		"version": "1.0.0",
-		"description": "The world's leading rubber duck manufacturer.",
+		"description": "A multiplayer idle game API where players build a rubber duck empire, produce ducks and sell them on the market.",
 		"license": {
 			"name": "MIT"
 		},
@@ -1281,7 +1281,7 @@
 											"message": "User registered",
 											"data": {
 												"id": "cmz8n7r2g0000v9k4a1b2c3d4",
-												"token": "player_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+												"token": "ba546530-96b6-4233-8552-7e1f4ce6c9d2",
 												"name": "DuckMaster",
 												"lastActive": "2026-06-17T18:30:00.000Z",
 												"createdAt": "2026-06-17T18:30:00.000Z",
@@ -1305,7 +1305,7 @@
 						}
 					}
 				},
-				"description": "Register a new player account.\nThe response includes the bearer token used to authenticate player routes.",
+				"description": "Register a new player account.\r\nThe response includes the bearer token used to authenticate player routes.",
 				"tags": [
 					"Auth"
 				],
@@ -2769,7 +2769,7 @@
 						}
 					}
 				},
-				"description": "Get every achievement available in the game.\nUse this route to display the achievement catalog, including locked\nachievements that the authenticated player has not unlocked yet.",
+				"description": "Get every achievement available in the game.\r\nUse this route to display the achievement catalog, including locked\r\nachievements that the authenticated player has not unlocked yet.",
 				"tags": [
 					"Achievement"
 				],
@@ -2784,7 +2784,7 @@
 	},
 	"servers": [
 		{
-			"url": "/"
+			"url": "https://api.duckcorp.com/"
 		}
 	]
 }

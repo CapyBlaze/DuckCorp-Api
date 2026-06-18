@@ -254,7 +254,7 @@ To see the rest of the available routes, please refer to the [documentation]()
 
 ### Architecture
 
-- **Data** : [src/data](src/data) - contains a list of construction and storage projects and their completion dates.
+- **Data** : [src/data](src/data) - contains a list of buildings and storage and their achievement details.
 - **Config** : [src/config](src/config) - contains configuration files for the application.
 - **Controllers** : [src/controllers](src/controllers) - Handle incoming requests and return responses.
 - **Services** : [src/services](src/services) - Contain business logic and interact with the database.

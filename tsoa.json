@@ -7,12 +7,13 @@
         "specVersion": 3,
         "name": "DuckCorp API",
         "title": "DuckCorp API",
-        "description": "The world's leading rubber duck manufacturer.",
+        "description": "A multiplayer idle game API where players build a rubber duck empire, produce ducks and sell them on the market.",
         "version": "1.0.0",
         "contact": {
             "name": "CapyBlaze",
             "email": "capyblaze@gmail.com"
         },
+        "servers": ["api.duckcorp.com"],
         "securityDefinitions": {
             "playerAuth": {
                 "type": "http",
