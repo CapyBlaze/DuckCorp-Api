@@ -2784,7 +2784,7 @@
 	},
 	"servers": [
 		{
-			"url": "https://api.duckcorp.com/"
+			"url": "https://duckcorp.capyblaze.hackclub.app/"
 		}
 	]
 }

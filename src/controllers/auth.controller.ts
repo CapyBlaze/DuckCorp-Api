@@ -1,6 +1,21 @@
 import type { Request as ExpressRequest } from "express";
-import { Body, Controller, Delete, Example, Get, Path, Post, Request, Response, Route, Security, SuccessResponse, Tags } from "tsoa";
-import { registerUser, getUserById, deleteUserById } from "../services/auth.service.js";
+import { 
+    Body, 
+    Controller, 
+    Delete, 
+    Example,
+    Get, 
+    Path, 
+    Post, 
+    Request, 
+    Response, 
+    Route, 
+    Security, 
+    SuccessResponse, 
+    Tags 
+} from "tsoa";
+
+import * as AuthService from "../services/auth.service.js";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 
 
@@ -40,7 +55,7 @@ export class AuthController extends Controller {
             return ApiResponse.error("Information missing", "Name is required");
         }
 
-        const user = await registerUser(name);
+        const user = await AuthService.registerUser(name);
 
         this.setStatus(201);
         return ApiResponse.success("User registered", {
@@ -98,7 +113,7 @@ export class AuthController extends Controller {
     })
     @Response<ApiResponseFormat>(404, "Player not found")
     public async getPlayer(@Path() id: string): Promise<ApiResponseFormat> {
-        const user = await getUserById(id);
+        const user = await AuthService.getUser(id);
 
         if (!user) {
             this.setStatus(404);
@@ -130,7 +145,7 @@ export class AuthController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async deleteProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
-        await deleteUserById(user.id);
+        await AuthService.disableUser(user.id);
 
         return ApiResponse.success("User profile deleted", { 
             id: user.id, 

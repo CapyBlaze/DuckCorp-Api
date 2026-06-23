@@ -1,6 +1,15 @@
-import { Controller, Example, Get, Response, Route, Security, Tags } from "tsoa";
+import { 
+    Controller, 
+    Example, 
+    Get, 
+    Response, 
+    Route, 
+    Security, 
+    Tags 
+} from "tsoa";
+
+import * as AchievementService from "../services/achievement.service.js";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
-import { getAllAchievements } from "../services/achievement.service.js";
 
 
 
@@ -31,7 +40,7 @@ export class AchievementController extends Controller {
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getAchievements(): Promise<ApiResponseFormat> {
-        const achievements = await getAllAchievements();
+        const achievements = await AchievementService.achievements();
         return ApiResponse.success("Achievements retrieved", { achievements });
     }
 }

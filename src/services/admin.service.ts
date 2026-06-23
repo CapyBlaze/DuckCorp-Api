@@ -1,7 +1,8 @@
-import crypto from "crypto";
 import { prisma } from "../prisma.js";
+
 import { gameConfig } from "../config/GameConfig.js";
 import { HttpError } from "../middlewares/error.middleware.js";
+
 
 
 export const adminSessions = new Map<string, {
@@ -9,7 +10,7 @@ export const adminSessions = new Map<string, {
     expiresAt: Date;
 }>();
 
-export async function loginAdmin(username: string, password: string) {
+export async function login(username: string, password: string) {
     const usernameEnv = process.env.ADMIN_USERNAME || "admin";
     const passwordEnv = process.env.ADMIN_PASSWORD || crypto.randomUUID();
 
@@ -28,7 +29,7 @@ export async function loginAdmin(username: string, password: string) {
     return token;
 }
 
-export async function getPlayersPaginated(page: number = 1, pageSize: number = 10) {
+export async function players(page: number = 1, pageSize: number = 10) {
     return prisma.player.findMany({
         take: pageSize,
         skip: (page - 1) * pageSize,
@@ -66,7 +67,7 @@ export async function getPlayer(id: string) {
     });
 }
 
-export async function deleteUserById(id: string) {
+export async function deletePlayer(id: string) {
     return await prisma.player.update({
         where: { id },
         data: { active: false },
@@ -77,7 +78,7 @@ export async function deleteUserById(id: string) {
     });
 }
 
-export async function resetPlayerData(id: string) {
+export async function resetPlayer(id: string) {
     return await prisma.player.update({
         where: { id },
         data: {
@@ -103,7 +104,7 @@ export async function resetPlayerData(id: string) {
     });
 }
 
-export async function setPlayerDataMoney(id: string, money: number) {
+export async function setPlayerMoney(id: string, money: number) {
     return await prisma.player.update({
         where: { id },
         data: {
@@ -117,7 +118,7 @@ export async function setPlayerDataMoney(id: string, money: number) {
     });
 }
 
-export async function setPlayerDataDucks(id: string, ducks: number) {
+export async function setPlayerDucks(id: string, ducks: number) {
     return await prisma.player.update({
         where: { id },
         data: {
@@ -131,7 +132,7 @@ export async function setPlayerDataDucks(id: string, ducks: number) {
     });
 }
 
-export async function addPlayerDataMoney(id: string, amount: number) {
+export async function addPlayerMoney(id: string, amount: number) {
     return await prisma.player.update({
         where: { id },
         data: {
@@ -147,7 +148,7 @@ export async function addPlayerDataMoney(id: string, amount: number) {
     });
 }
 
-export async function addPlayerDataDucks(id: string, amount: number) {
+export async function addPlayerDucks(id: string, amount: number) {
     return await prisma.player.update({
         where: { id },
         data: {
@@ -163,7 +164,7 @@ export async function addPlayerDataDucks(id: string, amount: number) {
     });
 }
 
-export async function removePlayerDataMoney(id: string, amount: number) {
+export async function removePlayerMoney(id: string, amount: number) {
     const player = await prisma.player.findUnique({
         where: { id },
         select: { money: true }
@@ -186,7 +187,7 @@ export async function removePlayerDataMoney(id: string, amount: number) {
     });
 }
 
-export async function removePlayerDataDucks(id: string, amount: number) {
+export async function removePlayerDucks(id: string, amount: number) {
     const player = await prisma.player.findUnique({
         where: { id },
         select: { ducks: true }

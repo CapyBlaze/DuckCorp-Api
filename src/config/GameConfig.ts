@@ -2,6 +2,7 @@ import { loadJsonConfig } from "../utils/loadJson.js";
 import { saveJsonConfig } from "../utils/saveJson.js";
 
 
+
 export interface Config {
     startingValues: {
         ducks: number,
@@ -14,7 +15,6 @@ export interface Config {
         max: number
     },
 }
-
 
 
 class GameConfig {

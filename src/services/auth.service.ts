@@ -1,6 +1,7 @@
-import { gameConfig } from "../config/GameConfig.js";
 import { prisma } from "../prisma.js";
-import crypto from "crypto";
+import { gameConfig } from "../config/GameConfig.js";
+
+
 
 export async function registerUser(name: string) {
     let player = await prisma.player.findUnique({
@@ -19,7 +20,7 @@ export async function registerUser(name: string) {
     });
 }
 
-export async function getUserById(id: string) {
+export async function getUser(id: string) {
     const player = await prisma.player.findUnique({
         where: { id }
     });
@@ -27,7 +28,7 @@ export async function getUserById(id: string) {
     return player;
 }
 
-export async function deleteUserById(id: string) {
+export async function disableUser(id: string) {
     await prisma.player.update({
         where: { id },
         data: { active: false }

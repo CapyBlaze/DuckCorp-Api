@@ -1,16 +1,17 @@
-import { unknownTranslation, gameData, type Translation } from "../data/GameData.js";
 import { prisma } from "../prisma.js";
+import { unknownTranslation, gameData, type Translation } from "../data/GameData.js";
 
 
-export enum BuyBuildingResult {
+
+export enum BuyResult {
     Success,
     PlayerNotFound,
     NotEnoughMoney,
     BuildingNotFound
 }
 
-type BuyBuildingSuccess = {
-    result: BuyBuildingResult.Success;
+type BuySuccess = {
+    result: BuyResult.Success;
     name: Translation;
     playerMoney: number;
     amount: number;
@@ -18,16 +19,16 @@ type BuyBuildingSuccess = {
     cost: number;
 };
 
-type BuyBuildingResponse = BuyBuildingSuccess | { result: Exclude<BuyBuildingResult, BuyBuildingResult.Success> };
+type BuyResponse = BuySuccess | { result: Exclude<BuyResult, BuyResult.Success> };
 
 
-export async function buyBuildingForPlayer(
+export async function buy(
     playerId: string,
     buildingId: string
-): Promise<BuyBuildingResponse> {
+): Promise<BuyResponse> {
     const building = gameData.buildings.find((b: any) => b.id === buildingId);
     if (!building) {
-        return { result: BuyBuildingResult.BuildingNotFound };
+        return { result: BuyResult.BuildingNotFound };
     }
 
     const result = await prisma.$transaction(async (tx) => {
@@ -37,11 +38,11 @@ export async function buyBuildingForPlayer(
         });
 
         if (!player) {
-            return { result: BuyBuildingResult.PlayerNotFound as const };
+            return { result: BuyResult.PlayerNotFound as const };
         }
 
         if (player.money < building.cost) {
-            return { result: BuyBuildingResult.NotEnoughMoney as const };
+            return { result: BuyResult.NotEnoughMoney as const };
         }
 
         await tx.player.update({
@@ -81,7 +82,7 @@ export async function buyBuildingForPlayer(
         });
 
         return {
-            result: BuyBuildingResult.Success,
+            result: BuyResult.Success,
             name: building.name,
             playerMoney: updatedPlayer!.money,
             amount: upserted.amount,
@@ -93,7 +94,7 @@ export async function buyBuildingForPlayer(
     return result;
 }
 
-export async function getPlayerBuildings(playerId: string) {
+export async function getPlayer(playerId: string) {
     const player = await prisma.player.findUnique({
         where: { id: playerId },
         select: {
@@ -131,7 +132,7 @@ export async function getPlayerBuildings(playerId: string) {
 }
 
 export async function getProductionPerMinute(playerId: string) {
-    const buildings = await getPlayerBuildings(playerId);
+    const buildings = await getPlayer(playerId);
     const totalProduction = buildings.reduce((acc, b) => acc + b.productionPerMinute, 0);
     return +totalProduction.toFixed(2);
 }

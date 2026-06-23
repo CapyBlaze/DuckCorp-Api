@@ -1,8 +1,10 @@
 import type { Request as ExpressRequest } from "express";
 import { Controller, Example, Get, Post, Request, Response, Route, Security, Tags } from "tsoa";
+
+import * as MarketService from "../services/market.service.js";
+import * as AchievementService from "../services/achievement.service.js";
+
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
-import { getDuckPrice, getPriceHistory, sellDucksForPlayer } from "../services/market.service.js";
-import { checkAchievements } from "../services/achievement.service.js";
 
 
 
@@ -22,7 +24,7 @@ export class MarketController extends Controller {
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getMarketPrice(): Promise<ApiResponseFormat> {
-        const price = getDuckPrice();
+        const price = MarketService.duckPrice();
         return ApiResponse.success("Current duck price retrieved", { price });
     }
     
@@ -49,9 +51,9 @@ export class MarketController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async sellDucks(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
-        const result = await sellDucksForPlayer(user.id);
+        const result = await MarketService.sell(user.id);
 
-        const achievements = await checkAchievements(user);
+        const achievements = await AchievementService.check(user);
         
         return ApiResponse.success("Ducks sold successfully", { 
             ...result, 
@@ -73,7 +75,7 @@ export class MarketController extends Controller {
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async priceHistoryChart(): Promise<ApiResponseFormat> {
-        const priceHistory = getPriceHistory();
+        const priceHistory = MarketService.priceHistory();
         return ApiResponse.success("Price history retrieved", { priceHistory });
     }
 }

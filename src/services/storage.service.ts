@@ -1,15 +1,17 @@
-import { gameData, unknownTranslation, type Translation } from "../data/GameData.js";
 import { prisma } from "../prisma.js";
+import { gameData, unknownTranslation, type Translation } from "../data/GameData.js";
 
-export enum BuyStorageResult {
+
+
+export enum BuyResult {
     Success,
     PlayerNotFound,
     NotEnoughMoney,
     StorageNotFound
 }
 
-type BuyStorageSuccess = {
-    result: BuyStorageResult.Success;
+type BuySuccess = {
+    result: BuyResult.Success;
     name: Translation;
     playerMoney: number;
     amount: number;
@@ -17,16 +19,16 @@ type BuyStorageSuccess = {
     cost: number;
 };
 
-type BuyStorageResponse = BuyStorageSuccess | { result: Exclude<BuyStorageResult, BuyStorageResult.Success> };
+type BuyResponse = BuySuccess | { result: Exclude<BuyResult, BuyResult.Success> };
 
 
-export async function buyStorageForPlayer(
+export async function buy(
     playerId: string,
     storageId: string
-): Promise<BuyStorageResponse> {
+): Promise<BuyResponse> {
     const storage = gameData.storages.find((s: any) => s.id === storageId);
     if (!storage) {
-        return { result: BuyStorageResult.StorageNotFound };
+        return { result: BuyResult.StorageNotFound };
     }
 
     const result = await prisma.$transaction(async (tx) => {
@@ -36,11 +38,11 @@ export async function buyStorageForPlayer(
         });
 
         if (!player) {
-            return { result: BuyStorageResult.PlayerNotFound as const };
+            return { result: BuyResult.PlayerNotFound as const };
         }
 
         if (player.money < storage.cost) {
-            return { result: BuyStorageResult.NotEnoughMoney as const };
+            return { result: BuyResult.NotEnoughMoney as const };
         }
 
         await tx.player.update({
@@ -80,7 +82,7 @@ export async function buyStorageForPlayer(
         });
 
         return {
-            result: BuyStorageResult.Success,
+            result: BuyResult.Success,
             name: storage.name,
             playerMoney: updatedPlayer!.money,
             amount: upserted.amount,
@@ -92,7 +94,7 @@ export async function buyStorageForPlayer(
     return result;
 }
 
-export async function getPlayerStorages(playerId: string) {
+export async function getPlayer(playerId: string) {
     const player = await prisma.player.findUnique({
         where: { id: playerId },
         select: {
@@ -129,7 +131,7 @@ export async function getPlayerStorages(playerId: string) {
 }
 
 export async function getMaxStorageCapacity(playerId: string) {
-    const storages = await getPlayerStorages(playerId);
+    const storages = await getPlayer(playerId);
     const totalCapacity = storages.reduce((acc, s) => acc + s.storageCapacity, 0);
     return +totalCapacity.toFixed(0);
 }

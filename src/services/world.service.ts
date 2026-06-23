@@ -1,6 +1,7 @@
 import { prisma } from "../prisma.js";
 
 
+
 export async function addTotalDucksProduced(amount: number) {
     return await prisma.worldState.update({
         where: { id: 1 },
@@ -34,7 +35,7 @@ export async function addTotalMoneyGenerated(amount: number) {
     });
 }
 
-export async function getWorldState() {
+export async function getState() {
     return await prisma.worldState.findUnique({
         where: { id: 1 },
         select: {

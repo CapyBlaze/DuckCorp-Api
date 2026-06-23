@@ -1,10 +1,12 @@
-import { gameConfig } from "../config/GameConfig.js";
 import { prisma } from "../prisma.js";
-import { processOfflineProduction } from "./duck.service.js";
-import { addTotalDucksSold, addTotalMoneyGenerated } from "./world.service.js";
+
+import * as DuckService from "./duck.service.js";
+import * as WorldService from "./world.service.js";
+
+import { gameConfig } from "../config/GameConfig.js";
 
 
-export function getDuckPrice(time: number = Date.now()) {
+export function duckPrice(time: number = Date.now()) {
     const t = Math.floor(time / gameConfig.config.marketUpdateIntervalMs);
 
     const minPrice = gameConfig.config.duckPriceFluctuation.min;
@@ -20,10 +22,10 @@ export function getDuckPrice(time: number = Date.now()) {
     return price;
 }
 
-export async function sellDucksForPlayer(playerId: string) {
-    const duckPrice = getDuckPrice();
+export async function sell(playerId: string) {
+    const price = duckPrice();
 
-    await processOfflineProduction(playerId);
+    await DuckService.updateProduction(playerId);
 
     const player = await prisma.player.findUnique({
         where: { id: playerId },
@@ -34,7 +36,7 @@ export async function sellDucksForPlayer(playerId: string) {
     if (!player) {
         return {
             ducks: 0,
-            duckPrice: duckPrice,
+            duckPrice: price,
             earnings: 0
         };
     }
@@ -43,13 +45,13 @@ export async function sellDucksForPlayer(playerId: string) {
     if (player.ducks <= 0) {
         return {
             ducksSold: 0,
-            duckPrice: duckPrice,
+            duckPrice: price,
             earnings: 0
         };
     }
 
 
-    const earnings = player.ducks * duckPrice;
+    const earnings = player.ducks * price;
     await prisma.player.update({
         where: { id: playerId },
         data: {
@@ -64,22 +66,22 @@ export async function sellDucksForPlayer(playerId: string) {
         }
     });
 
-    await addTotalDucksSold(player.ducks);
-    await addTotalMoneyGenerated(earnings);
+    await WorldService.addTotalDucksSold(player.ducks);
+    await WorldService.addTotalMoneyGenerated(earnings);
 
     return {
         ducksSold: player.ducks,
-        duckPrice: duckPrice,
+        duckPrice: price,
         earnings: earnings
     };
 }
 
-export function getPriceHistory() {
+export function priceHistory() {
     let historicalPrices: number[] = [];
     const t = Date.now();
 
     for (let time = t - (gameConfig.config.marketUpdateIntervalMs * 100); time < t; time += gameConfig.config.marketUpdateIntervalMs) {
-        let price = getDuckPrice(time);
+        let price = duckPrice(time);
         historicalPrices.push(price);
     }
 

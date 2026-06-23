@@ -5,13 +5,15 @@ import swaggerUi from "swagger-ui-express";
 import pc from 'picocolors';
 
 import swaggerDocument from "../swagger.json" with { type: "json" };
+import { bootstrap } from "./start/bootstrap.js";
+import { RegisterRoutes } from "./generated/routes.js";
+
 import { errorHandler } from "./middlewares/error.middleware.js";
 import { loggerHandler } from "./middlewares/logger.middleware.js";
 import { notFoundHandler } from "./middlewares/notFound.middleware.js";
-import { ApiResponse } from "./utils/apiResponse.js";
-import { RegisterRoutes } from "./generated/routes.js";
 import { ipBannedHandler } from "./middlewares/ipBanned.middleware.js";
-import { bootstrap } from "./start/bootstrap.js";
+
+import { ApiResponse } from "./utils/apiResponse.js";
 
 
 

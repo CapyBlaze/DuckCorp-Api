@@ -1,11 +1,14 @@
-import { gameConfig } from "../config/GameConfig.js";
 import { prisma } from "../prisma.js";
-import { getProductionPerMinute } from "./building.service.js";
-import { getMaxStorageCapacity } from "./storage.service.js";
-import { addTotalDucksProduced } from "./world.service.js";
+
+import * as BuildingService from "./building.service.js";
+import * as StorageService from "./storage.service.js";
+import * as WorldServoce from "./world.service.js";
+
+import { gameConfig } from "../config/GameConfig.js";
 
 
-export async function processOfflineProduction(playerId: string) {
+
+export async function updateProduction(playerId: string) {
     const now = Date.now();
     const player = await prisma.player.findUnique({
         where: { id: playerId },
@@ -20,8 +23,8 @@ export async function processOfflineProduction(playerId: string) {
     }
     
     const minutesOffline = Math.min((now - player.lastSync.getTime()) / 60000, gameConfig.config.maxOfflineHours * 60);
-    const productionPerMinute = await getProductionPerMinute(playerId);
-    const maxStorageCapacity = await getMaxStorageCapacity(playerId);
+    const productionPerMinute = await BuildingService.getProductionPerMinute(playerId);
+    const maxStorageCapacity = await StorageService.getMaxStorageCapacity(playerId);
 
     const totalProduction = productionPerMinute * minutesOffline;
     const newDucks = Math.min(player.ducks + totalProduction, maxStorageCapacity);
@@ -38,7 +41,7 @@ export async function processOfflineProduction(playerId: string) {
         }
     });
 
-    await addTotalDucksProduced(actualProduced);
+    await WorldServoce.addTotalDucksProduced(actualProduced);
 
     return Math.floor(newDucks);
 }

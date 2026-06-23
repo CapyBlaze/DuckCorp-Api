@@ -3,6 +3,7 @@ import { initJson } from "./initJson.js";
 import { initWorld } from "./initWorld.js";
 
 
+
 export async function bootstrap() {
     initJson();
     logBootstrapMessage("JSON state initialized successfully.");

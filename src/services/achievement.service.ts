@@ -2,7 +2,9 @@ import type { Player } from "@prisma/client";
 import { prisma } from "../prisma.js";
 import { gameData, type AchievementItem } from "../data/GameData.js";
 
-export async function getPlayerAchievements(playerId: string) {
+
+
+export async function playerAchievements(playerId: string) {
     const player = await prisma.player.findUnique({
         where: { id: playerId },
         include: {
@@ -13,7 +15,7 @@ export async function getPlayerAchievements(playerId: string) {
     return player?.achievements || [];
 }
 
-export async function getAllAchievements() {
+export async function achievements() {
     const achievements: AchievementItem[] = [];
     for (const achievement of gameData.achievements) {
         if (!achievement.hidden) {
@@ -37,7 +39,7 @@ export async function getAllAchievements() {
 }
 
 
-export async function checkAchievements(player: Player) {
+export async function check(player: Player) {
     for (const achievement of gameData.achievements) {
         const alreadyUnlocked = await prisma.playerAchievement.findUnique({
             where: {
@@ -52,14 +54,14 @@ export async function checkAchievements(player: Player) {
             continue;
         }
 
-        if (isAchievementUnlocked(player, achievement)) {
-            await unlockAchievement(player, achievement);
+        if (isUnlocked(player, achievement)) {
+            await unlock(player, achievement);
         }
     }
 }
 
 
-function isAchievementUnlocked(
+function isUnlocked(
     player: Player,
     achievement: AchievementItem
 ): boolean {
@@ -81,7 +83,7 @@ function isAchievementUnlocked(
     }
 }
 
-async function unlockAchievement(
+async function unlock(
     player: Player,
     achievement: AchievementItem
 ) {

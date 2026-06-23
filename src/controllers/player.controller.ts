@@ -1,10 +1,12 @@
 import type { Request as ExpressRequest } from "express";
 import { Controller, Example, Get, Post, Request, Response, Route, Security, Tags } from "tsoa";
+
+import * as BuildingService from "../services/building.service.js";
+import * as StorageService from "../services/storage.service.js";
+import * as AchievementService from "../services/achievement.service.js";
+import * as DuckService from "../services/duck.service.js";
+
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
-import { getProductionPerMinute, getPlayerBuildings } from "../services/building.service.js";
-import { getMaxStorageCapacity, getPlayerStorages } from "../services/storage.service.js";
-import { checkAchievements, getPlayerAchievements } from "../services/achievement.service.js";
-import { processOfflineProduction } from "../services/duck.service.js";
 
 
 
@@ -49,18 +51,18 @@ export class PlayerController extends Controller {
         const user = (req as any).user;
         
         const [ducksAfterSync, buildings, storages, achievements] = await Promise.all([
-            processOfflineProduction(user.id),
-            getPlayerBuildings(user.id),
-            getPlayerStorages(user.id),
-            getPlayerAchievements(user.id),
+            DuckService.updateProduction(user.id),
+            BuildingService.getPlayer(user.id),
+            StorageService.getPlayer(user.id),
+            AchievementService.playerAchievements(user.id),
         ]);
 
         const [productionPerMinute, maxStorageCapacity] = await Promise.all([
-            getProductionPerMinute(user.id),
-            getMaxStorageCapacity(user.id),
+            BuildingService.getProductionPerMinute(user.id),
+            StorageService.getMaxStorageCapacity(user.id),
         ]);
 
-        const achievementsUnlocked = await checkAchievements(user);
+        const achievementsUnlocked = await AchievementService.check(user);
 
         
         return ApiResponse.success("Player data retrieved", {
@@ -98,11 +100,11 @@ export class PlayerController extends Controller {
     public async getPlayerSync(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
 
-        const ducksAfterSync = await processOfflineProduction(user.id);
-        const productionPerMinute = await getProductionPerMinute(user.id);
-        const maxStorageCapacity = await getMaxStorageCapacity(user.id);
+        const ducksAfterSync = await DuckService.updateProduction(user.id);
+        const productionPerMinute = await BuildingService.getProductionPerMinute(user.id);
+        const maxStorageCapacity = await StorageService.getMaxStorageCapacity(user.id);
 
-        const achievements = await checkAchievements(user);
+        const achievements = await AchievementService.check(user);
         
         return ApiResponse.success("Player data synchronized", {
             ducks: ducksAfterSync === -1 ? user.ducks : ducksAfterSync,
@@ -135,7 +137,7 @@ export class PlayerController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayerBuildings(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
-        const buildings = await getPlayerBuildings(user.id);
+        const buildings = await BuildingService.getPlayer(user.id);
 
         return ApiResponse.success("Player buildings retrieved", {
             buildings: buildings
@@ -164,7 +166,7 @@ export class PlayerController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayerStorages(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
-        const storages = await getPlayerStorages(user.id);
+        const storages = await StorageService.getPlayer(user.id);
 
         return ApiResponse.success("Player storages retrieved", {
             storages: storages

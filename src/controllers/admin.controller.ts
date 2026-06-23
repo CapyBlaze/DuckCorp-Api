@@ -1,14 +1,31 @@
-import { Body, Controller, Delete, Example, Get, Path, Post, Put, Query, Response, Route, Security, Tags } from "tsoa";
-import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
-import { getPlayersPaginated, getPlayer, loginAdmin, deleteUserById, resetPlayerData, setPlayerDataMoney, setPlayerDataDucks, addPlayerDataDucks, addPlayerDataMoney, removePlayerDataMoney, removePlayerDataDucks, ipUnbanned, ipBanned, countPlayers } from "../services/admin.service.js";
-import { processOfflineProduction } from "../services/duck.service.js";
-import { getPlayerBuildings, getProductionPerMinute } from "../services/building.service.js";
-import { getMaxStorageCapacity, getPlayerStorages } from "../services/storage.service.js";
-import { getPlayerAchievements } from "../services/achievement.service.js";
-import { gameConfig } from "../config/GameConfig.js";
-import os from "os";
+import {
+    Body,
+    Controller,
+    Delete,
+    Example,
+    Get,
+    Path,
+    Post,
+    Put,
+    Query,
+    Response,
+    Route,
+    Security,
+    Tags
+} from "tsoa";
+
 import systeminformation from "systeminformation";
-import { getWorldState } from "../services/world.service.js";
+import os from "os";
+
+import * as WorldService from "../services/world.service.js";
+import * as BuildingService from "../services/building.service.js";
+import * as StorageService from "../services/storage.service.js";
+import * as AchievementService from "../services/achievement.service.js";
+import * as AdminService from "../services/admin.service.js";
+import * as DuckService from "../services/duck.service.js";
+
+import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
+import { gameConfig } from "../config/GameConfig.js";
 
 
 
@@ -81,7 +98,7 @@ export class AdminController extends Controller {
             return ApiResponse.error("Information missing", "Username and password are required");
         }
 
-        const token = await loginAdmin(username, password);
+        const token = await AdminService.login(username, password);
 
         this.setStatus(201);
         return ApiResponse.success("User logged in", {
@@ -230,23 +247,23 @@ export class AdminController extends Controller {
         if (!pageSize || pageSize < 1) pageSize = 10;
         if (pageSize > 500) pageSize = 500;
 
-        
-        const players = await getPlayersPaginated(page, pageSize);
+
+        const players = await AdminService.players(page, pageSize);
 
         let data = [];
         for (const player of players) {
             const [ducksAfterSync, buildings, storages, achievements] = await Promise.all([
-                processOfflineProduction(player.id),
-                getPlayerBuildings(player.id),
-                getPlayerStorages(player.id),
-                getPlayerAchievements(player.id),
+                DuckService.updateProduction(player.id),
+                BuildingService.getPlayer(player.id),
+                StorageService.getPlayer(player.id),
+                AchievementService.playerAchievements(player.id),
             ]);
 
             const [productionPerMinute, maxStorageCapacity] = await Promise.all([
-                getProductionPerMinute(player.id),
-                getMaxStorageCapacity(player.id),
+                BuildingService.getProductionPerMinute(player.id),
+                StorageService.getMaxStorageCapacity(player.id),
             ]);
-            
+
             data.push({
                 id: player.id,
                 name: player.name,
@@ -299,7 +316,7 @@ export class AdminController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
     public async getPlayerById(@Path() id: string): Promise<ApiResponseFormat> {
-        const user = await getPlayer(id);
+        const user = await AdminService.getPlayer(id);
 
         if (!user) {
             this.setStatus(404);
@@ -308,17 +325,17 @@ export class AdminController extends Controller {
 
 
         const [ducksAfterSync, buildings, storages, achievements] = await Promise.all([
-            processOfflineProduction(user.id),
-            getPlayerBuildings(user.id),
-            getPlayerStorages(user.id),
-            getPlayerAchievements(user.id),
+            DuckService.updateProduction(user.id),
+            BuildingService.getPlayer(user.id),
+            StorageService.getPlayer(user.id),
+            AchievementService.playerAchievements(user.id),
         ]);
 
         const [productionPerMinute, maxStorageCapacity] = await Promise.all([
-            getProductionPerMinute(user.id),
-            getMaxStorageCapacity(user.id),
+            BuildingService.getProductionPerMinute(user.id),
+            StorageService.getMaxStorageCapacity(user.id),
         ]);
-        
+
         return ApiResponse.success("Player data retrieved", {
             id: user.id,
             name: user.name,
@@ -356,14 +373,14 @@ export class AdminController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
     public async deletePlayer(@Path() id: string): Promise<ApiResponseFormat> {
-        const user = await deleteUserById(id);
+        const user = await AdminService.deletePlayer(id);
 
         if (!user) {
             this.setStatus(404);
             return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
 
-        return ApiResponse.success("Player deleted", { 
+        return ApiResponse.success("Player deleted", {
             id: user.id,
             name: user.name
         });
@@ -385,16 +402,16 @@ export class AdminController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
     public async resetPlayer(
-        @Path() id: string, 
+        @Path() id: string,
     ): Promise<ApiResponseFormat> {
-        const user = await resetPlayerData(id);
+        const user = await AdminService.resetPlayer(id);
 
         if (!user) {
             this.setStatus(404);
             return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
 
-        return ApiResponse.success("Player reset", { 
+        return ApiResponse.success("Player reset", {
             id: user.id,
             name: user.name
         });
@@ -414,7 +431,7 @@ export class AdminController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
     public async setPlayerMoney(
-        @Path() id: string, 
+        @Path() id: string,
         @Body() body: SetPlayerMoneyBody
     ): Promise<ApiResponseFormat> {
         const { money } = body;
@@ -424,17 +441,17 @@ export class AdminController extends Controller {
             return ApiResponse.error("Invalid value", "Money must be a non-negative number");
         }
 
-        const user = await setPlayerDataMoney(id, money);
+        const user = await AdminService.setPlayerMoney(id, money);
 
         if (!user) {
             this.setStatus(404);
             return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
 
-        return ApiResponse.success("Player money updated", { 
-            id: user.id, 
-            name: user.name, 
-            money: user.money 
+        return ApiResponse.success("Player money updated", {
+            id: user.id,
+            name: user.name,
+            money: user.money
         });
     }
 
@@ -452,7 +469,7 @@ export class AdminController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
     public async setPlayerDucks(
-        @Path() id: string, 
+        @Path() id: string,
         @Body() body: SetPlayerDucksBody
     ): Promise<ApiResponseFormat> {
         const { ducks } = body;
@@ -462,17 +479,17 @@ export class AdminController extends Controller {
             return ApiResponse.error("Invalid value", "Ducks must be a non-negative number");
         }
 
-        const user = await setPlayerDataDucks(id, ducks);
+        const user = await AdminService.setPlayerDucks(id, ducks);
 
         if (!user) {
             this.setStatus(404);
             return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
 
-        return ApiResponse.success("Player ducks updated", { 
-            id: user.id, 
-            name: user.name, 
-            ducks: user.ducks 
+        return ApiResponse.success("Player ducks updated", {
+            id: user.id,
+            name: user.name,
+            ducks: user.ducks
         });
     }
 
@@ -490,7 +507,7 @@ export class AdminController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
     public async addPlayerMoney(
-        @Path() id: string, 
+        @Path() id: string,
         @Body() body: AddPlayerMoneyBody
     ): Promise<ApiResponseFormat> {
         const { money } = body;
@@ -500,17 +517,17 @@ export class AdminController extends Controller {
             return ApiResponse.error("Invalid value", "Money must be a non-negative number");
         }
 
-        const user = await addPlayerDataMoney(id, money);
+        const user = await AdminService.addPlayerMoney(id, money);
 
         if (!user) {
             this.setStatus(404);
             return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
 
-        return ApiResponse.success("Player money added", { 
-            id: user.id, 
-            name: user.name, 
-            money: user.money 
+        return ApiResponse.success("Player money added", {
+            id: user.id,
+            name: user.name,
+            money: user.money
         });
     }
 
@@ -528,7 +545,7 @@ export class AdminController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
     public async addPlayerDucks(
-        @Path() id: string, 
+        @Path() id: string,
         @Body() body: AddPlayerDucksBody
     ): Promise<ApiResponseFormat> {
         const { ducks } = body;
@@ -538,17 +555,17 @@ export class AdminController extends Controller {
             return ApiResponse.error("Invalid value", "Ducks must be a non-negative number");
         }
 
-        const user = await addPlayerDataDucks(id, ducks);
+        const user = await AdminService.addPlayerDucks(id, ducks);
 
         if (!user) {
             this.setStatus(404);
             return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
 
-        return ApiResponse.success("Player ducks added", { 
-            id: user.id, 
-            name: user.name, 
-            ducks: user.ducks 
+        return ApiResponse.success("Player ducks added", {
+            id: user.id,
+            name: user.name,
+            ducks: user.ducks
         });
     }
 
@@ -566,7 +583,7 @@ export class AdminController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
     public async removePlayerMoney(
-        @Path() id: string, 
+        @Path() id: string,
         @Body() body: RemovePlayerMoneyBody
     ): Promise<ApiResponseFormat> {
         const { money } = body;
@@ -576,17 +593,17 @@ export class AdminController extends Controller {
             return ApiResponse.error("Invalid value", "Money must be a non-negative number");
         }
 
-        const user = await removePlayerDataMoney(id, money);
+        const user = await AdminService.removePlayerMoney(id, money);
 
         if (!user) {
             this.setStatus(404);
             return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
 
-        return ApiResponse.success("Player money removed", { 
-            id: user.id, 
-            name: user.name, 
-            money: user.money 
+        return ApiResponse.success("Player money removed", {
+            id: user.id,
+            name: user.name,
+            money: user.money
         });
     }
 
@@ -604,7 +621,7 @@ export class AdminController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
     public async removePlayerDucks(
-        @Path() id: string, 
+        @Path() id: string,
         @Body() body: RemovePlayerDucksBody
     ): Promise<ApiResponseFormat> {
         const { ducks } = body;
@@ -614,17 +631,17 @@ export class AdminController extends Controller {
             return ApiResponse.error("Invalid value", "Ducks must be a non-negative number");
         }
 
-        const user = await removePlayerDataDucks(id, ducks);
+        const user = await AdminService.removePlayerDucks(id, ducks);
 
         if (!user) {
             this.setStatus(404);
             return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
 
-        return ApiResponse.success("Player ducks removed", { 
-            id: user.id, 
-            name: user.name, 
-            ducks: user.ducks 
+        return ApiResponse.success("Player ducks removed", {
+            id: user.id,
+            name: user.name,
+            ducks: user.ducks
         });
     }
 
@@ -649,8 +666,8 @@ export class AdminController extends Controller {
             this.setStatus(400);
             return ApiResponse.error("Information missing", "IP address is required");
         }
-        
-        await ipBanned(body.ipAddress);
+
+        await AdminService.ipBanned(body.ipAddress);
 
         return ApiResponse.success("IP banned", {
             ipAddress: body.ipAddress
@@ -679,14 +696,14 @@ export class AdminController extends Controller {
             return ApiResponse.error("Information missing", "IP address is required");
         }
 
-        await ipUnbanned(body.ipAddress);
+        await AdminService.ipUnbanned(body.ipAddress);
 
         return ApiResponse.success("IP unbanned", {
             ipAddress: body.ipAddress
         });
     }
 
-    
+
     /** Get global game totals and host resource statistics for the admin dashboard. */
     @Get("stats")
     @Security("adminAuth")
@@ -715,8 +732,8 @@ export class AdminController extends Controller {
         const load = await systeminformation.currentLoad();
         const mem = await systeminformation.mem();
 
-        const playerCount = await countPlayers();
-        const worldState = await getWorldState();
+        const playerCount = await AdminService.countPlayers();
+        const worldState = await WorldService.getState();
 
         return ApiResponse.success("Admin stats fetched", {
             players: playerCount,

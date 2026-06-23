@@ -1,7 +1,8 @@
 import type { Request as ExpressRequest } from "express";
 import { Controller, Example, Get, Query, Request, Response, Route, Security, Tags } from "tsoa";
+
+import * as LeaderboardService from "../services/leaderbord.service.js";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
-import { getPlayerRank, playersByDucks, playersByMoney, playersByNbBuildings, playersByNbStorage, playersByProduction, playersByStorage } from "../services/leaderbord.service.js";
 
 
 
@@ -61,37 +62,37 @@ export class LeaderboardController extends Controller {
 
         switch (sort) {
             case SortType.byDucks: {
-                const players = await playersByDucks(page, pageSize);
+                const players = await LeaderboardService.playersByDucks(page, pageSize);
                 return ApiResponse.success("Leaderboard by ducks retrieved successfully", players);
             }
 
             case SortType.byMoney: {
-                const players = await playersByMoney(page, pageSize);
+                const players = await LeaderboardService.playersByMoney(page, pageSize);
                 return ApiResponse.success("Leaderboard by money retrieved successfully", players);
             }
 
             case SortType.byProduction: {
-                const players = await playersByProduction(page, pageSize);
+                const players = await LeaderboardService.playersByProduction(page, pageSize);
                 return ApiResponse.success("Leaderboard by production retrieved successfully", players);
             }
 
             case SortType.byStorage: {
-                const players = await playersByStorage(page, pageSize);
+                const players = await LeaderboardService.playersByStorage(page, pageSize);
                 return ApiResponse.success("Leaderboard by storage retrieved successfully", players);
             }
 
             case SortType.byNbBuildings: {
-                const players = await playersByNbBuildings(page, pageSize);
+                const players = await LeaderboardService.playersByNbBuildings(page, pageSize);
                 return ApiResponse.success("Leaderboard by number of buildings retrieved successfully", players);
             }
 
             case SortType.byNbStorage: {
-                const players = await playersByNbStorage(page, pageSize);
+                const players = await LeaderboardService.playersByNbStorage(page, pageSize);
                 return ApiResponse.success("Leaderboard by number of storage units retrieved successfully", players);
             }
 
             default: {
-                const players = await playersByDucks(page, pageSize);
+                const players = await LeaderboardService.playersByDucks(page, pageSize);
                 return ApiResponse.success("Leaderboard by ducks retrieved successfully", players);
             }
         }
@@ -119,7 +120,7 @@ export class LeaderboardController extends Controller {
     public async getMyLeaderboard(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
 
-        const playerDucks = await getPlayerRank(user.id);
+        const playerDucks = await LeaderboardService.getPlayerRank(user.id);
         return ApiResponse.success("Your leaderboard ranks retrieved successfully", playerDucks);
     }
 }

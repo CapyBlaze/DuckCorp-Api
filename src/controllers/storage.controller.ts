@@ -1,9 +1,11 @@
 import type { Request as ExpressRequest } from "express";
 import { Body, Controller, Example, Get, Post, Request, Response, Route, Security, Tags } from "tsoa";
+
+import * as StorageService from "../services/storage.service.js";
+import * as AchievementService from "../services/achievement.service.js";
+
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
-import { buyStorageForPlayer, BuyStorageResult } from "../services/storage.service.js";
-import { checkAchievements } from "../services/achievement.service.js";
 
 
 
@@ -69,7 +71,7 @@ export class StorageController extends Controller {
         }
 
 
-        const result = await buyStorageForPlayer(user.id, id);
+        const result = await StorageService.buy(user.id, id);
         if (!result) {
             this.setStatus(500);
             return ApiResponse.error("Unknown error", "An unknown error occurred while processing the purchase");
@@ -77,20 +79,20 @@ export class StorageController extends Controller {
 
 
         switch (result.result) {
-            case BuyStorageResult.PlayerNotFound:
+            case StorageService.BuyResult.PlayerNotFound:
                 this.setStatus(404);
                 return ApiResponse.failure("Not Found", "Player not found");
 
-            case BuyStorageResult.NotEnoughMoney:
+            case StorageService.BuyResult.NotEnoughMoney:
                 this.setStatus(400);
                 return ApiResponse.failure("Not enough money", "Insufficient funds to purchase this storage");
 
-            case BuyStorageResult.StorageNotFound:
+            case StorageService.BuyResult.StorageNotFound:
                 this.setStatus(404);
                 return ApiResponse.failure("Not Found", "Storage not found");
 
-            case BuyStorageResult.Success:
-                const achievements = await checkAchievements(user);
+            case StorageService.BuyResult.Success:
+                const achievements = await AchievementService.check(user);
 
                 return ApiResponse.success("Storage purchased", {
                     name: result.name,

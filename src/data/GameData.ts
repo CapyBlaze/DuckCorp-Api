@@ -1,6 +1,7 @@
 import { loadJsonData } from "../utils/loadJson.js";
 
 
+
 export interface Translation {
   en: string;
   fr: string;

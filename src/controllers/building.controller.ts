@@ -1,9 +1,22 @@
 import type { Request as ExpressRequest } from "express";
-import { Body, Controller, Example, Get, Post, Request, Response, Route, Security, Tags } from "tsoa";
+import { 
+    Body, 
+    Controller, 
+    Example, 
+    Get, 
+    Post, 
+    Request, 
+    Response, 
+    Route, 
+    Security, 
+    Tags
+} from "tsoa";
+
+import * as BuildingService from "../services/building.service.js";
+import * as AchievementService from "../services/achievement.service.js";
+
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
-import { buyBuildingForPlayer, BuyBuildingResult } from "../services/building.service.js";
-import { checkAchievements } from "../services/achievement.service.js";
 
 
 
@@ -78,7 +91,7 @@ export class BuildingController extends Controller {
         }
 
 
-        const result = await buyBuildingForPlayer(user.id, id);
+        const result = await BuildingService.buy(user.id, id);
         if (!result) {
             this.setStatus(500);
             return ApiResponse.error("Unknown error", "An unknown error occurred while processing the purchase");
@@ -86,20 +99,20 @@ export class BuildingController extends Controller {
 
 
         switch (result.result) {
-            case BuyBuildingResult.PlayerNotFound:
+            case BuildingService.BuyResult.PlayerNotFound:
                 this.setStatus(404);
                 return ApiResponse.failure("Not Found", "Player not found");
 
-            case BuyBuildingResult.NotEnoughMoney:
+            case BuildingService.BuyResult.NotEnoughMoney:
                 this.setStatus(400);
                 return ApiResponse.failure("Not enough money", "Insufficient funds to purchase this building");
 
-            case BuyBuildingResult.BuildingNotFound:
+            case BuildingService.BuyResult.BuildingNotFound:
                 this.setStatus(404);
                 return ApiResponse.failure("Not Found", "Building not found");
 
-            case BuyBuildingResult.Success:
-                const achievements = await checkAchievements(user);
+            case BuildingService.BuyResult.Success:
+                const achievements = await AchievementService.check(user);
 
                 return ApiResponse.success("Building purchased", {
                     name: result.name,

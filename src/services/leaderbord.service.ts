@@ -1,6 +1,7 @@
 import { prisma } from "../prisma.js";
-import { getProductionPerMinute } from "./building.service.js";
-import { getMaxStorageCapacity } from "./storage.service.js";
+import * as BuildingService from "./building.service.js";
+import * as StorageService from "./storage.service.js";
+
 
 
 export async function playersByDucks(page: number = 1, pageSize: number = 10) {
@@ -42,7 +43,7 @@ export async function playersByProduction(page: number = 1, pageSize: number = 1
     });
 
     const playersWithProduction = await Promise.all(players.map(async (player) => {
-        const productionPerMinute = await getProductionPerMinute(player.id);
+        const productionPerMinute = await BuildingService.getProductionPerMinute(player.id);
         return {
             name: player.name,
             productionPerMinute
@@ -63,7 +64,7 @@ export async function playersByStorage(page: number = 1, pageSize: number = 10) 
     });
 
     const playersWithStorage = await Promise.all(players.map(async (player) => {
-        const maxStorageCapacity = await getMaxStorageCapacity(player.id);
+        const maxStorageCapacity = await StorageService.getMaxStorageCapacity(player.id);
         return {
             name: player.name,
             maxStorageCapacity
@@ -156,14 +157,14 @@ export async function getPlayerRank(playerId: string) {
 
     const productionList = await Promise.all(allPlayers.map(async (p) => ({
         id: p.id,
-        score: await getProductionPerMinute(p.id)
+        score: await BuildingService.getProductionPerMinute(p.id)
     })));
     productionList.sort((a, b) => b.score - a.score);
     const productionRank = productionList.findIndex(p => p.id === playerId) + 1;
 
     const storageList = await Promise.all(allPlayers.map(async (p) => ({
         id: p.id,
-        score: await getMaxStorageCapacity(p.id)
+        score: await StorageService.getMaxStorageCapacity(p.id)
     })));
     storageList.sort((a, b) => b.score - a.score);
     const storageRank = storageList.findIndex(p => p.id === playerId) + 1;
