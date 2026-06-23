@@ -3,7 +3,7 @@ import { ApiResponse } from "../utils/apiResponse.js";
 
 
 
-export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
+export const notFoundHandler = (req: Request, res: Response, _next: NextFunction) => {
     return res.status(404).json(
         ApiResponse.error(
             "Not Found",

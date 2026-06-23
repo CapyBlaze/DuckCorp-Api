@@ -32,7 +32,7 @@ const globalLimiter = rateLimit({
     legacyHeaders: false,
     validate: { trustProxy }, 
 
-    handler: (req, res, next, options) => {
+    handler: (_req, res, _next, options) => {
         return res.status(options.statusCode).json(
             ApiResponse.error(
                 "Too Many Requests",
@@ -49,7 +49,7 @@ const authLimiter = rateLimit({
     legacyHeaders: false,
     validate: { trustProxy }, 
 
-    handler: (req, res, next, options) => {
+    handler: (_req, res, _next, options) => {
         return res.status(options.statusCode).json(
             ApiResponse.error(
                 "Too Many Requests",
@@ -66,7 +66,7 @@ const adminLimiter = rateLimit({
     legacyHeaders: false,
     validate: { trustProxy },
 
-    handler: (req, res, next, options) => {
+    handler: (_req, res, _next, options) => {
         return res.status(options.statusCode).json(
             ApiResponse.error(
                 "Too Many Requests",

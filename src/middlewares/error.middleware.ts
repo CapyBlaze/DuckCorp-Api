@@ -18,7 +18,7 @@ export class HttpError extends Error {
     }
 }
 
-export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     if (err instanceof HttpError) {
         return res.status(err.status).json(
             ApiResponse.error(
