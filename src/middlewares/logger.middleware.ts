@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
 import pc from "picocolors";
 
 export function loggerHandler(req: Request, res: Response, next: NextFunction) {

@@ -1,11 +1,16 @@
 import tsParser from "@typescript-eslint/parser";
-import tsPlugin from "@typescript-eslint/typescript-estree";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
+import eslintConfigPrettier from "eslint-config-prettier";
 
 export default [
+    eslintConfigPrettier,
     {
         files: ["**/*.ts"],
         languageOptions: {
             parser: tsParser,
+        },
+        plugins: {
+            "@typescript-eslint": tsPlugin,
         },
         rules: {
             "@typescript-eslint/no-unused-vars": [
@@ -15,12 +20,12 @@ export default [
                     varsIgnorePattern: "^_",
                 },
             ],
+
             "sort-imports": [
                 "error",
                 {
                     ignoreDeclarationSort: true,
                     ignoreMemberSort: false,
-                    memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
                 },
             ],
         },
