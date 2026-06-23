@@ -1,24 +1,22 @@
 import type { Request as ExpressRequest } from "express";
-import { 
-    Body, 
-    Controller, 
-    Delete, 
+import {
+    Body,
+    Controller,
+    Delete,
     Example,
-    Get, 
-    Path, 
-    Post, 
-    Request, 
-    Response, 
-    Route, 
-    Security, 
-    SuccessResponse, 
-    Tags 
+    Get,
+    Path,
+    Post,
+    Request,
+    Response,
+    Route,
+    Security,
+    SuccessResponse,
+    Tags,
 } from "tsoa";
 
 import * as AuthService from "../services/auth.service.js";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
-
-
 
 interface RegisterBody {
     name: string;
@@ -41,9 +39,9 @@ export class AuthController extends Controller {
             name: "DuckMaster",
             lastActive: "2026-06-17T18:30:00.000Z",
             createdAt: "2026-06-17T18:30:00.000Z",
-            updatedAt: "2026-06-17T18:30:00.000Z"
+            updatedAt: "2026-06-17T18:30:00.000Z",
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Missing name")
     @SuccessResponse(201, "User registered")
@@ -68,7 +66,6 @@ export class AuthController extends Controller {
         });
     }
 
-
     /** Get the profile of the authenticated player from the bearer token. */
     @Get("profile")
     @Security("playerAuth")
@@ -80,9 +77,9 @@ export class AuthController extends Controller {
             name: "DuckMaster",
             lastActive: "2026-06-17T18:30:00.000Z",
             createdAt: "2026-06-17T18:25:00.000Z",
-            updatedAt: "2026-06-17T18:30:00.000Z"
+            updatedAt: "2026-06-17T18:30:00.000Z",
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
@@ -96,7 +93,6 @@ export class AuthController extends Controller {
         });
     }
 
-
     /** Get a public player profile by ID. This route does not expose money, ducks, token, or private progress data. */
     @Get("player/{id}")
     @Example<ApiResponseFormat>({
@@ -107,9 +103,9 @@ export class AuthController extends Controller {
             name: "DuckMaster",
             lastActive: "2026-06-17T18:30:00.000Z",
             createdAt: "2026-06-17T18:25:00.000Z",
-            updatedAt: "2026-06-17T18:30:00.000Z"
+            updatedAt: "2026-06-17T18:30:00.000Z",
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(404, "Player not found")
     public async getPlayer(@Path() id: string): Promise<ApiResponseFormat> {
@@ -129,7 +125,6 @@ export class AuthController extends Controller {
         });
     }
 
-
     /** Delete the authenticated player's account and progress. */
     @Delete("profile")
     @Security("playerAuth")
@@ -138,18 +133,18 @@ export class AuthController extends Controller {
         message: "User profile deleted",
         data: {
             id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            name: "DuckMaster"
+            name: "DuckMaster",
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async deleteProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
         await AuthService.disableUser(user.id);
 
-        return ApiResponse.success("User profile deleted", { 
-            id: user.id, 
-            name: user.name 
+        return ApiResponse.success("User profile deleted", {
+            id: user.id,
+            name: user.name,
         });
     }
 }

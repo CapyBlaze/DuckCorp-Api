@@ -1,21 +1,18 @@
 import { loadJsonConfig } from "../utils/loadJson.js";
 import { saveJsonConfig } from "../utils/saveJson.js";
 
-
-
 export interface Config {
     startingValues: {
-        ducks: number,
-        money: number
-    },
-    maxOfflineHours: number,
-    marketUpdateIntervalMs: number,
+        ducks: number;
+        money: number;
+    };
+    maxOfflineHours: number;
+    marketUpdateIntervalMs: number;
     duckPriceFluctuation: {
-        min: number,
-        max: number
-    },
+        min: number;
+        max: number;
+    };
 }
-
 
 class GameConfig {
     config: Config;

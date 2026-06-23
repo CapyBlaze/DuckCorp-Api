@@ -11,7 +11,7 @@ import {
     Response,
     Route,
     Security,
-    Tags
+    Tags,
 } from "tsoa";
 
 import systeminformation from "systeminformation";
@@ -26,8 +26,6 @@ import * as DuckService from "../services/duck.service.js";
 
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameConfig } from "../config/GameConfig.js";
-
-
 
 interface RegisterAdminBody {
     username: string;
@@ -85,9 +83,9 @@ export class AdminController extends Controller {
         message: "User logged in",
         data: {
             token: "admin_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-            name: "admin"
+            name: "admin",
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Missing credentials")
     public async login(@Body() body: RegisterAdminBody): Promise<ApiResponseFormat> {
@@ -107,7 +105,6 @@ export class AdminController extends Controller {
         });
     }
 
-
     /** Get the current game configuration, including starting values and market tuning. */
     @Get("config")
     @Security("adminAuth")
@@ -118,18 +115,14 @@ export class AdminController extends Controller {
             startingValues: { ducks: 0, money: 1000 },
             maxOfflineHours: 8,
             marketUpdateIntervalMs: 60000,
-            duckPriceFluctuation: { min: 5, max: 20 }
+            duckPriceFluctuation: { min: 5, max: 20 },
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getConfig(): Promise<ApiResponseFormat> {
-        return ApiResponse.success(
-            "Game configuration retrieved successfully",
-            gameConfig.config
-        );
+        return ApiResponse.success("Game configuration retrieved successfully", gameConfig.config);
     }
-
 
     /** Update one or more game configuration values and persist them to disk. */
     @Put("config")
@@ -141,24 +134,31 @@ export class AdminController extends Controller {
             startingValues: { ducks: 0, money: 1200 },
             maxOfflineHours: 10,
             marketUpdateIntervalMs: 60000,
-            duckPriceFluctuation: { min: 5, max: 25 }
+            duckPriceFluctuation: { min: 5, max: 25 },
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Invalid configuration value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async updateConfig(@Body() body: ConfigUpdateBody): Promise<ApiResponseFormat> {
-        const { startingValues, maxOfflineHours, marketUpdateIntervalMs, duckPriceFluctuation } = body;
+        const { startingValues, maxOfflineHours, marketUpdateIntervalMs, duckPriceFluctuation } =
+            body;
 
         if (startingValues !== undefined) {
             if (startingValues?.ducks !== undefined && startingValues.ducks < 0) {
                 this.setStatus(400);
-                return ApiResponse.error("Invalid value", "startingValues.ducks must be a non-negative number");
+                return ApiResponse.error(
+                    "Invalid value",
+                    "startingValues.ducks must be a non-negative number"
+                );
             }
 
             if (startingValues?.money !== undefined && startingValues.money < 0) {
                 this.setStatus(400);
-                return ApiResponse.error("Invalid value", "startingValues.money must be a non-negative number");
+                return ApiResponse.error(
+                    "Invalid value",
+                    "startingValues.money must be a non-negative number"
+                );
             }
 
             gameConfig.config.startingValues = {
@@ -170,7 +170,10 @@ export class AdminController extends Controller {
         if (maxOfflineHours !== undefined) {
             if (maxOfflineHours < 0) {
                 this.setStatus(400);
-                return ApiResponse.error("Invalid value", "maxOfflineHours must be a non-negative number");
+                return ApiResponse.error(
+                    "Invalid value",
+                    "maxOfflineHours must be a non-negative number"
+                );
             }
 
             gameConfig.config.maxOfflineHours = maxOfflineHours;
@@ -181,7 +184,10 @@ export class AdminController extends Controller {
         }
 
         if (duckPriceFluctuation !== undefined) {
-            if (duckPriceFluctuation.min > duckPriceFluctuation.max || duckPriceFluctuation.min < 0) {
+            if (
+                duckPriceFluctuation.min > duckPriceFluctuation.max ||
+                duckPriceFluctuation.min < 0
+            ) {
                 this.setStatus(400);
                 return ApiResponse.error(
                     "Invalid value",
@@ -200,13 +206,12 @@ export class AdminController extends Controller {
         return ApiResponse.success("Game configuration updated successfully", gameConfig.config);
     }
 
-
-    /** 
+    /**
      * Get a paginated list of players
-     * 
+     *
      * @param page The page number for pagination (default: 1)
      * @param pageSize The number of players to return per page (default: 10)
-     * 
+     *
      * @isInt page
      * @isInt pageSize
      * @minimum page 1
@@ -233,20 +238,19 @@ export class AdminController extends Controller {
                 updatedAt: "2026-06-17T18:30:00.000Z",
                 buildings: [],
                 storages: [],
-                achievements: []
-            }
+                achievements: [],
+            },
         ],
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayers(
         @Query() page?: number,
-        @Query('limit') pageSize?: number
+        @Query("limit") pageSize?: number
     ): Promise<ApiResponseFormat> {
         if (!page || page < 1) page = 1;
         if (!pageSize || pageSize < 1) pageSize = 10;
         if (pageSize > 500) pageSize = 500;
-
 
         const players = await AdminService.players(page, pageSize);
 
@@ -281,13 +285,12 @@ export class AdminController extends Controller {
 
                 buildings: buildings,
                 storages: storages,
-                achievements: achievements
+                achievements: achievements,
             });
         }
 
         return ApiResponse.success("Player data retrieved", data);
     }
-
 
     /** Get complete gameplay and account details for one player by ID. */
     @Get("players/{id}")
@@ -309,9 +312,9 @@ export class AdminController extends Controller {
             updatedAt: "2026-06-17T18:30:00.000Z",
             buildings: [],
             storages: [],
-            achievements: []
+            achievements: [],
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
@@ -322,7 +325,6 @@ export class AdminController extends Controller {
             this.setStatus(404);
             return ApiResponse.error("Player not found", "No player exists with the provided ID");
         }
-
 
         const [ducksAfterSync, buildings, storages, achievements] = await Promise.all([
             DuckService.updateProduction(user.id),
@@ -353,10 +355,9 @@ export class AdminController extends Controller {
 
             buildings: buildings,
             storages: storages,
-            achievements: achievements
+            achievements: achievements,
         });
     }
-
 
     /** Delete a player account and return the deleted player's identity. */
     @Delete("players/{id}")
@@ -366,9 +367,9 @@ export class AdminController extends Controller {
         message: "Player deleted",
         data: {
             id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            name: "DuckMaster"
+            name: "DuckMaster",
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
@@ -382,10 +383,9 @@ export class AdminController extends Controller {
 
         return ApiResponse.success("Player deleted", {
             id: user.id,
-            name: user.name
+            name: user.name,
         });
     }
-
 
     /** Reset a player's progress to default game values while keeping the account. */
     @Post("players/{id}/reset")
@@ -395,15 +395,13 @@ export class AdminController extends Controller {
         message: "Player reset",
         data: {
             id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            name: "DuckMaster"
+            name: "DuckMaster",
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
-    public async resetPlayer(
-        @Path() id: string,
-    ): Promise<ApiResponseFormat> {
+    public async resetPlayer(@Path() id: string): Promise<ApiResponseFormat> {
         const user = await AdminService.resetPlayer(id);
 
         if (!user) {
@@ -413,10 +411,9 @@ export class AdminController extends Controller {
 
         return ApiResponse.success("Player reset", {
             id: user.id,
-            name: user.name
+            name: user.name,
         });
     }
-
 
     /** Replace a player's money amount with an exact non-negative value. */
     @Post("players/{id}/money")
@@ -425,7 +422,7 @@ export class AdminController extends Controller {
         success: true,
         message: "Player money updated",
         data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", money: 5000 },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Invalid money value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -451,10 +448,9 @@ export class AdminController extends Controller {
         return ApiResponse.success("Player money updated", {
             id: user.id,
             name: user.name,
-            money: user.money
+            money: user.money,
         });
     }
-
 
     /** Replace a player's duck amount with an exact non-negative value. */
     @Post("players/{id}/ducks")
@@ -463,7 +459,7 @@ export class AdminController extends Controller {
         success: true,
         message: "Player ducks updated",
         data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", ducks: 250 },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Invalid duck value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -489,10 +485,9 @@ export class AdminController extends Controller {
         return ApiResponse.success("Player ducks updated", {
             id: user.id,
             name: user.name,
-            ducks: user.ducks
+            ducks: user.ducks,
         });
     }
-
 
     /** Add a non-negative amount of money to a player. */
     @Post("players/{id}/add-money")
@@ -501,7 +496,7 @@ export class AdminController extends Controller {
         success: true,
         message: "Player money added",
         data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", money: 1500 },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Invalid money value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -527,10 +522,9 @@ export class AdminController extends Controller {
         return ApiResponse.success("Player money added", {
             id: user.id,
             name: user.name,
-            money: user.money
+            money: user.money,
         });
     }
-
 
     /** Add a non-negative amount of ducks to a player. */
     @Post("players/{id}/add-ducks")
@@ -539,7 +533,7 @@ export class AdminController extends Controller {
         success: true,
         message: "Player ducks added",
         data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", ducks: 350 },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Invalid duck value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -565,10 +559,9 @@ export class AdminController extends Controller {
         return ApiResponse.success("Player ducks added", {
             id: user.id,
             name: user.name,
-            ducks: user.ducks
+            ducks: user.ducks,
         });
     }
-
 
     /** Remove a non-negative amount of money from a player. */
     @Post("players/{id}/remove-money")
@@ -577,7 +570,7 @@ export class AdminController extends Controller {
         success: true,
         message: "Player money removed",
         data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", money: 800 },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Invalid money value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -603,10 +596,9 @@ export class AdminController extends Controller {
         return ApiResponse.success("Player money removed", {
             id: user.id,
             name: user.name,
-            money: user.money
+            money: user.money,
         });
     }
-
 
     /** Remove a non-negative amount of ducks from a player. */
     @Post("players/{id}/remove-ducks")
@@ -615,7 +607,7 @@ export class AdminController extends Controller {
         success: true,
         message: "Player ducks removed",
         data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", ducks: 120 },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Invalid duck value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -641,10 +633,9 @@ export class AdminController extends Controller {
         return ApiResponse.success("Player ducks removed", {
             id: user.id,
             name: user.name,
-            ducks: user.ducks
+            ducks: user.ducks,
         });
     }
-
 
     /** Ban an IP address from accessing the API. */
     @Post("ip/ban")
@@ -653,13 +644,11 @@ export class AdminController extends Controller {
         success: true,
         message: "IP banned",
         data: { ipAddress: "203.0.113.42" },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Missing IP address")
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async banIP(
-        @Body() body: IPBanBody
-    ): Promise<ApiResponseFormat> {
+    public async banIP(@Body() body: IPBanBody): Promise<ApiResponseFormat> {
         const { ipAddress } = body;
 
         if (!ipAddress) {
@@ -670,10 +659,9 @@ export class AdminController extends Controller {
         await AdminService.ipBanned(body.ipAddress);
 
         return ApiResponse.success("IP banned", {
-            ipAddress: body.ipAddress
+            ipAddress: body.ipAddress,
         });
     }
-
 
     /** Remove a ban from an IP address. */
     @Post("ip/unban")
@@ -682,13 +670,11 @@ export class AdminController extends Controller {
         success: true,
         message: "IP unbanned",
         data: { ipAddress: "203.0.113.42" },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Missing IP address")
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async unbanIP(
-        @Body() body: IPBanBody
-    ): Promise<ApiResponseFormat> {
+    public async unbanIP(@Body() body: IPBanBody): Promise<ApiResponseFormat> {
         const { ipAddress } = body;
 
         if (!ipAddress) {
@@ -699,10 +685,9 @@ export class AdminController extends Controller {
         await AdminService.ipUnbanned(body.ipAddress);
 
         return ApiResponse.success("IP unbanned", {
-            ipAddress: body.ipAddress
+            ipAddress: body.ipAddress,
         });
     }
-
 
     /** Get global game totals and host resource statistics for the admin dashboard. */
     @Get("stats")
@@ -721,11 +706,11 @@ export class AdminController extends Controller {
                 usedMB: 512,
                 freeMB: 1536,
                 totalMB: 2048,
-                usagePercent: 25
+                usagePercent: 25,
             },
-            cpuUsage: "12.34%"
+            cpuUsage: "12.34%",
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getStats(): Promise<ApiResponseFormat> {
@@ -746,11 +731,9 @@ export class AdminController extends Controller {
                 usedMB: Math.round(mem.used / 1024 / 1024),
                 freeMB: Math.round(mem.free / 1024 / 1024),
                 totalMB: Math.round(mem.total / 1024 / 1024),
-                usagePercent: Number(
-                    ((mem.used / mem.total) * 100).toFixed(2)
-                )
+                usagePercent: Number(((mem.used / mem.total) * 100).toFixed(2)),
             },
-            cpuUsage: `${load.currentLoad.toFixed(2)}%`
+            cpuUsage: `${load.currentLoad.toFixed(2)}%`,
         });
     }
 }

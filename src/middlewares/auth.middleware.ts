@@ -4,8 +4,6 @@ import { prisma } from "../prisma.js";
 import { adminSessions } from "../services/admin.service.js";
 import { HttpError } from "./error.middleware.js";
 
-
-
 export async function expressAuthentication(request: Request, securityName: string): Promise<any> {
     const token = request.headers.authorization?.replace("Bearer ", "");
 
@@ -13,11 +11,10 @@ export async function expressAuthentication(request: Request, securityName: stri
         throw new HttpError(401, "Missing Token", "Token is missing");
     }
 
-
     switch (securityName) {
         case "playerAuth": {
             const user = await prisma.player.findUnique({
-                where: { token }
+                where: { token },
             });
 
             if (!user) {
@@ -30,7 +27,7 @@ export async function expressAuthentication(request: Request, securityName: stri
 
             return user;
         }
-            
+
         case "adminAuth": {
             const session = adminSessions.get(token);
 
@@ -46,7 +43,7 @@ export async function expressAuthentication(request: Request, securityName: stri
             return {
                 type: "admin",
                 createdAt: session.createdAt,
-                expiresAt: session.expiresAt
+                expiresAt: session.expiresAt,
             };
         }
 

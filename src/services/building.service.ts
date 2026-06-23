@@ -1,13 +1,11 @@
 import { prisma } from "../prisma.js";
 import { unknownTranslation, gameData, type Translation } from "../data/GameData.js";
 
-
-
 export enum BuyResult {
     Success,
     PlayerNotFound,
     NotEnoughMoney,
-    BuildingNotFound
+    BuildingNotFound,
 }
 
 type BuySuccess = {
@@ -21,11 +19,7 @@ type BuySuccess = {
 
 type BuyResponse = BuySuccess | { result: Exclude<BuyResult, BuyResult.Success> };
 
-
-export async function buy(
-    playerId: string,
-    buildingId: string
-): Promise<BuyResponse> {
+export async function buy(playerId: string, buildingId: string): Promise<BuyResponse> {
     const building = gameData.buildings.find((b: any) => b.id === buildingId);
     if (!building) {
         return { result: BuyResult.BuildingNotFound };
@@ -34,7 +28,7 @@ export async function buy(
     const result = await prisma.$transaction(async (tx) => {
         const player = await tx.player.findUnique({
             where: { id: playerId },
-            select: { money: true }
+            select: { money: true },
         });
 
         if (!player) {
@@ -49,36 +43,36 @@ export async function buy(
             where: { id: playerId },
             data: {
                 money: {
-                    decrement: building.cost
+                    decrement: building.cost,
                 },
                 totalBuildings: {
-                    increment: 1
-                }
-            }
+                    increment: 1,
+                },
+            },
         });
 
         const upserted = await tx.playerBuilding.upsert({
             where: {
                 buildingId_playerId: {
                     playerId,
-                    buildingId
-                }
+                    buildingId,
+                },
             },
             update: {
                 amount: {
-                    increment: 1
-                }
+                    increment: 1,
+                },
             },
             create: {
                 playerId,
                 buildingId,
-                amount: 1
-            }
+                amount: 1,
+            },
         });
 
         const updatedPlayer = await tx.player.findUnique({
             where: { id: playerId },
-            select: { money: true }
+            select: { money: true },
         });
 
         return {
@@ -102,23 +96,21 @@ export async function getPlayer(playerId: string) {
                 select: {
                     buildingId: true,
                     amount: true,
-                }
-            }
-        }
+                },
+            },
+        },
     });
 
-
     const buildings = (player?.buildings || []).map((b) => {
-        const buildingData = gameData.buildings.find(
-            (bd) => bd.id === b.buildingId
-        );
+        const buildingData = gameData.buildings.find((bd) => bd.id === b.buildingId);
 
-        if (!buildingData) return {
-            buildingId: b.buildingId,
-            name: unknownTranslation(),
-            amount: b.amount,
-            productionPerMinute: +(0).toFixed(2),
-        };
+        if (!buildingData)
+            return {
+                buildingId: b.buildingId,
+                name: unknownTranslation(),
+                amount: b.amount,
+                productionPerMinute: +(0).toFixed(2),
+            };
 
         return {
             buildingId: b.buildingId,

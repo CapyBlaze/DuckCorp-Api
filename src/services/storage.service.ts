@@ -1,13 +1,11 @@
 import { prisma } from "../prisma.js";
 import { gameData, unknownTranslation, type Translation } from "../data/GameData.js";
 
-
-
 export enum BuyResult {
     Success,
     PlayerNotFound,
     NotEnoughMoney,
-    StorageNotFound
+    StorageNotFound,
 }
 
 type BuySuccess = {
@@ -21,11 +19,7 @@ type BuySuccess = {
 
 type BuyResponse = BuySuccess | { result: Exclude<BuyResult, BuyResult.Success> };
 
-
-export async function buy(
-    playerId: string,
-    storageId: string
-): Promise<BuyResponse> {
+export async function buy(playerId: string, storageId: string): Promise<BuyResponse> {
     const storage = gameData.storages.find((s: any) => s.id === storageId);
     if (!storage) {
         return { result: BuyResult.StorageNotFound };
@@ -34,7 +28,7 @@ export async function buy(
     const result = await prisma.$transaction(async (tx) => {
         const player = await tx.player.findUnique({
             where: { id: playerId },
-            select: { money: true }
+            select: { money: true },
         });
 
         if (!player) {
@@ -49,36 +43,36 @@ export async function buy(
             where: { id: playerId },
             data: {
                 money: {
-                    decrement: storage.cost
+                    decrement: storage.cost,
                 },
                 totalStorage: {
-                    increment: 1
-                }
-            }
+                    increment: 1,
+                },
+            },
         });
 
         const upserted = await tx.playerStorage.upsert({
             where: {
                 storageId_playerId: {
                     playerId,
-                    storageId
-                }
+                    storageId,
+                },
             },
             update: {
                 amount: {
-                    increment: 1
-                }
+                    increment: 1,
+                },
             },
             create: {
                 playerId,
                 storageId,
-                amount: 1
-            }
+                amount: 1,
+            },
         });
 
         const updatedPlayer = await tx.player.findUnique({
             where: { id: playerId },
-            select: { money: true }
+            select: { money: true },
         });
 
         return {
@@ -102,22 +96,21 @@ export async function getPlayer(playerId: string) {
                 select: {
                     storageId: true,
                     amount: true,
-                }
-            }
-        }
+                },
+            },
+        },
     });
 
     const storages = (player?.storages || []).map((s) => {
-        const storageData = gameData.storages.find(
-            (sd) => sd.id === s.storageId
-        );
+        const storageData = gameData.storages.find((sd) => sd.id === s.storageId);
 
-        if (!storageData) return {
-            storageId: s.storageId,
-            name: unknownTranslation(),
-            amount: s.amount,
-            storageCapacity: +(0).toFixed(2),
-        };
+        if (!storageData)
+            return {
+                storageId: s.storageId,
+                name: unknownTranslation(),
+                amount: s.amount,
+                storageCapacity: +(0).toFixed(2),
+            };
 
         return {
             storageId: s.storageId,

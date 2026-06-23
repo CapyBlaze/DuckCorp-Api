@@ -1,15 +1,15 @@
 import type { Request as ExpressRequest } from "express";
-import { 
-    Body, 
-    Controller, 
-    Example, 
-    Get, 
-    Post, 
-    Request, 
-    Response, 
-    Route, 
-    Security, 
-    Tags
+import {
+    Body,
+    Controller,
+    Example,
+    Get,
+    Post,
+    Request,
+    Response,
+    Route,
+    Security,
+    Tags,
 } from "tsoa";
 
 import * as BuildingService from "../services/building.service.js";
@@ -17,8 +17,6 @@ import * as AchievementService from "../services/achievement.service.js";
 
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
-
-
 
 interface BuyBuildingBody {
     id: string;
@@ -38,22 +36,21 @@ export class BuildingController extends Controller {
                 id: "garage",
                 name: { en: "Garage", fr: "Garage" },
                 cost: 100,
-                production: 0.1
+                production: 0.1,
             },
             {
                 id: "small_workshop",
                 name: { en: "Small Workshop", fr: "Petit Atelier" },
                 cost: 200,
-                production: 0.5
-            }
+                production: 0.5,
+            },
         ],
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getBuildingList(): Promise<ApiResponseFormat> {
         return ApiResponse.success("Building list retrieved", gameData.buildings);
     }
-
 
     /** Purchase one building for the authenticated player and return the updated building amount and production. */
     @Post("buy")
@@ -70,18 +67,21 @@ export class BuildingController extends Controller {
             achievementsUnlocked: [
                 {
                     id: "first_building",
-                    name: { en: "First Building", fr: "Premier bâtiment" }
-                }
-            ]
+                    name: { en: "First Building", fr: "Premier bâtiment" },
+                },
+            ],
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(400, "Missing building ID")
     @Response<ApiResponseFormat>(400, "Not enough money")
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Building or player not found")
     @Response<ApiResponseFormat>(500, "Purchase error")
-    public async buyBuilding(@Request() req: ExpressRequest, @Body() body: BuyBuildingBody): Promise<ApiResponseFormat> {
+    public async buyBuilding(
+        @Request() req: ExpressRequest,
+        @Body() body: BuyBuildingBody
+    ): Promise<ApiResponseFormat> {
         const { id } = body;
         const user = (req as any).user;
 
@@ -90,13 +90,14 @@ export class BuildingController extends Controller {
             return ApiResponse.error("Information missing", "Building ID is required");
         }
 
-
         const result = await BuildingService.buy(user.id, id);
         if (!result) {
             this.setStatus(500);
-            return ApiResponse.error("Unknown error", "An unknown error occurred while processing the purchase");
+            return ApiResponse.error(
+                "Unknown error",
+                "An unknown error occurred while processing the purchase"
+            );
         }
-
 
         switch (result.result) {
             case BuildingService.BuyResult.PlayerNotFound:
@@ -105,7 +106,10 @@ export class BuildingController extends Controller {
 
             case BuildingService.BuyResult.NotEnoughMoney:
                 this.setStatus(400);
-                return ApiResponse.failure("Not enough money", "Insufficient funds to purchase this building");
+                return ApiResponse.failure(
+                    "Not enough money",
+                    "Insufficient funds to purchase this building"
+                );
 
             case BuildingService.BuyResult.BuildingNotFound:
                 this.setStatus(404);
@@ -120,12 +124,15 @@ export class BuildingController extends Controller {
                     amount: result.amount,
                     productionPerMinute: result.productionPerMinute,
                     cost: result.cost,
-                    achievementsUnlocked: achievements
+                    achievementsUnlocked: achievements,
                 });
 
             default:
                 this.setStatus(500);
-                return ApiResponse.error("Unknown error", "An unknown error occurred while processing the purchase");
+                return ApiResponse.error(
+                    "Unknown error",
+                    "An unknown error occurred while processing the purchase"
+                );
         }
     }
 }

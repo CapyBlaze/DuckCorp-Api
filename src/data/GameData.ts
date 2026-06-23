@@ -1,10 +1,8 @@
 import { loadJsonData } from "../utils/loadJson.js";
 
-
-
 export interface Translation {
-  en: string;
-  fr: string;
+    en: string;
+    fr: string;
 }
 
 export type UnknownTranslation = Record<keyof Translation, unknown>;
@@ -18,13 +16,11 @@ export function unknownTranslation(): UnknownTranslation {
     }, {} as UnknownTranslation);
 }
 
-
-
 export interface BuildingItem {
-  id: string;
-  name: Translation;
-  cost: number;
-  production: number;
+    id: string;
+    name: Translation;
+    cost: number;
+    production: number;
 }
 
 export interface StorageItem {
@@ -49,9 +45,6 @@ export interface AchievementItem {
         ducks?: number;
     };
 }
-
-
-
 
 class GameData {
     achievements: AchievementItem[];

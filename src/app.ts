@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import rateLimit from "express-rate-limit";
 import swaggerUi from "swagger-ui-express";
-import pc from 'picocolors';
+import pc from "picocolors";
 
 import swaggerDocument from "../swagger.json" with { type: "json" };
 import { bootstrap } from "./start/bootstrap.js";
@@ -15,71 +15,72 @@ import { ipBannedHandler } from "./middlewares/ipBanned.middleware.js";
 
 import { ApiResponse } from "./utils/apiResponse.js";
 
-
-
 dotenv.config({ quiet: true });
 
 await bootstrap();
-
 
 const port = process.env.SERVER_PORT || 3000;
 const trustProxy = process.env.TRUST_PROXY === "true";
 
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 200,                 // Max 200 requests per IP
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-    validate: { trustProxy }, 
-
-    handler: (_req, res, _next, options) => {
-        return res.status(options.statusCode).json(
-            ApiResponse.error(
-                "Too Many Requests",
-                "You have exceeded the limit of allowed requests. Please try again later.",
-            )
-        );
-    }
-});
-
-const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5,                  // Max 5 requests per IP
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-    validate: { trustProxy }, 
-
-    handler: (_req, res, _next, options) => {
-        return res.status(options.statusCode).json(
-            ApiResponse.error(
-                "Too Many Requests",
-                "You have exceeded the limit of allowed requests. Please try again later.",
-            )
-        );
-    }
-});
-
-const adminLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5,                   // Max 5 requests per IP
-    standardHeaders: 'draft-7',
+    max: 200, // Max 200 requests per IP
+    standardHeaders: "draft-7",
     legacyHeaders: false,
     validate: { trustProxy },
 
     handler: (_req, res, _next, options) => {
-        return res.status(options.statusCode).json(
-            ApiResponse.error(
-                "Too Many Requests",
-                "You have exceeded the limit of allowed requests. Please try again later.",
-            )
-        );
-    }
+        return res
+            .status(options.statusCode)
+            .json(
+                ApiResponse.error(
+                    "Too Many Requests",
+                    "You have exceeded the limit of allowed requests. Please try again later."
+                )
+            );
+    },
 });
 
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Max 5 requests per IP
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    validate: { trustProxy },
 
+    handler: (_req, res, _next, options) => {
+        return res
+            .status(options.statusCode)
+            .json(
+                ApiResponse.error(
+                    "Too Many Requests",
+                    "You have exceeded the limit of allowed requests. Please try again later."
+                )
+            );
+    },
+});
+
+const adminLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Max 5 requests per IP
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    validate: { trustProxy },
+
+    handler: (_req, res, _next, options) => {
+        return res
+            .status(options.statusCode)
+            .json(
+                ApiResponse.error(
+                    "Too Many Requests",
+                    "You have exceeded the limit of allowed requests. Please try again later."
+                )
+            );
+    },
+});
 
 const app = express();
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 app.use(express.json());
 app.use(loggerHandler);
@@ -93,7 +94,6 @@ app.use("/admin/login", adminLimiter);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 RegisterRoutes(app);
 
-
 app.use(notFoundHandler);
 app.use(errorHandler);
 
@@ -101,6 +101,6 @@ const date = new Date().toISOString();
 app.listen(port, () => {
     console.log(
         `${pc.gray(`[${date}]`)} ` +
-        pc.green(`Server started at ` + pc.bold(pc.underline(`http://localhost:${port}`)))
+            pc.green(`Server started at ` + pc.bold(pc.underline(`http://localhost:${port}`)))
     );
 });

@@ -2,16 +2,14 @@ import type { Player } from "@prisma/client";
 import { prisma } from "../prisma.js";
 import { gameData, type AchievementItem } from "../data/GameData.js";
 
-
-
 export async function playerAchievements(playerId: string) {
     const player = await prisma.player.findUnique({
         where: { id: playerId },
         include: {
-            achievements: true
-        }
+            achievements: true,
+        },
     });
-    
+
     return player?.achievements || [];
 }
 
@@ -20,7 +18,6 @@ export async function achievements() {
     for (const achievement of gameData.achievements) {
         if (!achievement.hidden) {
             achievements.push(achievement);
-            
         } else {
             achievements.push({
                 ...achievement,
@@ -29,15 +26,14 @@ export async function achievements() {
                 description: { fr: "?????", en: "?????" },
                 condition: {
                     type: "?????",
-                    value: 0
-                }
+                    value: 0,
+                },
             });
         }
     }
-    
+
     return achievements;
 }
-
 
 export async function check(player: Player) {
     for (const achievement of gameData.achievements) {
@@ -45,9 +41,9 @@ export async function check(player: Player) {
             where: {
                 achievementId_playerId: {
                     playerId: player.id,
-                    achievementId: achievement.id
-                }
-            }
+                    achievementId: achievement.id,
+                },
+            },
         });
 
         if (alreadyUnlocked) {
@@ -60,11 +56,7 @@ export async function check(player: Player) {
     }
 }
 
-
-function isUnlocked(
-    player: Player,
-    achievement: AchievementItem
-): boolean {
+function isUnlocked(player: Player, achievement: AchievementItem): boolean {
     switch (achievement.condition.type) {
         case "total_ducks_produced":
             return player.totalDucksProduced >= achievement.condition.value;
@@ -83,15 +75,12 @@ function isUnlocked(
     }
 }
 
-async function unlock(
-    player: Player,
-    achievement: AchievementItem
-) {
+async function unlock(player: Player, achievement: AchievementItem) {
     await prisma.playerAchievement.create({
         data: {
             playerId: player.id,
-            achievementId: achievement.id
-        }
+            achievementId: achievement.id,
+        },
     });
 
     if (achievement.reward?.money) {
@@ -99,21 +88,20 @@ async function unlock(
             where: { id: player.id },
             data: {
                 money: {
-                    increment: achievement.reward.money
-                }
-            }
+                    increment: achievement.reward.money,
+                },
+            },
         });
-
     }
-    
+
     if (achievement.reward?.ducks) {
         await prisma.player.update({
             where: { id: player.id },
             data: {
                 totalDucksProduced: {
-                    increment: achievement.reward.ducks
-                }
-            }
+                    increment: achievement.reward.ducks,
+                },
+            },
         });
     }
 }

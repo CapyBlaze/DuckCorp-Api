@@ -5,13 +5,12 @@ import * as WorldService from "./world.service.js";
 
 import { gameConfig } from "../config/GameConfig.js";
 
-
 export function duckPrice(time: number = Date.now()) {
     const t = Math.floor(time / gameConfig.config.marketUpdateIntervalMs);
 
     const minPrice = gameConfig.config.duckPriceFluctuation.min;
     const maxPrice = gameConfig.config.duckPriceFluctuation.max;
-    const base = (minPrice + maxPrice) / 2; 
+    const base = (minPrice + maxPrice) / 2;
 
     const trend = Math.sin(t * 0.7) * 6;
     const noise = Math.sin(t * 3.1) * 2;
@@ -29,15 +28,14 @@ export async function sell(playerId: string) {
 
     const player = await prisma.player.findUnique({
         where: { id: playerId },
-        select: { ducks: true, money: true }
+        select: { ducks: true, money: true },
     });
-
 
     if (!player) {
         return {
             ducks: 0,
             duckPrice: price,
-            earnings: 0
+            earnings: 0,
         };
     }
 
@@ -46,10 +44,9 @@ export async function sell(playerId: string) {
         return {
             ducksSold: 0,
             duckPrice: price,
-            earnings: 0
+            earnings: 0,
         };
     }
-
 
     const earnings = player.ducks * price;
     await prisma.player.update({
@@ -58,12 +55,12 @@ export async function sell(playerId: string) {
             ducks: 0,
             money: player.money + earnings,
             totalDucksSold: {
-                increment: player.ducks
+                increment: player.ducks,
             },
             totalMoneyGenerated: {
-                increment: earnings
-            }
-        }
+                increment: earnings,
+            },
+        },
     });
 
     await WorldService.addTotalDucksSold(player.ducks);
@@ -72,7 +69,7 @@ export async function sell(playerId: string) {
     return {
         ducksSold: player.ducks,
         duckPrice: price,
-        earnings: earnings
+        earnings: earnings,
     };
 }
 
@@ -80,7 +77,11 @@ export function priceHistory() {
     let historicalPrices: number[] = [];
     const t = Date.now();
 
-    for (let time = t - (gameConfig.config.marketUpdateIntervalMs * 100); time < t; time += gameConfig.config.marketUpdateIntervalMs) {
+    for (
+        let time = t - gameConfig.config.marketUpdateIntervalMs * 100;
+        time < t;
+        time += gameConfig.config.marketUpdateIntervalMs
+    ) {
         let price = duckPrice(time);
         historicalPrices.push(price);
     }

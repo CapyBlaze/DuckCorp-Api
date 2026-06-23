@@ -8,8 +8,6 @@ import * as DuckService from "../services/duck.service.js";
 
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 
-
-
 @Route("player")
 @Tags("Player")
 export class PlayerController extends Controller {
@@ -30,26 +28,26 @@ export class PlayerController extends Controller {
                     buildingId: "garage",
                     name: { en: "Garage", fr: "Garage" },
                     amount: 1,
-                    productionPerMinute: 6
-                }
+                    productionPerMinute: 6,
+                },
             ],
             storages: [
                 {
                     storageId: "cardboard_box",
                     name: { en: "Cardboard Box", fr: "Boîte en Carton" },
                     amount: 1,
-                    storageCapacity: 10
-                }
+                    storageCapacity: 10,
+                },
             ],
             achievements: [],
-            achievementsUnlocked: []
+            achievementsUnlocked: [],
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayer(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
         const user = (req as any).user;
-        
+
         const [ducksAfterSync, buildings, storages, achievements] = await Promise.all([
             DuckService.updateProduction(user.id),
             BuildingService.getPlayer(user.id),
@@ -64,7 +62,6 @@ export class PlayerController extends Controller {
 
         const achievementsUnlocked = await AchievementService.check(user);
 
-        
         return ApiResponse.success("Player data retrieved", {
             id: user.id,
             ducks: ducksAfterSync === -1 ? user.ducks : ducksAfterSync,
@@ -80,7 +77,6 @@ export class PlayerController extends Controller {
         });
     }
 
-
     /** Synchronize the authenticated player by applying offline duck production. */
     @Post("sync")
     @Security("playerAuth")
@@ -92,9 +88,9 @@ export class PlayerController extends Controller {
             money: 900,
             productionPerMinute: 6,
             maxStorageCapacity: 10,
-            achievementsUnlocked: []
+            achievementsUnlocked: [],
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayerSync(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
@@ -105,16 +101,15 @@ export class PlayerController extends Controller {
         const maxStorageCapacity = await StorageService.getMaxStorageCapacity(user.id);
 
         const achievements = await AchievementService.check(user);
-        
+
         return ApiResponse.success("Player data synchronized", {
             ducks: ducksAfterSync === -1 ? user.ducks : ducksAfterSync,
             money: user.money,
             productionPerMinute: productionPerMinute,
             maxStorageCapacity: maxStorageCapacity,
-            achievementsUnlocked: achievements
+            achievementsUnlocked: achievements,
         });
     }
-
 
     /** Get the authenticated player's purchased buildings and their production values. */
     @Get("buildings")
@@ -128,11 +123,11 @@ export class PlayerController extends Controller {
                     buildingId: "garage",
                     name: { en: "Garage", fr: "Garage" },
                     amount: 2,
-                    productionPerMinute: 12
-                }
-            ]
+                    productionPerMinute: 12,
+                },
+            ],
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayerBuildings(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
@@ -140,10 +135,9 @@ export class PlayerController extends Controller {
         const buildings = await BuildingService.getPlayer(user.id);
 
         return ApiResponse.success("Player buildings retrieved", {
-            buildings: buildings
+            buildings: buildings,
         });
     }
-
 
     /** Get the authenticated player's purchased storage units and capacity values. */
     @Get("storages")
@@ -157,11 +151,11 @@ export class PlayerController extends Controller {
                     storageId: "cardboard_box",
                     name: { en: "Cardboard Box", fr: "Boîte en Carton" },
                     amount: 3,
-                    storageCapacity: 30
-                }
-            ]
+                    storageCapacity: 30,
+                },
+            ],
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayerStorages(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
@@ -169,7 +163,7 @@ export class PlayerController extends Controller {
         const storages = await StorageService.getPlayer(user.id);
 
         return ApiResponse.success("Player storages retrieved", {
-            storages: storages
+            storages: storages,
         });
     }
 }

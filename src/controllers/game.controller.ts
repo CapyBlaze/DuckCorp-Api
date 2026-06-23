@@ -3,8 +3,6 @@ import { Controller, Example, Get, Response, Route, Security, Tags } from "tsoa"
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameConfig } from "../config/GameConfig.js";
 
-
-
 @Route("game")
 @Tags("Game")
 export class GameController extends Controller {
@@ -18,15 +16,12 @@ export class GameController extends Controller {
             startingValues: { ducks: 0, money: 1000 },
             maxOfflineHours: 8,
             marketUpdateIntervalMs: 60000,
-            duckPriceFluctuation: { min: 5, max: 20 }
+            duckPriceFluctuation: { min: 5, max: 20 },
         },
-        timestamp: "2026-06-17T18:30:00.000Z"
+        timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getConfig(): Promise<ApiResponseFormat> {
-        return ApiResponse.success(
-            "Game configuration retrieved successfully",
-            gameConfig.config
-        );
+        return ApiResponse.success("Game configuration retrieved successfully", gameConfig.config);
     }
 }

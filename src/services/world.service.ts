@@ -1,15 +1,13 @@
 import { prisma } from "../prisma.js";
 
-
-
 export async function addTotalDucksProduced(amount: number) {
     return await prisma.worldState.update({
         where: { id: 1 },
         data: {
             totalDucksProduced: {
-                increment: amount
-            }
-        }
+                increment: amount,
+            },
+        },
     });
 }
 
@@ -18,9 +16,9 @@ export async function addTotalDucksSold(amount: number) {
         where: { id: 1 },
         data: {
             totalDucksSold: {
-                increment: amount
-            }
-        }
+                increment: amount,
+            },
+        },
     });
 }
 
@@ -29,9 +27,9 @@ export async function addTotalMoneyGenerated(amount: number) {
         where: { id: 1 },
         data: {
             totalMoneyGenerated: {
-                increment: amount
-            }
-        }
+                increment: amount,
+            },
+        },
     });
 }
 
@@ -41,7 +39,7 @@ export async function getState() {
         select: {
             totalDucksProduced: true,
             totalDucksSold: true,
-            totalMoneyGenerated: true
-        }
+            totalMoneyGenerated: true,
+        },
     });
 }
