@@ -166,4 +166,37 @@ export class PlayerController extends Controller {
             storages: storages,
         });
     }
+
+    /** Get the authenticated player's statistics. */
+    @Get("statistics")
+    @Security("playerAuth")
+    @Example<ApiResponseFormat>({
+        success: true,
+        message: "Player statistics retrieved",
+        data: {
+            totalDucksSold: 100,
+            totalDucksProduced: 500,
+            totalMoneyGenerated: 1000,
+            totalBuildings: 5,
+            totalStorage: 3,
+            lastActive: "2026-06-24T09:23:44.898Z",
+            createdAt: "2026-06-17T18:30:00.000Z",
+        },
+        timestamp: "2026-06-25T17:00:00.000Z",
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    public async getPlayerStatistics(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
+        const user = (req as any).user;
+
+        return ApiResponse.success("Player statistics retrieved", {
+            totalDucksSold: user.totalDucksSold,
+            totalDucksProduced: user.totalDucksProduced,
+            totalMoneyGenerated: user.totalMoneyGenerated,
+            totalBuildings: user.totalBuildings,
+            totalStorage: user.totalStorage,
+
+            lastActive: user.lastActive,
+            createdAt: user.createdAt,
+        });
+    }
 }

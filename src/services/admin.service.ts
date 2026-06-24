@@ -234,11 +234,3 @@ export async function getBannedIps() {
         },
     });
 }
-
-export async function countPlayers() {
-    return await prisma.player.count({
-        where: {
-            active: true,
-        },
-    });
-}

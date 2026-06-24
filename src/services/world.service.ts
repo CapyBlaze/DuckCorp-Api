@@ -43,3 +43,11 @@ export async function getState() {
         },
     });
 }
+
+export async function countPlayers() {
+    return await prisma.player.count({
+        where: {
+            active: true,
+        },
+    });
+}

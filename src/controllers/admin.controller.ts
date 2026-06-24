@@ -717,7 +717,7 @@ export class AdminController extends Controller {
         const load = await systeminformation.currentLoad();
         const mem = await systeminformation.mem();
 
-        const playerCount = await AdminService.countPlayers();
+        const playerCount = await WorldService.countPlayers();
         const worldState = await WorldService.getState();
 
         return ApiResponse.success("Admin stats fetched", {

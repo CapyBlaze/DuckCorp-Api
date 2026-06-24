@@ -6,7 +6,12 @@ export async function playerAchievements(playerId: string) {
     const player = await prisma.player.findUnique({
         where: { id: playerId },
         include: {
-            achievements: true,
+            achievements: {
+                select: {
+                    achievementId: true,
+                    unlockedAt: true,
+                },
+            },
         },
     });
 
