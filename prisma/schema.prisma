@@ -16,11 +16,11 @@ model Player {
   money    Float
   lastSync DateTime @default(now())
 
-  totalDucksProduced BigInt @default(0)
-  totalDucksSold BigInt @default(0)
-  totalMoneyGenerated Float @default(0)
-  totalBuildings Int @default(0)
-  totalStorage Int @default(0)
+  totalDucksProduced  BigInt @default(0)
+  totalDucksSold      BigInt @default(0)
+  totalMoneyGenerated BigInt @default(0)
+  totalBuildings      Int    @default(0)
+  totalStorage        Int    @default(0)
 
   lastActive DateTime @default(now())
   createdAt  DateTime @default(now())

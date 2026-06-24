@@ -37,12 +37,12 @@ export async function updateProduction(playerId: string) {
             ducks: newDucks,
             lastSync: new Date(),
             totalDucksProduced: {
-                increment: actualProduced,
+                increment: Math.floor(actualProduced),
             },
         },
     });
 
-    await WorldServoce.addTotalDucksProduced(actualProduced);
+    await WorldServoce.addTotalDucksProduced(Math.floor(actualProduced));
 
     return Math.floor(newDucks);
 }

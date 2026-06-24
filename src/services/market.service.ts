@@ -55,16 +55,16 @@ export async function sell(playerId: string) {
             ducks: 0,
             money: player.money + earnings,
             totalDucksSold: {
-                increment: player.ducks,
+                increment: Math.floor(player.ducks),
             },
             totalMoneyGenerated: {
-                increment: earnings,
+                increment: Math.floor(earnings),
             },
         },
     });
 
-    await WorldService.addTotalDucksSold(player.ducks);
-    await WorldService.addTotalMoneyGenerated(earnings);
+    await WorldService.addTotalDucksSold(Math.floor(player.ducks));
+    await WorldService.addTotalMoneyGenerated(Math.floor(earnings));
 
     return {
         ducksSold: player.ducks,

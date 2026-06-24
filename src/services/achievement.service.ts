@@ -98,8 +98,11 @@ async function unlock(player: Player, achievement: AchievementItem) {
         await prisma.player.update({
             where: { id: player.id },
             data: {
+                ducks: {
+                    increment: Math.floor(achievement.reward.ducks),
+                },
                 totalDucksProduced: {
-                    increment: achievement.reward.ducks,
+                    increment: Math.floor(achievement.reward.ducks),
                 },
             },
         });
