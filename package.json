@@ -4,14 +4,16 @@
     "description": "The world's leading rubber duck manufacturer.",
     "main": "index.js",
     "scripts": {
-        "dev": "tsoa spec-and-routes && tsx --watch src/app.ts",
+        "dev": "tsoa spec-and-routes && tsx --watch src/server.ts",
         "prisma:generate": "prisma generate",
         "build": "npm run clean && npm run prisma:generate && tsoa spec-and-routes && node scripts/fix-tsoa-esm.mjs && tsc && npm run copy",
         "clean": "rimraf dist",
         "copy": "node scripts/copy-json.mjs",
-        "start": "node dist/src/app.js",
+        "start": "node dist/src/server.js",
         "lint": "eslint src/**/*.ts",
-        "test": "vitest"
+        "tsoa:gen": "tsoa routes && tsoa swagger",
+        "test": "npm run tsoa:gen && vitest run",
+        "test:watch": "npm run tsoa:gen && vitest"
     },
     "keywords": [],
     "author": "CapyBlaze <capyblaze@gmail.com>",
@@ -20,6 +22,7 @@
     "devDependencies": {
         "@trivago/prettier-plugin-sort-imports": "^6.0.2",
         "@types/node": "^25.9.2",
+        "@types/supertest": "^7.2.0",
         "@types/swagger-ui-express": "^4.1.8",
         "@typescript-eslint/eslint-plugin": "^8.62.0",
         "@typescript-eslint/parser": "^8.62.0",
@@ -29,6 +32,7 @@
         "prettier": "^3.8.4",
         "prisma": "^7.8.0",
         "rimraf": "^6.1.3",
+        "supertest": "^7.2.2",
         "tsx": "^4.22.4",
         "typescript": "^6.0.3",
         "vitest": "^4.1.9"

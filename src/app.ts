@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
 import rateLimit from "express-rate-limit";
-import pc from "picocolors";
 import swaggerUi from "swagger-ui-express";
 
 import swaggerDocument from "../swagger.json" with { type: "json" };
@@ -17,7 +16,6 @@ dotenv.config({ quiet: true });
 
 await bootstrap();
 
-const port = process.env.SERVER_PORT || 3000;
 const trustProxy = process.env.TRUST_PROXY === "true";
 
 const globalLimiter = rateLimit({
@@ -95,10 +93,4 @@ RegisterRoutes(app);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-const date = new Date().toISOString();
-app.listen(port, () => {
-    console.log(
-        `${pc.gray(`[${date}]`)} ` +
-            pc.green(`Server started at ` + pc.bold(pc.underline(`http://localhost:${port}`)))
-    );
-});
+export default app;

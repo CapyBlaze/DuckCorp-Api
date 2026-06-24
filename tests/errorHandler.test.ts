@@ -4,10 +4,10 @@ import { describe, expect, it, vi } from "vitest";
 import { errorHandler } from "../src/middlewares/error.middleware.js";
 
 describe("errorHandler", () => {
-    it("doit renvoyer un statut 500 et le message d'erreur", () => {
+    it("should return a status 500 and the error message", () => {
         vi.spyOn(console, "error").mockImplementation(() => {});
 
-        const error = new Error("Une erreur TSOA est survenue");
+        const error = new Error("A TSOA error has occurred");
         const req = {} as Request;
 
         const res = {
