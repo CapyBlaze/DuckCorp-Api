@@ -1,4 +1,3 @@
-import type { Request as ExpressRequest } from "express";
 import {
     Body,
     Controller,
@@ -17,6 +16,7 @@ import * as AchievementService from "../services/achievement.service.js";
 
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
+import type { AuthenticatedRequest } from "../types/express.js";
 
 interface BuyBuildingBody {
     id: string;
@@ -78,12 +78,9 @@ export class BuildingController extends Controller {
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Building or player not found")
     @Response<ApiResponseFormat>(500, "Purchase error")
-    public async buyBuilding(
-        @Request() req: ExpressRequest,
-        @Body() body: BuyBuildingBody
-    ): Promise<ApiResponseFormat> {
+    public async buyBuilding(@Request() req: AuthenticatedRequest, @Body() body: BuyBuildingBody): Promise<ApiResponseFormat> {
         const { id } = body;
-        const user = (req as any).user;
+        const user = req.user;
 
         if (!id) {
             this.setStatus(400);

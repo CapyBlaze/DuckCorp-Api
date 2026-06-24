@@ -1,11 +1,13 @@
-import { User } from "@prisma/client";
+import { Player } from "@prisma/client";
 
 declare global {
     namespace Express {
         interface Request {
-            user?: User;
+            user?: Player;
         }
     }
 }
 
-export {};
+export interface AuthenticatedRequest extends Express.Request {
+    user: Player;
+}

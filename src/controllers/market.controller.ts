@@ -1,10 +1,10 @@
-import type { Request as ExpressRequest } from "express";
 import { Controller, Example, Get, Post, Request, Response, Route, Security, Tags } from "tsoa";
 
 import * as MarketService from "../services/market.service.js";
 import * as AchievementService from "../services/achievement.service.js";
 
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
+import type { AuthenticatedRequest } from "../types/express.js";
 
 @Route("market")
 @Tags("Market")
@@ -46,8 +46,8 @@ export class MarketController extends Controller {
         timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async sellDucks(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
+    public async sellDucks(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
+        const user = req.user;
         const result = await MarketService.sell(user.id);
 
         const achievements = await AchievementService.check(user);

@@ -1,8 +1,8 @@
-import type { Request as ExpressRequest } from "express";
 import { Controller, Example, Get, Query, Request, Response, Route, Security, Tags } from "tsoa";
 
 import * as LeaderboardService from "../services/leaderbord.service.js";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
+import type { AuthenticatedRequest } from "../types/express.js";
 
 /** Sort types for the leaderboard */
 export enum SortType {
@@ -125,8 +125,8 @@ export class LeaderboardController extends Controller {
         timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async getMyLeaderboard(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
+    public async getMyLeaderboard(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
+        const user = req.user;
 
         const playerDucks = await LeaderboardService.getPlayerRank(user.id);
         return ApiResponse.success("Your leaderboard ranks retrieved successfully", playerDucks);

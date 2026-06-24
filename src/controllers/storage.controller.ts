@@ -1,4 +1,3 @@
-import type { Request as ExpressRequest } from "express";
 import {
     Body,
     Controller,
@@ -17,6 +16,7 @@ import * as AchievementService from "../services/achievement.service.js";
 
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
 import { gameData } from "../data/GameData.js";
+import type { AuthenticatedRequest } from "../types/express.js";
 
 interface BuyStorageBody {
     id: string;
@@ -68,11 +68,11 @@ export class StorageController extends Controller {
     @Response<ApiResponseFormat>(404, "Storage or player not found")
     @Response<ApiResponseFormat>(500, "Purchase error")
     public async buyStorage(
-        @Request() req: ExpressRequest,
+        @Request() req: AuthenticatedRequest,
         @Body() body: BuyStorageBody
     ): Promise<ApiResponseFormat> {
         const { id } = body;
-        const user = (req as any).user;
+        const user = req.user;
 
         if (!id) {
             this.setStatus(400);

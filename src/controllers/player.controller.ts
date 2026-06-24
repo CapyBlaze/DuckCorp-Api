@@ -1,4 +1,3 @@
-import type { Request as ExpressRequest } from "express";
 import { Controller, Example, Get, Post, Request, Response, Route, Security, Tags } from "tsoa";
 
 import * as BuildingService from "../services/building.service.js";
@@ -7,6 +6,7 @@ import * as AchievementService from "../services/achievement.service.js";
 import * as DuckService from "../services/duck.service.js";
 
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
+import type { AuthenticatedRequest } from "../types/express.js";
 
 @Route("player")
 @Tags("Player")
@@ -45,8 +45,8 @@ export class PlayerController extends Controller {
         timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async getPlayer(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
+    public async getPlayer(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
+        const user = req.user;
 
         const [ducksAfterSync, buildings, storages, achievements] = await Promise.all([
             DuckService.updateProduction(user.id),
@@ -93,8 +93,8 @@ export class PlayerController extends Controller {
         timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async getPlayerSync(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
+    public async getPlayerSync(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
+        const user = req.user;
 
         const ducksAfterSync = await DuckService.updateProduction(user.id);
         const productionPerMinute = await BuildingService.getProductionPerMinute(user.id);
@@ -130,8 +130,8 @@ export class PlayerController extends Controller {
         timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async getPlayerBuildings(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
+    public async getPlayerBuildings(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
+        const user = req.user;
         const buildings = await BuildingService.getPlayer(user.id);
 
         return ApiResponse.success("Player buildings retrieved", {
@@ -158,8 +158,8 @@ export class PlayerController extends Controller {
         timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async getPlayerStorages(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
+    public async getPlayerStorages(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
+        const user = req.user;
         const storages = await StorageService.getPlayer(user.id);
 
         return ApiResponse.success("Player storages retrieved", {
@@ -185,8 +185,8 @@ export class PlayerController extends Controller {
         timestamp: "2026-06-25T17:00:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async getPlayerStatistics(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
+    public async getPlayerStatistics(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
+        const user = req.user;
 
         return ApiResponse.success("Player statistics retrieved", {
             totalDucksSold: user.totalDucksSold,

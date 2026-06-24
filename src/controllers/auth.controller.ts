@@ -1,4 +1,3 @@
-import type { Request as ExpressRequest } from "express";
 import {
     Body,
     Controller,
@@ -17,6 +16,7 @@ import {
 
 import * as AuthService from "../services/auth.service.js";
 import { ApiResponse, type ApiResponseFormat } from "../utils/apiResponse.js";
+import type { AuthenticatedRequest } from "../types/express.js";
 
 interface RegisterBody {
     name: string;
@@ -82,8 +82,9 @@ export class AuthController extends Controller {
         timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async getProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
+    public async getProfile(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
+        const user = req.user;
+
         return ApiResponse.success("User data retrieved", {
             id: user.id,
             name: user.name,
@@ -138,8 +139,8 @@ export class AuthController extends Controller {
         timestamp: "2026-06-17T18:30:00.000Z",
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
-    public async deleteProfile(@Request() req: ExpressRequest): Promise<ApiResponseFormat> {
-        const user = (req as any).user;
+    public async deleteProfile(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
+        const user = req.user;
         await AuthService.disableUser(user.id);
 
         return ApiResponse.success("User profile deleted", {
