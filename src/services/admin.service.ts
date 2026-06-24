@@ -1,7 +1,6 @@
-import { prisma } from "../prisma.js";
-
 import { gameConfig } from "../config/GameConfig.js";
 import { HttpError } from "../middlewares/error.middleware.js";
+import { prisma } from "../prisma.js";
 
 export const adminSessions = new Map<
     string,

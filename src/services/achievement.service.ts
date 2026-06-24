@@ -1,6 +1,7 @@
 import type { Player } from "@prisma/client";
-import { prisma } from "../prisma.js";
+
 import { type AchievementItem, gameData } from "../data/GameData.js";
+import { prisma } from "../prisma.js";
 
 export async function playerAchievements(playerId: string) {
     const player = await prisma.player.findUnique({

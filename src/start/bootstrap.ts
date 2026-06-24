@@ -1,4 +1,5 @@
 import pc from "picocolors";
+
 import { initJson } from "./initJson.js";
 import { initWorld } from "./initWorld.js";
 

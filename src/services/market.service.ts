@@ -1,9 +1,7 @@
+import { gameConfig } from "../config/GameConfig.js";
 import { prisma } from "../prisma.js";
-
 import * as DuckService from "./duck.service.js";
 import * as WorldService from "./world.service.js";
-
-import { gameConfig } from "../config/GameConfig.js";
 
 export function duckPrice(time: number = Date.now()) {
     const t = Math.floor(time / gameConfig.config.marketUpdateIntervalMs);

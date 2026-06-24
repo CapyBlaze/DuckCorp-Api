@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
 
 const adapter = new PrismaLibSql({

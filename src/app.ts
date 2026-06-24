@@ -1,18 +1,16 @@
 import dotenv from "dotenv";
 import express from "express";
 import rateLimit from "express-rate-limit";
-import swaggerUi from "swagger-ui-express";
 import pc from "picocolors";
+import swaggerUi from "swagger-ui-express";
 
 import swaggerDocument from "../swagger.json" with { type: "json" };
-import { bootstrap } from "./start/bootstrap.js";
 import { RegisterRoutes } from "./generated/routes.js";
-
 import { errorHandler } from "./middlewares/error.middleware.js";
+import { ipBannedHandler } from "./middlewares/ipBanned.middleware.js";
 import { loggerHandler } from "./middlewares/logger.middleware.js";
 import { notFoundHandler } from "./middlewares/notFound.middleware.js";
-import { ipBannedHandler } from "./middlewares/ipBanned.middleware.js";
-
+import { bootstrap } from "./start/bootstrap.js";
 import { ApiResponse } from "./utils/apiResponse.js";
 
 dotenv.config({ quiet: true });

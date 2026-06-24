@@ -1,5 +1,5 @@
-import { prisma } from "../prisma.js";
 import { gameConfig } from "../config/GameConfig.js";
+import { prisma } from "../prisma.js";
 
 export async function registerUser(name: string) {
     let player = await prisma.player.findUnique({

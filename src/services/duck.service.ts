@@ -1,10 +1,8 @@
+import { gameConfig } from "../config/GameConfig.js";
 import { prisma } from "../prisma.js";
-
 import * as BuildingService from "./building.service.js";
 import * as StorageService from "./storage.service.js";
 import * as WorldServoce from "./world.service.js";
-
-import { gameConfig } from "../config/GameConfig.js";
 
 export async function updateProduction(playerId: string) {
     const now = Date.now();

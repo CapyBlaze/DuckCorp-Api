@@ -1,6 +1,6 @@
 import type { Request } from "express";
-import { prisma } from "../prisma.js";
 
+import { prisma } from "../prisma.js";
 import { adminSessions } from "../services/admin.service.js";
 import { HttpError } from "./error.middleware.js";
 

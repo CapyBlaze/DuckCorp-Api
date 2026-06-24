@@ -1,5 +1,5 @@
-import { prisma } from "../prisma.js";
 import { type Translation, gameData, unknownTranslation } from "../data/GameData.js";
+import { prisma } from "../prisma.js";
 
 export enum BuyResult {
     Success,
