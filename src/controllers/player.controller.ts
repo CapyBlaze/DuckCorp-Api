@@ -65,7 +65,7 @@ export class PlayerController extends Controller {
         return ApiResponse.success("Player data retrieved", {
             id: user.id,
             ducks: ducksAfterSync === -1 ? user.ducks : ducksAfterSync,
-            money: user.money,
+            money: Math.round(user.money * 100) / 100,
             productionPerMinute: productionPerMinute,
             maxStorageCapacity: maxStorageCapacity,
 
@@ -104,7 +104,7 @@ export class PlayerController extends Controller {
 
         return ApiResponse.success("Player data synchronized", {
             ducks: ducksAfterSync === -1 ? user.ducks : ducksAfterSync,
-            money: user.money,
+            money: Math.round(user.money * 100) / 100,
             productionPerMinute: productionPerMinute,
             maxStorageCapacity: maxStorageCapacity,
             achievementsUnlocked: achievements,
