@@ -59,3 +59,6 @@ jobs:
             npx prisma migrate deploy
 
             systemctl restart duckcorp_api
+
+            sleep 5
+            curl -f http://localhost:8080/system/health || exit 1
