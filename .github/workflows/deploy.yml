@@ -60,7 +60,7 @@ jobs:
 
             systemctl restart duckcorp_api
 
-            sleep 5
+            sleep 10
             curl --fail  http://localhost:8080/system/health
 
             echo "Deploy successful"
