@@ -60,4 +60,13 @@ jobs:
 
             systemctl restart duckcorp_api
 
+            for i in {1..10}; do
+              if curl -sf http://localhost:8080/system/health; then
+                echo "API OK"
+                break
+              fi
+              echo "Waiting API... ($i)"
+              sleep 2
+            done
+
             echo "Deploy successful"
