@@ -82,35 +82,33 @@ function isUnlocked(player: Player, achievement: AchievementItem): boolean {
 }
 
 async function unlock(player: Player, achievement: AchievementItem) {
-    await prisma.playerAchievement.create({
-        data: {
-            playerId: player.id,
-            achievementId: achievement.id,
-        },
+    await prisma.$transaction(async (tx) => {
+        await tx.playerAchievement.create({
+            data: {
+                playerId: player.id,
+                achievementId: achievement.id,
+            },
+        });
+
+        const money = achievement.reward?.money ?? 0;
+        const ducks = Math.floor(achievement.reward?.ducks ?? 0);
+
+        await tx.player.update({
+            where: { id: player.id },
+            data: {
+                money: money ? { increment: money } : undefined,
+                ducks: ducks ? { increment: ducks } : undefined,
+                totalDucksProduced: ducks ? { increment: ducks } : undefined,
+                totalMoneyGenerated: money ? { increment: money } : undefined,
+            },
+        });
+
+        await tx.worldState.update({
+            where: { id: 1 },
+            data: {
+                totalDucksProduced: ducks ? { increment: ducks } : undefined,
+                totalMoneyGenerated: money ? { increment: money } : undefined,
+            },
+        });
     });
-
-    if (achievement.reward?.money) {
-        await prisma.player.update({
-            where: { id: player.id },
-            data: {
-                money: {
-                    increment: achievement.reward.money,
-                },
-            },
-        });
-    }
-
-    if (achievement.reward?.ducks) {
-        await prisma.player.update({
-            where: { id: player.id },
-            data: {
-                ducks: {
-                    increment: Math.floor(achievement.reward.ducks),
-                },
-                totalDucksProduced: {
-                    increment: Math.floor(achievement.reward.ducks),
-                },
-            },
-        });
-    }
 }
