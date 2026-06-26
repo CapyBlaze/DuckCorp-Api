@@ -59,8 +59,12 @@ jobs:
             npx prisma migrate deploy
 
             systemctl restart duckcorp_api
+            echo "pm2=$?"
 
-            sleep 10
+            sleep 5
+            echo "sleep=$?"
+
             curl --fail  http://localhost:8080/system/health
+            echo "curl=$?"
 
             echo "Deploy successful"
