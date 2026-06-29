@@ -2,7 +2,7 @@ import pc from "picocolors";
 
 import app from "./app.js";
 
-const port = process.env.SERVER_PORT || 3000;
+const port = process.env.SERVER_PORT || 8080;
 const date = new Date().toISOString();
 
 app.listen(port, () => {
