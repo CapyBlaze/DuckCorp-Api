@@ -689,6 +689,32 @@ export class AdminController extends Controller {
         });
     }
 
+    /** Get a list of all banned IP addresses. */
+    @Get("ip/banned")
+    @Security("adminAuth")
+    @Example<ApiResponseFormat>({
+        "success": true,
+        "message": "Banned IPs fetched",
+        "data": [
+            {
+                "ipAddress": "203.0.113.42",
+                "bannedAt": "2026-06-29T16:18:49.126Z"
+            }
+        ],
+        "timestamp": "2026-06-29T16:20:28.338Z"
+    })
+    @Response<ApiResponseFormat>(401, "Unauthorized")
+    public async getBannedIPs(): Promise<ApiResponseFormat> {
+        const bannedIps = await AdminService.getBannedIps();
+
+        const formattedBannedIps = bannedIps.map((ban) => ({
+            ipAddress: ban.ipAddress,
+            bannedAt: ban.bannedAt,
+        }));
+
+        return ApiResponse.success("Banned IPs fetched", formattedBannedIps);
+    }
+
     /** Get global game totals and host resource statistics for the admin dashboard. */
     @Get("stats")
     @Security("adminAuth")
