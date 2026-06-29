@@ -10,15 +10,21 @@ export class GameController extends Controller {
     @Get("config")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Game configuration retrieved successfully",
-        data: {
-            startingValues: { ducks: 0, money: 1000 },
-            maxOfflineHours: 8,
-            marketUpdateIntervalMs: 60000,
-            duckPriceFluctuation: { min: 5, max: 20 },
+        "success": true,
+        "message": "Game configuration retrieved successfully",
+        "data": {
+            "startingValues": {
+                "money": 150,
+                "ducks": 0
+            },
+            "maxOfflineHours": 24,
+            "marketUpdateIntervalMs": 30000,
+            "duckPriceFluctuation": {
+                "min": -5,
+                "max": 25
+            }
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:20:55.389Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getConfig(): Promise<ApiResponseFormat> {

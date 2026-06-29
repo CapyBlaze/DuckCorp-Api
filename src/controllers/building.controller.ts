@@ -29,23 +29,20 @@ export class BuildingController extends Controller {
     @Get("")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Building list retrieved",
-        data: [
+        "success": true,
+        "message": "Building list retrieved",
+        "data": [
             {
-                id: "garage",
-                name: { en: "Garage", fr: "Garage" },
-                cost: 100,
-                production: 0.1,
-            },
-            {
-                id: "small_workshop",
-                name: { en: "Small Workshop", fr: "Petit Atelier" },
-                cost: 200,
-                production: 0.5,
-            },
+                "id": "garage",
+                "name": {
+                    "en": "Garage",
+                    "fr": "Garage"
+                },
+                "cost": 100,
+                "production": 0.1
+            }
         ],
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:06:07.428Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getBuildingList(): Promise<ApiResponseFormat> {
@@ -56,22 +53,19 @@ export class BuildingController extends Controller {
     @Post("buy")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Building purchased",
-        data: {
-            name: { en: "Garage", fr: "Garage" },
-            playerMoney: 900,
-            amount: 1,
-            productionPerMinute: 6,
-            cost: 100,
-            achievementsUnlocked: [
-                {
-                    id: "first_building",
-                    name: { en: "First Building", fr: "Premier bâtiment" },
-                },
-            ],
+        "success": true,
+        "message": "Building purchased",
+        "data": {
+            "name": {
+                "en": "Garage",
+                "fr": "Garage"
+            },
+            "playerMoney": 50,
+            "amount": 1,
+            "productionPerMinute": 6,
+            "cost": 100
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:06:43.023Z"
     })
     @Response<ApiResponseFormat>(400, "Missing building ID")
     @Response<ApiResponseFormat>(400, "Not enough money")

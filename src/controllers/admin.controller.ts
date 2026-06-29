@@ -79,13 +79,13 @@ export class AdminController extends Controller {
     /** Authenticate as an administrator and receive the bearer token required for admin routes. */
     @Post("login")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "User logged in",
-        data: {
-            token: "admin_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-            name: "admin",
+        "success": true,
+        "message": "User logged in",
+        "data": {
+            "token": "928c178f-7ce3-463e-a6b3-1bdba6b5c931",
+            "name": "admin"
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T21:21:40.446Z"
     })
     @Response<ApiResponseFormat>(400, "Missing credentials")
     public async login(@Body() body: RegisterAdminBody): Promise<ApiResponseFormat> {
@@ -109,15 +109,21 @@ export class AdminController extends Controller {
     @Get("config")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Game configuration retrieved successfully",
-        data: {
-            startingValues: { ducks: 0, money: 1000 },
-            maxOfflineHours: 8,
-            marketUpdateIntervalMs: 60000,
-            duckPriceFluctuation: { min: 5, max: 20 },
+        "success": true,
+        "message": "Game configuration retrieved successfully",
+        "data": {
+            "startingValues": {
+                "money": 150,
+                "ducks": 0
+            },
+            "maxOfflineHours": 24,
+            "marketUpdateIntervalMs": 30000,
+            "duckPriceFluctuation": {
+                "min": -5,
+                "max": 25
+            }
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T21:22:06.338Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getConfig(): Promise<ApiResponseFormat> {
@@ -128,15 +134,21 @@ export class AdminController extends Controller {
     @Put("config")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Game configuration updated successfully",
-        data: {
-            startingValues: { ducks: 0, money: 1200 },
-            maxOfflineHours: 10,
-            marketUpdateIntervalMs: 60000,
-            duckPriceFluctuation: { min: 5, max: 25 },
+        "success": true,
+        "message": "Game configuration updated successfully",
+        "data": {
+            "startingValues": {
+                "money": 1000,
+                "ducks": 0
+            },
+            "maxOfflineHours": 8,
+            "marketUpdateIntervalMs": 60000,
+            "duckPriceFluctuation": {
+                "min": 5,
+                "max": 20
+            }
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T21:22:51.262Z"
     })
     @Response<ApiResponseFormat>(400, "Invalid configuration value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -221,27 +233,52 @@ export class AdminController extends Controller {
     @Get("players")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player data retrieved",
-        data: [
+        "success": true,
+        "message": "Player data retrieved",
+        "data": [
             {
-                id: "cmz8n7r2g0000v9k4a1b2c3d4",
-                name: "DuckMaster",
-                ducks: 42,
-                money: 900,
-                productionPerMinute: 6,
-                maxStorageCapacity: 10,
-                active: true,
-                lastSync: "2026-06-17T18:30:00.000Z",
-                lastActive: "2026-06-17T18:30:00.000Z",
-                createdAt: "2026-06-17T18:25:00.000Z",
-                updatedAt: "2026-06-17T18:30:00.000Z",
-                buildings: [],
-                storages: [],
-                achievements: [],
-            },
+                "id": "cmqzndt500000uwkltvpoyaiq",
+                "name": "Eugenia69",
+                "ducks": 10,
+                "money": 212.52,
+                "productionPerMinute": 6,
+                "maxStorageCapacity": 10,
+                "active": true,
+                "lastSync": "2026-06-29T20:14:37.838Z",
+                "lastActive": "2026-06-29T20:05:42.468Z",
+                "createdAt": "2026-06-29T20:05:42.468Z",
+                "updatedAt": "2026-06-29T20:14:37.858Z",
+                "buildings": [
+                    {
+                        "buildingId": "garage",
+                        "name": {
+                            "en": "Garage",
+                            "fr": "Garage"
+                        },
+                        "amount": 1,
+                        "productionPerMinute": 6
+                    }
+                ],
+                "storages": [
+                    {
+                        "storageId": "cardboard_box",
+                        "name": {
+                            "en": "Cardboard Box",
+                            "fr": "Boîte en Carton"
+                        },
+                        "amount": 1,
+                        "storageCapacity": 10
+                    }
+                ],
+                "achievements": [
+                    {
+                        "achievementId": "first_building",
+                        "unlockedAt": "2026-06-29T20:08:12.544Z"
+                    }
+                ]
+            }
         ],
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T21:22:17.860Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayers(
@@ -296,25 +333,54 @@ export class AdminController extends Controller {
     @Get("players/{id}")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player data retrieved",
-        data: {
-            id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            name: "DuckMaster",
-            ducks: 42,
-            money: 900,
-            productionPerMinute: 6,
-            maxStorageCapacity: 10,
-            active: true,
-            lastSync: "2026-06-17T18:30:00.000Z",
-            lastActive: "2026-06-17T18:30:00.000Z",
-            createdAt: "2026-06-17T18:25:00.000Z",
-            updatedAt: "2026-06-17T18:30:00.000Z",
-            buildings: [],
-            storages: [],
-            achievements: [],
+        "success": true,
+        "message": "Player data retrieved",
+        "data": {
+            "id": "cmqzndt500000uwkltvpoyaiq",
+            "name": "Eugenia69",
+            "ducks": 10,
+            "money": 212.52,
+            "productionPerMinute": 6,
+            "maxStorageCapacity": 10,
+            "active": true,
+            "lastSync": "2026-06-29T21:22:17.844Z",
+            "lastActive": "2026-06-29T20:05:42.468Z",
+            "createdAt": "2026-06-29T20:05:42.468Z",
+            "updatedAt": "2026-06-29T21:22:17.844Z",
+            "buildings": [
+                {
+                    "buildingId": "garage",
+                    "name": {
+                        "en": "Garage",
+                        "fr": "Garage"
+                    },
+                    "amount": 1,
+                    "productionPerMinute": 6
+                }
+            ],
+            "storages": [
+                {
+                    "storageId": "cardboard_box",
+                    "name": {
+                        "en": "Cardboard Box",
+                        "fr": "Boîte en Carton"
+                    },
+                    "amount": 1,
+                    "storageCapacity": 10
+                }
+            ],
+            "achievements": [
+                {
+                    "achievementId": "first_building",
+                    "unlockedAt": "2026-06-29T20:08:12.544Z"
+                },
+                {
+                    "achievementId": "first_duck",
+                    "unlockedAt": "2026-06-29T20:09:18.307Z"
+                }
+            ]
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T21:22:29.706Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
@@ -363,13 +429,13 @@ export class AdminController extends Controller {
     @Delete("players/{id}")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player deleted",
-        data: {
-            id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            name: "DuckMaster",
+        "success": true,
+        "message": "Player deleted",
+        "data": {
+            "id": "cmqzndt500000uwkltvpoyaiq",
+            "name": "Eugenia69"
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T21:23:10.045Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
@@ -391,13 +457,13 @@ export class AdminController extends Controller {
     @Post("players/{id}/reset")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player reset",
-        data: {
-            id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            name: "DuckMaster",
+        "success": true,
+        "message": "Player reset",
+        "data": {
+            "id": "cmqzqam230000wcklml34pih0",
+            "name": "Mackenzie.Bogisich24"
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T21:28:23.724Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     @Response<ApiResponseFormat>(404, "Player not found")
@@ -419,10 +485,14 @@ export class AdminController extends Controller {
     @Post("players/{id}/money")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player money updated",
-        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", money: 5000 },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "Player money updated",
+        "data": {
+            "id": "cmqzqam230000wcklml34pih0",
+            "name": "Mackenzie.Bogisich24",
+            "money": 5000
+        },
+        "timestamp": "2026-06-29T21:28:56.795Z"
     })
     @Response<ApiResponseFormat>(400, "Invalid money value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -456,10 +526,14 @@ export class AdminController extends Controller {
     @Post("players/{id}/ducks")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player ducks updated",
-        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", ducks: 250 },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "Player ducks updated",
+        "data": {
+            "id": "cmqzqam230000wcklml34pih0",
+            "name": "Mackenzie.Bogisich24",
+            "ducks": 250
+        },
+        "timestamp": "2026-06-29T21:29:07.453Z"
     })
     @Response<ApiResponseFormat>(400, "Invalid duck value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -493,10 +567,14 @@ export class AdminController extends Controller {
     @Post("players/{id}/add-money")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player money added",
-        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", money: 1500 },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "Player money added",
+        "data": {
+            "id": "cmqzqam230000wcklml34pih0",
+            "name": "Mackenzie.Bogisich24",
+            "money": 5500
+        },
+        "timestamp": "2026-06-29T21:29:14.619Z"
     })
     @Response<ApiResponseFormat>(400, "Invalid money value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -530,10 +608,14 @@ export class AdminController extends Controller {
     @Post("players/{id}/add-ducks")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player ducks added",
-        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", ducks: 350 },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "Player ducks added",
+        "data": {
+            "id": "cmqzqam230000wcklml34pih0",
+            "name": "Mackenzie.Bogisich24",
+            "ducks": 300
+        },
+        "timestamp": "2026-06-29T21:29:20.304Z"
     })
     @Response<ApiResponseFormat>(400, "Invalid duck value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -567,10 +649,14 @@ export class AdminController extends Controller {
     @Post("players/{id}/remove-money")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player money removed",
-        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", money: 800 },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "Player money removed",
+        "data": {
+            "id": "cmqzqam230000wcklml34pih0",
+            "name": "Mackenzie.Bogisich24",
+            "money": 5400
+        },
+        "timestamp": "2026-06-29T21:29:25.779Z"
     })
     @Response<ApiResponseFormat>(400, "Invalid money value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -604,10 +690,14 @@ export class AdminController extends Controller {
     @Post("players/{id}/remove-ducks")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player ducks removed",
-        data: { id: "cmz8n7r2g0000v9k4a1b2c3d4", name: "DuckMaster", ducks: 120 },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "Player ducks removed",
+        "data": {
+            "id": "cmqzqam230000wcklml34pih0",
+            "name": "Mackenzie.Bogisich24",
+            "ducks": 290
+        },
+        "timestamp": "2026-06-29T21:29:36.937Z"
     })
     @Response<ApiResponseFormat>(400, "Invalid duck value")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -641,10 +731,12 @@ export class AdminController extends Controller {
     @Post("ip/ban")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "IP banned",
-        data: { ipAddress: "203.0.113.42" },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "IP banned",
+        "data": {
+            "ipAddress": "203.0.113.42"
+        },
+        "timestamp": "2026-06-29T21:29:43.054Z"
     })
     @Response<ApiResponseFormat>(400, "Missing IP address")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -667,10 +759,12 @@ export class AdminController extends Controller {
     @Post("ip/unban")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "IP unbanned",
-        data: { ipAddress: "203.0.113.42" },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "IP unbanned",
+        "data": {
+            "ipAddress": "203.0.113.42"
+        },
+        "timestamp": "2026-06-29T21:29:48.875Z"
     })
     @Response<ApiResponseFormat>(400, "Missing IP address")
     @Response<ApiResponseFormat>(401, "Unauthorized")
@@ -698,10 +792,10 @@ export class AdminController extends Controller {
         "data": [
             {
                 "ipAddress": "203.0.113.42",
-                "bannedAt": "2026-06-29T16:18:49.126Z"
+                "bannedAt": "2026-06-29T21:34:34.434Z"
             }
         ],
-        "timestamp": "2026-06-29T16:20:28.338Z"
+        "timestamp": "2026-06-29T21:34:38.258Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getBannedIPs(): Promise<ApiResponseFormat> {
@@ -719,24 +813,24 @@ export class AdminController extends Controller {
     @Get("stats")
     @Security("adminAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Admin stats fetched",
-        data: {
-            players: 12,
-            ducksProduced: 12000,
-            ducksSold: 8450,
-            moneyGenerated: 103250.75,
-            apiVersion: "1.0.0",
-            uptime: 86400,
-            memory: {
-                usedMB: 512,
-                freeMB: 1536,
-                totalMB: 2048,
-                usagePercent: 25,
+        "success": true,
+        "message": "Admin stats fetched",
+        "data": {
+            "players": 1,
+            "ducksProduced": "20841",
+            "ducksSold": "18047",
+            "moneyGenerated": "207485",
+            "apiVersion": "v1",
+            "uptime": 40346.39,
+            "memory": {
+                "usedMB": 20139,
+                "freeMB": 11986,
+                "totalMB": 32125,
+                "usagePercent": 62.69
             },
-            cpuUsage: "12.34%",
+            "cpuUsage": "8.01%"
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T21:30:04.542Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getStats(): Promise<ApiResponseFormat> {

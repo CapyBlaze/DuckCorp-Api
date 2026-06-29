@@ -15,34 +15,44 @@ export class PlayerController extends Controller {
     @Get("")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player data retrieved",
-        data: {
-            id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            ducks: 42,
-            money: 900,
-            productionPerMinute: 6,
-            maxStorageCapacity: 10,
-            buildings: [
+        "success": true,
+        "message": "Player data retrieved",
+        "data": {
+            "id": "cmqzndt500000uwkltvpoyaiq",
+            "ducks": 10,
+            "money": 50,
+            "productionPerMinute": 6,
+            "maxStorageCapacity": 10,
+            "buildings": [
                 {
-                    buildingId: "garage",
-                    name: { en: "Garage", fr: "Garage" },
-                    amount: 1,
-                    productionPerMinute: 6,
-                },
+                    "buildingId": "garage",
+                    "name": {
+                        "en": "Garage",
+                        "fr": "Garage"
+                    },
+                    "amount": 1,
+                    "productionPerMinute": 6
+                }
             ],
-            storages: [
+            "storages": [
                 {
-                    storageId: "cardboard_box",
-                    name: { en: "Cardboard Box", fr: "Boîte en Carton" },
-                    amount: 1,
-                    storageCapacity: 10,
-                },
+                    "storageId": "cardboard_box",
+                    "name": {
+                        "en": "Cardboard Box",
+                        "fr": "Boîte en Carton"
+                    },
+                    "amount": 1,
+                    "storageCapacity": 10
+                }
             ],
-            achievements: [],
-            achievementsUnlocked: [],
+            "achievements": [
+                {
+                    "achievementId": "first_building",
+                    "unlockedAt": "2026-06-29T20:08:12.544Z"
+                }
+            ]
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:08:38.020Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayer(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
@@ -81,16 +91,15 @@ export class PlayerController extends Controller {
     @Post("sync")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player data synchronized",
-        data: {
-            ducks: 47.5,
-            money: 900,
-            productionPerMinute: 6,
-            maxStorageCapacity: 10,
-            achievementsUnlocked: [],
+        "success": true,
+        "message": "Player data synchronized",
+        "data": {
+            "ducks": 10,
+            "money": 50,
+            "productionPerMinute": 6,
+            "maxStorageCapacity": 10
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:09:18.318Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayerSync(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
@@ -115,19 +124,22 @@ export class PlayerController extends Controller {
     @Get("buildings")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player buildings retrieved",
-        data: {
-            buildings: [
+        "success": true,
+        "message": "Player buildings retrieved",
+        "data": {
+            "buildings": [
                 {
-                    buildingId: "garage",
-                    name: { en: "Garage", fr: "Garage" },
-                    amount: 2,
-                    productionPerMinute: 12,
-                },
-            ],
+                    "buildingId": "garage",
+                    "name": {
+                        "en": "Garage",
+                        "fr": "Garage"
+                    },
+                    "amount": 1,
+                    "productionPerMinute": 6
+                }
+            ]
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:09:48.332Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayerBuildings(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
@@ -143,19 +155,22 @@ export class PlayerController extends Controller {
     @Get("storages")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player storages retrieved",
-        data: {
-            storages: [
+        "success": true,
+        "message": "Player storages retrieved",
+        "data": {
+            "storages": [
                 {
-                    storageId: "cardboard_box",
-                    name: { en: "Cardboard Box", fr: "Boîte en Carton" },
-                    amount: 3,
-                    storageCapacity: 30,
-                },
-            ],
+                    "storageId": "cardboard_box",
+                    "name": {
+                        "en": "Cardboard Box",
+                        "fr": "Boîte en Carton"
+                    },
+                    "amount": 1,
+                    "storageCapacity": 10
+                }
+            ]
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:10:13.658Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayerStorages(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
@@ -171,18 +186,18 @@ export class PlayerController extends Controller {
     @Get("statistics")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player statistics retrieved",
-        data: {
-            totalDucksSold: 100,
-            totalDucksProduced: 500,
-            totalMoneyGenerated: 1000,
-            totalBuildings: 5,
-            totalStorage: 3,
-            lastActive: "2026-06-24T09:23:44.898Z",
-            createdAt: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "Player statistics retrieved",
+        "data": {
+            "totalDucksSold": "0",
+            "totalDucksProduced": "10",
+            "totalMoneyGenerated": "100",
+            "totalBuildings": 1,
+            "totalStorage": 1,
+            "lastActive": "2026-06-29T20:05:42.468Z",
+            "createdAt": "2026-06-29T20:05:42.468Z"
         },
-        timestamp: "2026-06-25T17:00:00.000Z",
+        "timestamp": "2026-06-29T20:10:32.730Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getPlayerStatistics(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {

@@ -29,17 +29,20 @@ export class StorageController extends Controller {
     @Get("")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Storage list retrieved",
-        data: [
+        "success": true,
+        "message": "Storage list retrieved",
+        "data": [
             {
-                id: "cardboard_box",
-                name: { en: "Cardboard Box", fr: "Boîte en Carton" },
-                cost: 50,
-                storageCapacity: 10,
-            },
+                "id": "cardboard_box",
+                "name": {
+                    "en": "Cardboard Box",
+                    "fr": "Boîte en Carton"
+                },
+                "cost": 50,
+                "storageCapacity": 10
+            }
         ],
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:07:37.335Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getStorageList(): Promise<ApiResponseFormat> {
@@ -50,17 +53,19 @@ export class StorageController extends Controller {
     @Post("buy")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Storage purchased",
-        data: {
-            name: { en: "Cardboard Box", fr: "Boîte en Carton" },
-            playerMoney: 950,
-            amount: 1,
-            storageCapacity: 10,
-            cost: 50,
-            achievementsUnlocked: [],
+        "success": true,
+        "message": "Storage purchased",
+        "data": {
+            "name": {
+                "en": "Cardboard Box",
+                "fr": "Boîte en Carton"
+            },
+            "playerMoney": 0,
+            "amount": 1,
+            "storageCapacity": 10,
+            "cost": 50
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:08:12.559Z"
     })
     @Response<ApiResponseFormat>(400, "Missing storage ID")
     @Response<ApiResponseFormat>(400, "Not enough money")

@@ -31,17 +31,17 @@ export class AuthController extends Controller {
      */
     @Post("register")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "User registered",
-        data: {
-            id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            token: "ba546530-96b6-4233-8552-7e1f4ce6c9d2",
-            name: "DuckMaster",
-            lastActive: "2026-06-17T18:30:00.000Z",
-            createdAt: "2026-06-17T18:30:00.000Z",
-            updatedAt: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "User registered",
+        "data": {
+            "id": "cmqzn8tdw000098kl3upzydbt",
+            "token": "fa83285e-641b-44cc-971f-92a49781dcc7",
+            "name": "DuckMaster",
+            "lastActive": "2026-06-29T20:01:49.508Z",
+            "createdAt": "2026-06-29T20:01:49.508Z",
+            "updatedAt": "2026-06-29T20:01:49.508Z"
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:01:49.519Z"
     })
     @Response<ApiResponseFormat>(400, "Missing name")
     @SuccessResponse(201, "User registered")
@@ -70,16 +70,16 @@ export class AuthController extends Controller {
     @Get("profile")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "User data retrieved",
-        data: {
-            id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            name: "DuckMaster",
-            lastActive: "2026-06-17T18:30:00.000Z",
-            createdAt: "2026-06-17T18:25:00.000Z",
-            updatedAt: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "User data retrieved",
+        "data": {
+            "id": "cmqzn8tdw000098kl3upzydbt",
+            "name": "DuckMaster",
+            "lastActive": "2026-06-29T20:01:49.508Z",
+            "createdAt": "2026-06-29T20:01:49.508Z",
+            "updatedAt": "2026-06-29T20:01:49.508Z"
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:03:01.989Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getProfile(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {
@@ -97,16 +97,16 @@ export class AuthController extends Controller {
     /** Get a public player profile by ID. This route does not expose money, ducks, token, or private progress data. */
     @Get("player/{id}")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Player data retrieved",
-        data: {
-            id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            name: "DuckMaster",
-            lastActive: "2026-06-17T18:30:00.000Z",
-            createdAt: "2026-06-17T18:25:00.000Z",
-            updatedAt: "2026-06-17T18:30:00.000Z",
+        "success": true,
+        "message": "Player data retrieved",
+        "data": {
+            "id": "cmqzn8tdw000098kl3upzydbt",
+            "name": "DuckMasterWarrior",
+            "lastActive": "2026-06-29T20:01:49.508Z",
+            "createdAt": "2026-06-29T20:01:49.508Z",
+            "updatedAt": "2026-06-29T20:01:49.508Z"
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:03:39.807Z"
     })
     @Response<ApiResponseFormat>(404, "Player not found")
     public async getPlayer(@Path() id: string): Promise<ApiResponseFormat> {
@@ -130,13 +130,13 @@ export class AuthController extends Controller {
     @Delete("profile")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "User profile deleted",
-        data: {
-            id: "cmz8n7r2g0000v9k4a1b2c3d4",
-            name: "DuckMaster",
+        "success": true,
+        "message": "User profile deleted",
+        "data": {
+            "id": "cmqzn8tdw000098kl3upzydbt",
+            "name": "DuckMasterMaster",
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:04:50.271Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async deleteProfile(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {

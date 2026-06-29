@@ -14,22 +14,33 @@ export class AchievementController extends Controller {
     @Get("")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Achievements retrieved",
-        data: {
-            achievements: [
+        "success": true,
+        "message": "Achievements retrieved",
+        "data": {
+            "achievements": [
                 {
-                    id: "first_duck",
-                    name: { en: "First Duck", fr: "Premier Canard" },
-                    description: {
-                        en: "Produce your first duck.",
-                        fr: "Produisez votre premier canard.",
+                    "id": "first_duck",
+                    "category": "production",
+                    "hidden": false,
+                    "name": {
+                        "en": "First Duck",
+                        "fr": "Premier Coin-Coin"
                     },
-                    condition: { type: "ducks", value: 1 },
-                },
-            ],
+                    "description": {
+                        "en": "Produce 1 duck",
+                        "fr": "Produire 1 canard"
+                    },
+                    "condition": {
+                        "type": "total_ducks_produced",
+                        "value": 1
+                    },
+                    "reward": {
+                        "money": 50
+                    }
+                }
+            ]
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:21:30.602Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getAchievements(): Promise<ApiResponseFormat> {

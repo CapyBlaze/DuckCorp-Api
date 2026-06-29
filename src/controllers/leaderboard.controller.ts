@@ -39,13 +39,19 @@ export class LeaderboardController extends Controller {
     @Get("")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Leaderboard by ducks retrieved successfully",
-        data: [
-            { name: "DuckMaster", ducks: 420 },
-            { name: "QuackFactory", ducks: 300 },
+        "success": true,
+        "message": "Leaderboard by ducks retrieved successfully",
+        "data": [
+            {
+                "name": "Eugenia69",
+                "ducks": 10
+            },
+            {
+                "name": "Deontae.Deckow",
+                "ducks": 0
+            }
         ],
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:12:42.032Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getLeaderboard(
@@ -111,18 +117,18 @@ export class LeaderboardController extends Controller {
     @Get("me")
     @Security("playerAuth")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "Your leaderboard ranks retrieved successfully",
-        data: {
-            rank: 3,
-            ducksRank: 4,
-            moneyRank: 6,
-            productionRank: 3,
-            storageRank: 5,
-            nbBuildingsRank: 2,
-            nbStorageRank: 7,
+        "success": true,
+        "message": "Your leaderboard ranks retrieved successfully",
+        "data": {
+            "rank": 1,
+            "ducksRank": 1,
+            "moneyRank": 2,
+            "productionRank": 1,
+            "storageRank": 1,
+            "nbBuildingsRank": 1,
+            "nbStorageRank": 1
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:13:13.658Z"
     })
     @Response<ApiResponseFormat>(401, "Unauthorized")
     public async getMyLeaderboard(@Request() req: AuthenticatedRequest): Promise<ApiResponseFormat> {

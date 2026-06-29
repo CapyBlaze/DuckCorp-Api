@@ -8,15 +8,15 @@ export class WorldController extends Controller {
     /** Get world statistics */
     @Get("")
     @Example<ApiResponseFormat>({
-        success: true,
-        message: "World statistics retrieved",
-        data: {
-            players: 12,
-            ducksProduced: 12000,
-            ducksSold: 8450,
-            moneyGenerated: 103250,
+        "success": true,
+        "message": "World statistics retrieved",
+        "data": {
+            "players": 10,
+            "ducksProduced": "18412",
+            "ducksSold": "18102",
+            "moneyGenerated": "178012"
         },
-        timestamp: "2026-06-17T18:30:00.000Z",
+        "timestamp": "2026-06-29T20:25:24.105Z"
     })
     public async worldStats(): Promise<ApiResponseFormat> {
         const playerCount = await WorldService.countPlayers();
