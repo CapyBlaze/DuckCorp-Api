@@ -1,0 +1,3944 @@
+{
+  "info": {
+    "_postman_id": "5fdcdacd-3de4-4d77-9816-de139994d3f8",
+    "name": "Duck API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44543749",
+    "_collection_link": "https://go.postman.co/collection/44543749-5fdcdacd-3de4-4d77-9816-de139994d3f8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if ([200, 201].includes(pm.response.code)) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.data && json.data.token) {",
+                  "        pm.collectionVariables.set('playerToken', json.data.token);",
+                  "        console.log('playerToken sauvegardé');",
+                  "    }",
+                  "    if (json.data && json.data.id) {",
+                  "        pm.collectionVariables.set('playerId', json.data.id);",
+                  "        console.log('playerId sauvegardé');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{$randomUserName}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Crée un nouveau joueur (ou renvoie le compte existant si le nom existe déjà) et retourne le token bearer à utiliser pour toutes les routes 'playerAuth'.\nLe token et l'id sont automatiquement enregistrés dans les variables de collection {{playerToken}} et {{playerId}}."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"{{$randomUserName}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "5;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=5, remaining=4, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "314"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"13a-g2OOMxMiQA2pUnrNSGhyrrczN18\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:01:49 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User registered\",\n    \"data\": {\n        \"id\": \"cmqzn8tdw000098kl3upzydbt\",\n        \"token\": \"fa83285e-641b-44cc-971f-92a49781dcc7\",\n        \"name\": \"Deontae.Deckow\",\n        \"lastActive\": \"2026-06-29T20:01:49.508Z\",\n        \"createdAt\": \"2026-06-29T20:01:49.508Z\",\n        \"updatedAt\": \"2026-06-29T20:01:49.508Z\"\n    },\n    \"timestamp\": \"2026-06-29T20:01:49.519Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{playerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profile"
+              ]
+            },
+            "description": "Profil du joueur authentifié."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/profile",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "profile"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "271"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"10f-e5e36XDFNrN+zuGpTzBPANrVm58\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:03:01 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User data retrieved\",\n    \"data\": {\n        \"id\": \"cmqzn8tdw000098kl3upzydbt\",\n        \"name\": \"Deontae.Deckow\",\n        \"lastActive\": \"2026-06-29T20:01:49.508Z\",\n        \"createdAt\": \"2026-06-29T20:01:49.508Z\",\n        \"updatedAt\": \"2026-06-29T20:01:49.508Z\"\n    },\n    \"timestamp\": \"2026-06-29T20:03:01.989Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get public player profile by ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/player/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "player",
+                "{{playerId}}"
+              ]
+            },
+            "description": "Profil public d'un joueur (sans money/ducks). Aucune authentification requise."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/player/{{playerId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "player",
+                    "{{playerId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "273"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"111-lsOxK7IYNJpSi9v4Qp5BmPomuYU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:03:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player data retrieved\",\n    \"data\": {\n        \"id\": \"cmqzn8tdw000098kl3upzydbt\",\n        \"name\": \"Deontae.Deckow\",\n        \"lastActive\": \"2026-06-29T20:01:49.508Z\",\n        \"createdAt\": \"2026-06-29T20:01:49.508Z\",\n        \"updatedAt\": \"2026-06-29T20:01:49.508Z\"\n    },\n    \"timestamp\": \"2026-06-29T20:03:39.807Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete my profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{playerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profile"
+              ]
+            },
+            "description": "Désactive le compte du joueur authentifié."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/profile",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "profile"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "154"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"9a-Ck957CRpKlgNbXeweqa6KQdPr44\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:04:50 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User profile deleted\",\n    \"data\": {\n        \"id\": \"cmqzn8tdw000098kl3upzydbt\",\n        \"name\": \"Deontae.Deckow\"\n    },\n    \"timestamp\": \"2026-06-29T20:04:50.271Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Inscription, profil et suppression de compte joueur."
+    },
+    {
+      "name": "Player",
+      "item": [
+        {
+          "name": "Get player state",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/player",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "player"
+              ]
+            },
+            "description": "État complet du joueur (synchronise la production hors-ligne)."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/player",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "player"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "532"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"214-Z0yWm4EisCq64SZiNoL6BV5LmJI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:08:38 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player data retrieved\",\n    \"data\": {\n        \"id\": \"cmqzndt500000uwkltvpoyaiq\",\n        \"ducks\": 10,\n        \"money\": 50,\n        \"productionPerMinute\": 6,\n        \"maxStorageCapacity\": 10,\n        \"buildings\": [\n            {\n                \"buildingId\": \"garage\",\n                \"name\": {\n                    \"en\": \"Garage\",\n                    \"fr\": \"Garage\"\n                },\n                \"amount\": 1,\n                \"productionPerMinute\": 6\n            }\n        ],\n        \"storages\": [\n            {\n                \"storageId\": \"cardboard_box\",\n                \"name\": {\n                    \"en\": \"Cardboard Box\",\n                    \"fr\": \"Boîte en Carton\"\n                },\n                \"amount\": 1,\n                \"storageCapacity\": 10\n            }\n        ],\n        \"achievements\": [\n            {\n                \"achievementId\": \"first_building\",\n                \"unlockedAt\": \"2026-06-29T20:08:12.544Z\"\n            }\n        ]\n    },\n    \"timestamp\": \"2026-06-29T20:08:38.020Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Sync player (offline production)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/player/sync",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "player",
+                "sync"
+              ]
+            },
+            "description": "Synchronise uniquement la production de canards hors-ligne."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/player/sync",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "player",
+                    "sync"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "171"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ab-oxsuaYdGvaWO4t2h0R2EVfdEfQk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:09:18 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player data synchronized\",\n    \"data\": {\n        \"ducks\": 10,\n        \"money\": 50,\n        \"productionPerMinute\": 6,\n        \"maxStorageCapacity\": 10\n    },\n    \"timestamp\": \"2026-06-29T20:09:18.318Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get player buildings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/player/buildings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "player",
+                "buildings"
+              ]
+            },
+            "description": "Bâtiments possédés par le joueur."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/player/buildings",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "player",
+                    "buildings"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "213"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"d5-K0vDh2F2VKka2DjwzMg7QQwqE5A\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:09:48 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player buildings retrieved\",\n    \"data\": {\n        \"buildings\": [\n            {\n                \"buildingId\": \"garage\",\n                \"name\": {\n                    \"en\": \"Garage\",\n                    \"fr\": \"Garage\"\n                },\n                \"amount\": 1,\n                \"productionPerMinute\": 6\n            }\n        ]\n    },\n    \"timestamp\": \"2026-06-29T20:09:48.332Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get player storages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/player/storages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "player",
+                "storages"
+              ]
+            },
+            "description": "Stockages possédés par le joueur."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/player/storages",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "player",
+                    "storages"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "231"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"e7-cvOWzyWsB+1YBL6+izH/DlzzBy4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:10:13 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player storages retrieved\",\n    \"data\": {\n        \"storages\": [\n            {\n                \"storageId\": \"cardboard_box\",\n                \"name\": {\n                    \"en\": \"Cardboard Box\",\n                    \"fr\": \"Boîte en Carton\"\n                },\n                \"amount\": 1,\n                \"storageCapacity\": 10\n            }\n        ]\n    },\n    \"timestamp\": \"2026-06-29T20:10:13.658Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get player statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/player/statistics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "player",
+                "statistics"
+              ]
+            },
+            "description": "Statistiques globales du joueur."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/player/statistics",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "player",
+                    "statistics"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "294"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"126-Q4/Jumd0LRwgai02cVKB6oP+YUQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:10:32 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player statistics retrieved\",\n    \"data\": {\n        \"totalDucksSold\": \"0\",\n        \"totalDucksProduced\": \"10\",\n        \"totalMoneyGenerated\": \"100\",\n        \"totalBuildings\": 1,\n        \"totalStorage\": 1,\n        \"lastActive\": \"2026-06-29T20:05:42.468Z\",\n        \"createdAt\": \"2026-06-29T20:05:42.468Z\"\n    },\n    \"timestamp\": \"2026-06-29T20:10:32.730Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "État, synchronisation et statistiques du joueur authentifié.",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{playerToken}}",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Leaderboard",
+      "item": [
+        {
+          "name": "Get leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard?sort={{leaderboardSort}}&page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leaderboard"
+              ],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "{{leaderboardSort}}"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Classement paginé. sort peut être : byDucks, byMoney, byProduction, byStorage, byNbBuildings, byNbStorage."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/leaderboard?sort={{leaderboardSort}}&page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "leaderboard"
+                  ],
+                  "query": [
+                    {
+                      "key": "sort",
+                      "value": "{{leaderboardSort}}"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "188"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"bc-lEAeGIvQb8MPqDoUSv2ycjBJi1M\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:12:42 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Leaderboard by ducks retrieved successfully\",\n    \"data\": [\n        {\n            \"name\": \"Eugenia69\",\n            \"ducks\": 10\n        },\n        {\n            \"name\": \"Deontae.Deckow\",\n            \"ducks\": 0\n        }\n    ],\n    \"timestamp\": \"2026-06-29T20:12:42.032Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get my ranks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leaderboard",
+                "me"
+              ]
+            },
+            "description": "Rang du joueur authentifié dans chaque catégorie du classement."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/leaderboard/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "leaderboard",
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "232"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"e8-XV1BQXCDZwGbjHdZ3OCy/gDrsV0\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:13:13 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Your leaderboard ranks retrieved successfully\",\n    \"data\": {\n        \"rank\": 1,\n        \"ducksRank\": 1,\n        \"moneyRank\": 2,\n        \"productionRank\": 1,\n        \"storageRank\": 1,\n        \"nbBuildingsRank\": 1,\n        \"nbStorageRank\": 1\n    },\n    \"timestamp\": \"2026-06-29T20:13:13.658Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Classements des joueurs.",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{playerToken}}",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Building",
+      "item": [
+        {
+          "name": "Get building catalog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/building",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "building"
+              ]
+            },
+            "description": "Liste des bâtiments achetables."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/building",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "building"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=198, reset=876"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "950"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3b6-LsEdhrMoQVis32z3CvX3fFjkH9w\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:06:07 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Building list retrieved\",\n    \"data\": [\n        {\n            \"id\": \"garage\",\n            \"name\": {\n                \"en\": \"Garage\",\n                \"fr\": \"Garage\"\n            },\n            \"cost\": 100,\n            \"production\": 0.1\n        },\n        {\n            \"id\": \"small_workshop\",\n            \"name\": {\n                \"en\": \"Small Workshop\",\n                \"fr\": \"Petit Atelier\"\n            },\n            \"cost\": 200,\n            \"production\": 0.5\n        },\n        {\n            \"id\": \"industrial_workshop\",\n            \"name\": {\n                \"en\": \"Industrial Workshop\",\n                \"fr\": \"Atelier Industriel\"\n            },\n            \"cost\": 1000,\n            \"production\": 2\n        },\n        {\n            \"id\": \"modular_factory\",\n            \"name\": {\n                \"en\": \"Modular Factory\",\n                \"fr\": \"Usine Modulaire\"\n            },\n            \"cost\": 10000,\n            \"production\": 10\n        },\n        {\n            \"id\": \"big_factory\",\n            \"name\": {\n                \"en\": \"Big Factory\",\n                \"fr\": \"Grande Usine\"\n            },\n            \"cost\": 500000,\n            \"production\": 50\n        },\n        {\n            \"id\": \"orbital_station\",\n            \"name\": {\n                \"en\": \"Orbital Station\",\n                \"fr\": \"Station Orbitale\"\n            },\n            \"cost\": 5000000,\n            \"production\": 200\n        },\n        {\n            \"id\": \"planet_factory\",\n            \"name\": {\n                \"en\": \"Planet Factory\",\n                \"fr\": \"Usine Planétaire\"\n            },\n            \"cost\": 10000000000,\n            \"production\": 1000\n        },\n        {\n            \"id\": \"dyson_duck_sphere\",\n            \"name\": {\n                \"en\": \"Dyson Duck Sphere\",\n                \"fr\": \"Sphère Dyson Duck\"\n            },\n            \"cost\": 10000000000000\n        }\n    ],\n    \"timestamp\": \"2026-06-29T20:06:07.428Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Buy building",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"{{buildingId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/building/buy",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "building",
+                "buy"
+              ]
+            },
+            "description": "Achète un bâtiment pour le joueur authentifié."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"id\": \"{{buildingId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/building/buy",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "building",
+                    "buy"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "195"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"c3-qUhS8SwMXIzW3DLE5AgESUpTDUQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:06:43 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Building purchased\",\n    \"data\": {\n        \"name\": {\n            \"en\": \"Garage\",\n            \"fr\": \"Garage\"\n        },\n        \"playerMoney\": 50,\n        \"amount\": 1,\n        \"productionPerMinute\": 6,\n        \"cost\": 100\n    },\n    \"timestamp\": \"2026-06-29T20:06:43.023Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Catalogue et achat de bâtiments.",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{playerToken}}",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Storage",
+      "item": [
+        {
+          "name": "Get storage catalog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/storage",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "storage"
+              ]
+            },
+            "description": "Liste des unités de stockage achetables."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/storage",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "storage"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "207"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"cf-AvVgnPGHjwmbbRADpGn6XT7vUfE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:07:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Storage list retrieved\",\n    \"data\": [\n        {\n            \"id\": \"cardboard_box\",\n            \"name\": {\n                \"en\": \"Cardboard Box\",\n                \"fr\": \"Boîte en Carton\"\n            },\n            \"cost\": 50,\n            \"storageCapacity\": 10\n        }\n    ],\n    \"timestamp\": \"2026-06-29T20:07:37.335Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Buy storage",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"{{storageId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/storage/buy",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "storage",
+                "buy"
+              ]
+            },
+            "description": "Achète une unité de stockage pour le joueur authentifié."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"id\": \"{{storageId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/storage/buy",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "storage",
+                    "buy"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "206"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ce-y4MZ0TQAueo1YCf75dQlyDOvDh8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:08:12 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Storage purchased\",\n    \"data\": {\n        \"name\": {\n            \"en\": \"Cardboard Box\",\n            \"fr\": \"Boîte en Carton\"\n        },\n        \"playerMoney\": 0,\n        \"amount\": 1,\n        \"storageCapacity\": 10,\n        \"cost\": 50\n    },\n    \"timestamp\": \"2026-06-29T20:08:12.559Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Catalogue et achat de stockages.",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{playerToken}}",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Market",
+      "item": [
+        {
+          "name": "Get current duck price",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/market/price",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "market",
+                "price"
+              ]
+            },
+            "description": "Prix actuel du canard sur le marché."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/market/price",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "market",
+                    "price"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "119"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"77-jAQM3m0wPJMYqq/ZJrRXwnArpOk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:14:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Current duck price retrieved\",\n    \"data\": {\n        \"price\": 4.549\n    },\n    \"timestamp\": \"2026-06-29T20:14:05.240Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Sell all ducks",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/market/sell",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "market",
+                "sell"
+              ]
+            },
+            "description": "Vend tous les canards du joueur authentifié au prix actuel."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/market/sell",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "market",
+                    "sell"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "164"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"a4-+rkUnu99rS+bytRzag+SdNNO6t8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:14:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Ducks sold successfully\",\n    \"data\": {\n        \"ducksSold\": 10,\n        \"duckPrice\": 11.252,\n        \"earnings\": 112.52000000000001\n    },\n    \"timestamp\": \"2026-06-29T20:14:37.881Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get price history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/market/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "market",
+                "history"
+              ]
+            },
+            "description": "Historique des 100 derniers prix calculés."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/market/history",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "market",
+                    "history"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "753"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"2f1-aI9CjacEjVpTu5edeImuuNZu7aY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:14:57 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Price history retrieved\",\n    \"data\": {\n        \"priceHistory\": [\n            3.311,\n            10.708,\n            10.839,\n            17.557,\n            13.703,\n            15.15,\n            7.12,\n            7.499,\n            2.013,\n            7.3,\n            6.876,\n            14.854,\n            13.677,\n            17.57,\n            11.188,\n            10.866,\n            3.625,\n            5.775,\n            3.65,\n            10.633,\n            11.347,\n            17.238,\n            14.086,\n            14.47,\n            7.484,\n            6.749,\n            2.685,\n            6.702,\n            7.854,\n            14.199,\n            14.625,\n            16.573,\n            11.986,\n            9.649,\n            4.557,\n            4.676,\n            4.922,\n            9.655,\n            12.733,\n            16.058,\n            15.29,\n            12.988,\n            8.618,\n            5.268,\n            4.067,\n            5.44,\n            9.467,\n            12.943,\n            16.127,\n            15.048,\n            13.263,\n            7.992,\n            5.897,\n            3.223,\n            6.517,\n            8.402,\n            14.348,\n            14.683,\n            16.632,\n            11.402,\n            9.809,\n            3.781,\n            5.424,\n            4.26,\n            10.959,\n            11.848,\n            17.414,\n            13.77,\n            14.242,\n            6.674,\n            6.861,\n            2.198,\n            7.655,\n            7.651,\n            15.418,\n            13.88,\n            17.352,\n            10.465,\n            10.316,\n            3.018,\n            6.035,\n            3.867,\n            11.64,\n            11.591,\n            17.826,\n            13.378,\n            14.302,\n            6.296,\n            6.872,\n            2.158,\n            7.803,\n            7.912,\n            15.46,\n            14.106,\n            17.021,\n            10.579,\n            9.763,\n            3.327,\n            5.585,\n            4.549\n        ]\n    },\n    \"timestamp\": \"2026-06-29T20:14:57.485Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Prix du marché, vente de canards, historique.",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{playerToken}}",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Achievement",
+      "item": [
+        {
+          "name": "Get achievements catalog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/achievement",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "achievement"
+              ]
+            },
+            "description": "Liste de tous les succès, y compris ceux non débloqués."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/achievement",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "achievement"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "2252"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"8cc-iAB7Tk7aA3urt0y3CUJ44NmWUvY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:21:30 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Achievements retrieved\",\n    \"data\": {\n        \"achievements\": [\n            {\n                \"id\": \"first_duck\",\n                \"category\": \"production\",\n                \"hidden\": false,\n                \"name\": {\n                    \"en\": \"First Duck\",\n                    \"fr\": \"Premier Coin-Coin\"\n                },\n                \"description\": {\n                    \"en\": \"Produce 1 duck\",\n                    \"fr\": \"Produire 1 canard\"\n                },\n                \"condition\": {\n                    \"type\": \"total_ducks_produced\",\n                    \"value\": 1\n                },\n                \"reward\": {\n                    \"money\": 50\n                }\n            },\n            {\n                \"id\": \"duck_farmer\",\n                \"category\": \"production\",\n                \"hidden\": false,\n                \"name\": {\n                    \"en\": \"Duck Farmer\",\n                    \"fr\": \"Éleveur de Canards\"\n                },\n                \"description\": {\n                    \"en\": \"Produce 100 ducks\",\n                    \"fr\": \"Produire 100 canards\"\n                },\n                \"condition\": {\n                    \"type\": \"total_ducks_produced\",\n                    \"value\": 100\n                },\n                \"reward\": {\n                    \"money\": 500\n                }\n            },\n            {\n                \"id\": \"industrial_ducking\",\n                \"category\": \"production\",\n                \"hidden\": false,\n                \"name\": {\n                    \"en\": \"Industrial Ducking\",\n                    \"fr\": \"Élevage Industriel\"\n                },\n                \"description\": {\n                    \"en\": \"Produce 10,000 ducks\",\n                    \"fr\": \"Produire 10 000 canards\"\n                },\n                \"condition\": {\n                    \"type\": \"total_ducks_produced\",\n                    \"value\": 10000\n                },\n                \"reward\": {\n                    \"money\": 10000\n                }\n            },\n            {\n                \"id\": \"duck_millionaire\",\n                \"category\": \"production\",\n                \"hidden\": false,\n                \"name\": {\n                    \"en\": \"Duck Millionaire\",\n                    \"fr\": \"Canard Millionnaire\"\n                },\n                \"description\": {\n                    \"en\": \"Produce 1,000,000 ducks\",\n                    \"fr\": \"Produire 1 000 000 canards\"\n                },\n                \"condition\": {\n                    \"type\": \"total_ducks_produced\",\n                    \"value\": 1000000\n                },\n                \"reward\": {\n                    \"money\": 1000000\n                }\n            },\n            {\n                \"id\": \"first_building\",\n                \"category\": \"buildings\",\n                \"hidden\": false,\n                \"name\": {\n                    \"en\": \"First Building\",\n                    \"fr\": \"Premier Bâtiment\"\n                },\n                \"description\": {\n                    \"en\": \"Buy your first building\",\n                    \"fr\": \"Acheter votre premier bâtiment\"\n                },\n                \"condition\": {\n                    \"type\": \"buildings_owned\",\n                    \"value\": 1\n                },\n                \"reward\": {\n                    \"money\": 50\n                }\n            },\n            {\n                \"id\": \"landlord\",\n                \"category\": \"buildings\",\n                \"hidden\": false,\n                \"name\": {\n                    \"en\": \"Landlord\",\n                    \"fr\": \"Ducklord\"\n                },\n                \"description\": {\n                    \"en\": \"Own 10 buildings\",\n                    \"fr\": \"Posséder 10 bâtiments\"\n                },\n                \"condition\": {\n                    \"type\": \"buildings_owned\",\n                    \"value\": 10\n                },\n                \"reward\": {\n                    \"money\": 500\n                }\n            },\n            {\n                \"id\": \"first_sale\",\n                \"category\": \"wealth\",\n                \"hidden\": false,\n                \"name\": {\n                    \"en\": \"First Sale\",\n                    \"fr\": \"Premier Client\"\n                },\n                \"description\": {\n                    \"en\": \"Sell your first duck\",\n                    \"fr\": \"Vendre un canard\"\n                },\n                \"condition\": {\n                    \"type\": \"ducks_sold\",\n                    \"value\": 1\n                },\n                \"reward\": {\n                    \"money\": 50\n                }\n            },\n            {\n                \"id\": \"million_dollar_ducks\",\n                \"category\": \"wealth\",\n                \"hidden\": false,\n                \"name\": {\n                    \"en\": \"Million Duck Company\",\n                    \"fr\": \"Entreprise des Canards Millionnaires\"\n                },\n                \"description\": {\n                    \"en\": \"Own 1,000,000$\",\n                    \"fr\": \"Posséder 1 000 000$\"\n                },\n                \"condition\": {\n                    \"type\": \"money_owned\",\n                    \"value\": 1000000\n                },\n                \"reward\": {\n                    \"money\": 100000\n                }\n            }\n        ]\n    },\n    \"timestamp\": \"2026-06-29T20:21:30.602Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Catalogue des succès.",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{playerToken}}",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "World",
+      "item": [
+        {
+          "name": "Get world stats",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/world",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "world"
+              ]
+            },
+            "description": "Statistiques globales du monde de jeu. Aucune authentification requise."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/world",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "world"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "176"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"b0-AMXdSYJeUlRF6o1v4QnmPKFKg0g\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:25:24 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"World statistics retrieved\",\n    \"data\": {\n        \"players\": 1,\n        \"ducksProduced\": \"10\",\n        \"ducksSold\": \"10\",\n        \"moneyGenerated\": \"212\"\n    },\n    \"timestamp\": \"2026-06-29T20:25:24.105Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Statistiques globales publiques."
+    },
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/system/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "system",
+                "health"
+              ]
+            },
+            "description": "Vérifie que l'API répond. Aucune authentification requise."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/system/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "system",
+                    "health"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "85"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"55-cit5v80r2uYrPPaFOg/uJ79hhcs\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:19:40 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"System is healthy\",\n    \"timestamp\": \"2026-06-29T20:19:40.879Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get API version",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/system/version",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "system",
+                "version"
+              ]
+            },
+            "description": "Retourne la version de l'API en cours d'exécution. Aucune authentification requise."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/system/version",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "system",
+                    "version"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "113"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"71-mS4blr6R6B+h4mL9Va92rV39Yt8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:20:04 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"API version retrieved\",\n    \"data\": {\n        \"version\": \"v1\"\n    },\n    \"timestamp\": \"2026-06-29T20:20:04.975Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Santé et version de l'API."
+    },
+    {
+      "name": "Game",
+      "item": [
+        {
+          "name": "Get game config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/game/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "game",
+                "config"
+              ]
+            },
+            "description": "Configuration publique du jeu utilisée par les clients."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/game/config",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "game",
+                    "config"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=199, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "254"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"fe-47yF5N9ZQLEbvFJ658FrMH5NHRM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 20:20:55 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Game configuration retrieved successfully\",\n    \"data\": {\n        \"startingValues\": {\n            \"money\": 150,\n            \"ducks\": 0\n        },\n        \"maxOfflineHours\": 24,\n        \"marketUpdateIntervalMs\": 30000,\n        \"duckPriceFluctuation\": {\n            \"min\": -5,\n            \"max\": 25\n        }\n    },\n    \"timestamp\": \"2026-06-29T20:20:55.389Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Configuration publique du jeu.",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{playerToken}}",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Admin login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Sauvegarde automatique du token admin",
+                  "if ([200, 201].includes(pm.response.code)) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.data && json.data.token) {",
+                  "        pm.collectionVariables.set('adminToken', json.data.token);",
+                  "        console.log('adminToken sauvegardé');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"{{adminUsername}}\",\n    \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "login"
+              ]
+            },
+            "description": "Authentification admin. Retourne un token bearer à utiliser pour toutes les routes 'adminAuth'.\nLe token est automatiquement enregistré dans {{adminToken}}."
+          },
+          "response": [
+            {
+              "name": "201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"{{adminUsername}}\",\n    \"password\": \"{{adminPassword}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "login"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "5;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=5, remaining=4, reset=900"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "153"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"99-eIh/L4KjQPwTtsE8EuUT5lMmhOk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:21:40 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User logged in\",\n    \"data\": {\n        \"token\": \"928c178f-7ce3-463e-a6b3-1bdba6b5c931\",\n        \"name\": \"admin\"\n    },\n    \"timestamp\": \"2026-06-29T21:21:40.446Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get game config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "config"
+              ]
+            },
+            "description": "Configuration actuelle du jeu."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/config",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "config"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=198, reset=875"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "254"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"fe-AZ5vZ/TX7YWslLuTsaOTHmT9aOQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:22:06 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Game configuration retrieved successfully\",\n    \"data\": {\n        \"startingValues\": {\n            \"money\": 150,\n            \"ducks\": 0\n        },\n        \"maxOfflineHours\": 24,\n        \"marketUpdateIntervalMs\": 30000,\n        \"duckPriceFluctuation\": {\n            \"min\": -5,\n            \"max\": 25\n        }\n    },\n    \"timestamp\": \"2026-06-29T21:22:06.338Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update game config",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"startingValues\": {\n        \"ducks\": 0,\n        \"money\": 1000\n    },\n    \"maxOfflineHours\": 8,\n    \"marketUpdateIntervalMs\": 60000,\n    \"duckPriceFluctuation\": {\n        \"min\": 5,\n        \"max\": 20\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "config"
+              ]
+            },
+            "description": "Met à jour une ou plusieurs valeurs de configuration et les persiste sur disque."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"startingValues\": {\n        \"ducks\": 0,\n        \"money\": 1000\n    },\n    \"maxOfflineHours\": 8,\n    \"marketUpdateIntervalMs\": 60000,\n    \"duckPriceFluctuation\": {\n        \"min\": 5,\n        \"max\": 20\n    }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/config",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "config"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=195, reset=830"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "251"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"fb-5UMQ3WXItBqAqUcv1eWWJLUH+9A\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:22:51 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Game configuration updated successfully\",\n    \"data\": {\n        \"startingValues\": {\n            \"money\": 1000,\n            \"ducks\": 0\n        },\n        \"maxOfflineHours\": 8,\n        \"marketUpdateIntervalMs\": 60000,\n        \"duckPriceFluctuation\": {\n            \"min\": 5,\n            \"max\": 20\n        }\n    },\n    \"timestamp\": \"2026-06-29T21:22:51.262Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get all players (paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/players?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Liste paginée de tous les joueurs avec leurs données complètes."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=197, reset=863"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1144"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"478-nx1jhw8Lzp6ZhdbEkCQGckA1wko\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:22:17 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player data retrieved\",\n    \"data\": [\n        {\n            \"id\": \"cmqzn8tdw000098kl3upzydbt\",\n            \"name\": \"Deontae.Deckow\",\n            \"ducks\": 0,\n            \"money\": 150,\n            \"productionPerMinute\": 0,\n            \"maxStorageCapacity\": 0,\n            \"active\": false,\n            \"lastSync\": \"2026-06-29T20:01:49.508Z\",\n            \"lastActive\": \"2026-06-29T20:01:49.508Z\",\n            \"createdAt\": \"2026-06-29T20:01:49.508Z\",\n            \"updatedAt\": \"2026-06-29T20:04:50.262Z\",\n            \"buildings\": [],\n            \"storages\": [],\n            \"achievements\": []\n        },\n        {\n            \"id\": \"cmqzndt500000uwkltvpoyaiq\",\n            \"name\": \"Eugenia69\",\n            \"ducks\": 10,\n            \"money\": 212.52,\n            \"productionPerMinute\": 6,\n            \"maxStorageCapacity\": 10,\n            \"active\": true,\n            \"lastSync\": \"2026-06-29T20:14:37.838Z\",\n            \"lastActive\": \"2026-06-29T20:05:42.468Z\",\n            \"createdAt\": \"2026-06-29T20:05:42.468Z\",\n            \"updatedAt\": \"2026-06-29T20:14:37.858Z\",\n            \"buildings\": [\n                {\n                    \"buildingId\": \"garage\",\n                    \"name\": {\n                        \"en\": \"Garage\",\n                        \"fr\": \"Garage\"\n                    },\n                    \"amount\": 1,\n                    \"productionPerMinute\": 6\n                }\n            ],\n            \"storages\": [\n                {\n                    \"storageId\": \"cardboard_box\",\n                    \"name\": {\n                        \"en\": \"Cardboard Box\",\n                        \"fr\": \"Boîte en Carton\"\n                    },\n                    \"amount\": 1,\n                    \"storageCapacity\": 10\n                }\n            ],\n            \"achievements\": [\n                {\n                    \"achievementId\": \"first_building\",\n                    \"unlockedAt\": \"2026-06-29T20:08:12.544Z\"\n                },\n                {\n                    \"achievementId\": \"first_duck\",\n                    \"unlockedAt\": \"2026-06-29T20:09:18.307Z\"\n                }\n            ]\n        }\n    ],\n    \"timestamp\": \"2026-06-29T21:22:17.860Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get player by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/players/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players",
+                "{{playerId}}"
+              ]
+            },
+            "description": "Détails complets d'un joueur précis."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players/{{playerId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players",
+                    "{{playerId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=196, reset=851"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "796"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"31c-C/Z4V10TrwX++hC4h2D766Xu3kU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:22:29 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player data retrieved\",\n    \"data\": {\n        \"id\": \"cmqzndt500000uwkltvpoyaiq\",\n        \"name\": \"Eugenia69\",\n        \"ducks\": 10,\n        \"money\": 212.52,\n        \"productionPerMinute\": 6,\n        \"maxStorageCapacity\": 10,\n        \"active\": true,\n        \"lastSync\": \"2026-06-29T21:22:17.844Z\",\n        \"lastActive\": \"2026-06-29T20:05:42.468Z\",\n        \"createdAt\": \"2026-06-29T20:05:42.468Z\",\n        \"updatedAt\": \"2026-06-29T21:22:17.844Z\",\n        \"buildings\": [\n            {\n                \"buildingId\": \"garage\",\n                \"name\": {\n                    \"en\": \"Garage\",\n                    \"fr\": \"Garage\"\n                },\n                \"amount\": 1,\n                \"productionPerMinute\": 6\n            }\n        ],\n        \"storages\": [\n            {\n                \"storageId\": \"cardboard_box\",\n                \"name\": {\n                    \"en\": \"Cardboard Box\",\n                    \"fr\": \"Boîte en Carton\"\n                },\n                \"amount\": 1,\n                \"storageCapacity\": 10\n            }\n        ],\n        \"achievements\": [\n            {\n                \"achievementId\": \"first_building\",\n                \"unlockedAt\": \"2026-06-29T20:08:12.544Z\"\n            },\n            {\n                \"achievementId\": \"first_duck\",\n                \"unlockedAt\": \"2026-06-29T20:09:18.307Z\"\n            }\n        ]\n    },\n    \"timestamp\": \"2026-06-29T21:22:29.706Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete player",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/players/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players",
+                "{{playerId}}"
+              ]
+            },
+            "description": "Désactive le compte du joueur."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players/{{playerId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players",
+                    "{{playerId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=194, reset=811"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "143"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"8f-cDMoU4Ohvr+pF/31MVcyr94cqCQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:23:10 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player deleted\",\n    \"data\": {\n        \"id\": \"cmqzndt500000uwkltvpoyaiq\",\n        \"name\": \"Eugenia69\"\n    },\n    \"timestamp\": \"2026-06-29T21:23:10.045Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Reset player progress",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/players/{{playerId}}/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players",
+                "{{playerId}}",
+                "reset"
+              ]
+            },
+            "description": "Réinitialise la progression du joueur (valeurs de départ, bâtiments, stockages, succès supprimés)."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players/{{playerId}}/reset",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players",
+                    "{{playerId}}",
+                    "reset"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=191, reset=816"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "152"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"98-6jA5yks1qNtAUyAblUf1/yBLnWU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:28:23 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player reset\",\n    \"data\": {\n        \"id\": \"cmqzqam230000wcklml34pih0\",\n        \"name\": \"Mackenzie.Bogisich24\"\n    },\n    \"timestamp\": \"2026-06-29T21:28:23.724Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Set player money (exact value)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"money\": 5000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/players/{{playerId}}/money",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players",
+                "{{playerId}}",
+                "money"
+              ]
+            },
+            "description": "Remplace le montant d'argent du joueur par une valeur exacte."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"money\": 5000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players/{{playerId}}/money",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players",
+                    "{{playerId}}",
+                    "money"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=198, reset=891"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "173"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ad-xq5r2qKhB/ePJXtGovPYLa0/tH4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:28:56 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player money updated\",\n    \"data\": {\n        \"id\": \"cmqzqam230000wcklml34pih0\",\n        \"name\": \"Mackenzie.Bogisich24\",\n        \"money\": 5000\n    },\n    \"timestamp\": \"2026-06-29T21:28:56.795Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Set player ducks (exact value)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ducks\": 250\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/players/{{playerId}}/ducks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players",
+                "{{playerId}}",
+                "ducks"
+              ]
+            },
+            "description": "Remplace le nombre de canards du joueur par une valeur exacte."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"ducks\": 250\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players/{{playerId}}/ducks",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players",
+                    "{{playerId}}",
+                    "ducks"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=197, reset=880"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "172"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ac-5pCL0IRcqwoRLhyt3bvWrLF0B08\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:29:07 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player ducks updated\",\n    \"data\": {\n        \"id\": \"cmqzqam230000wcklml34pih0\",\n        \"name\": \"Mackenzie.Bogisich24\",\n        \"ducks\": 250\n    },\n    \"timestamp\": \"2026-06-29T21:29:07.453Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Add player money",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"money\": 500\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/players/{{playerId}}/add-money",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players",
+                "{{playerId}}",
+                "add-money"
+              ]
+            },
+            "description": "Ajoute un montant d'argent au joueur."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"money\": 500\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players/{{playerId}}/add-money",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players",
+                    "{{playerId}}",
+                    "add-money"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=196, reset=873"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "171"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ab-dQY1BJLX6+xgJDeSGWuz5RD9TRE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:29:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player money added\",\n    \"data\": {\n        \"id\": \"cmqzqam230000wcklml34pih0\",\n        \"name\": \"Mackenzie.Bogisich24\",\n        \"money\": 5500\n    },\n    \"timestamp\": \"2026-06-29T21:29:14.619Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Add player ducks",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ducks\": 50\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/players/{{playerId}}/add-ducks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players",
+                "{{playerId}}",
+                "add-ducks"
+              ]
+            },
+            "description": "Ajoute des canards au joueur."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"ducks\": 50\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players/{{playerId}}/add-ducks",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players",
+                    "{{playerId}}",
+                    "add-ducks"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=195, reset=867"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "170"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"aa-DpbeEe3qY+BpPEGDuvRsdewClM4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:29:20 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player ducks added\",\n    \"data\": {\n        \"id\": \"cmqzqam230000wcklml34pih0\",\n        \"name\": \"Mackenzie.Bogisich24\",\n        \"ducks\": 300\n    },\n    \"timestamp\": \"2026-06-29T21:29:20.304Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Remove player money",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"money\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/players/{{playerId}}/remove-money",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players",
+                "{{playerId}}",
+                "remove-money"
+              ]
+            },
+            "description": "Retire un montant d'argent au joueur."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"money\": 100\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players/{{playerId}}/remove-money",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players",
+                    "{{playerId}}",
+                    "remove-money"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=194, reset=862"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "173"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ad-cSUl3pmBjkUVIUDOIlrNFQr3BLs\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:29:25 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player money removed\",\n    \"data\": {\n        \"id\": \"cmqzqam230000wcklml34pih0\",\n        \"name\": \"Mackenzie.Bogisich24\",\n        \"money\": 5400\n    },\n    \"timestamp\": \"2026-06-29T21:29:25.779Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Remove player ducks",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ducks\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/players/{{playerId}}/remove-ducks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "players",
+                "{{playerId}}",
+                "remove-ducks"
+              ]
+            },
+            "description": "Retire des canards au joueur."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"ducks\": 10\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/players/{{playerId}}/remove-ducks",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "players",
+                    "{{playerId}}",
+                    "remove-ducks"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=193, reset=850"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "172"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ac-s2xv5sfholWKs298LPMzTJ1ZUA4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:29:36 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Player ducks removed\",\n    \"data\": {\n        \"id\": \"cmqzqam230000wcklml34pih0\",\n        \"name\": \"Mackenzie.Bogisich24\",\n        \"ducks\": 290\n    },\n    \"timestamp\": \"2026-06-29T21:29:36.937Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Ban IP address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ipAddress\": \"{{ipAddress}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/ip/ban",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ip",
+                "ban"
+              ]
+            },
+            "description": "Bannit une adresse IP de l'accès à l'API."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"ipAddress\": \"{{ipAddress}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/ip/ban",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "ip",
+                    "ban"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=192, reset=844"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "113"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"71-p2nXf6//Z8hK1+H5dM1U79tM2zA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:29:43 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"IP banned\",\n    \"data\": {\n        \"ipAddress\": \"203.0.113.42\"\n    },\n    \"timestamp\": \"2026-06-29T21:29:43.054Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Unban IP address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ipAddress\": \"{{ipAddress}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/ip/unban",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ip",
+                "unban"
+              ]
+            },
+            "description": "Retire le bannissement d'une adresse IP."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"ipAddress\": \"{{ipAddress}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/ip/unban",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "ip",
+                    "unban"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=191, reset=839"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "115"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"73-Qg4bLWaNOY+jn2h7Sbrp87k4XRI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:29:48 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"IP unbanned\",\n    \"data\": {\n        \"ipAddress\": \"203.0.113.42\"\n    },\n    \"timestamp\": \"2026-06-29T21:29:48.875Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get banned IPs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/ip/banned",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ip",
+                "banned"
+              ]
+            },
+            "description": "Liste de toutes les adresses IP bannies."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/ip/banned",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "ip",
+                    "banned"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=196, reset=875"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "162"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"a2-MbB2ePevI/MaTmdAuMgV5ADNWF8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:34:38 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Banned IPs fetched\",\n    \"data\": [\n        {\n            \"ipAddress\": \"203.0.113.42\",\n            \"bannedAt\": \"2026-06-29T21:34:34.434Z\"\n        }\n    ],\n    \"timestamp\": \"2026-06-29T21:34:38.258Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get admin dashboard stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "stats"
+              ]
+            },
+            "description": "Totaux globaux du jeu + statistiques système (mémoire, CPU, uptime)."
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/stats",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "stats"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "RateLimit-Policy",
+                  "value": "200;w=900"
+                },
+                {
+                  "key": "RateLimit",
+                  "value": "limit=200, remaining=189, reset=823"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "302"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"12e-AjNhGqG78a7hpXpunqQqRye3FBs\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 29 Jun 2026 21:30:04 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Admin stats fetched\",\n    \"data\": {\n        \"players\": 1,\n        \"ducksProduced\": \"20\",\n        \"ducksSold\": \"10\",\n        \"moneyGenerated\": \"212\",\n        \"apiVersion\": \"v1\",\n        \"uptime\": 40346.39,\n        \"memory\": {\n            \"usedMB\": 20139,\n            \"freeMB\": 11986,\n            \"totalMB\": 32125,\n            \"usagePercent\": 62.69\n        },\n        \"cpuUsage\": \"8.01%\"\n    },\n    \"timestamp\": \"2026-06-29T21:30:04.542Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Routes réservées aux administrateurs.",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{adminToken}}",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "playerToken",
+      "value": ""
+    },
+    {
+      "key": "playerId",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "adminUsername",
+      "value": "admin"
+    },
+    {
+      "key": "adminPassword",
+      "value": ""
+    },
+    {
+      "key": "buildingId",
+      "value": "garage"
+    },
+    {
+      "key": "storageId",
+      "value": "cardboard_box"
+    },
+    {
+      "key": "ipAddress",
+      "value": "203.0.113.42"
+    },
+    {
+      "key": "leaderboardSort",
+      "value": "byDucks"
+    }
+  ]
+}
