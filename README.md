@@ -18,7 +18,7 @@
 </p>
 
 A multiplayer idle game API where players build a rubber duck empire, produce ducks and sell them on the market.
-Designed to run on a local network, making it perfect for a Raspberry Pi or a small home server.
+Designed to run on a local network, making it perfect for a Raspberry Pi or a small home server. The game is fully server-side, and all progression is stored by the API.
 
 <div>
     <h4>
