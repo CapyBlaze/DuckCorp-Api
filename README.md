@@ -44,6 +44,9 @@ Designed to run on a local network, making it perfect for a Raspberry Pi or a sm
                 <a href="#🚀-getting-started">🚀 Getting Started</a>
             </li>
             <li>
+                <a href="#⚙️-environment-variables">⚙️ Environment Variables</a>
+            </li>
+            <li>
                 <a href="#🛠️-architecture-and-tech-stack">🛠️ Architecture and Tech Stack</a>
             </li>
             <li>
@@ -246,6 +249,25 @@ To see the rest of the available routes, please refer to the [documentation](htt
     ```
 
 4. Open your browser and navigate to `http://localhost:8080`
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+SERVER_PORT=8085
+TRUST_PROXY=true
+API_VERSION=v1
+
+DATABASE_URL="file:./dev.db"
+
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=xxxxxxxxxxxxxxxx
+
+YOUTUBE_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
